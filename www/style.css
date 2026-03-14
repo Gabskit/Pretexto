@@ -1,0 +1,28 @@
+html, body {
+ margin: 0;
+ padding: 0;
+ transition: 0.3s !important;
+}
+canvas {
+ display: block;
+}
+.barui {
+	display: flex !important;
+	flex: 1;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-around;
+}
+.squicle{
+	border-radius: 20px;
+	corner-shape: squircle;
+}
+/*iconos*/
+.ui-icon-nota {
+	background-image: url("assets/Nota.svg");
+	background-size: 18px 18px;
+}
+.ui-icon-calen {
+	background-image: url("assets/Calen.svg");
+	background-size: 18px 18px;
+}

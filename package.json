@@ -1,0 +1,12 @@
+{
+  "name": "Pre-texto",
+  "version": "0.0.1testbuild",
+  "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0"
+  },
+  "scripts": {
+    "build": "echo 'No build step needed for vanilla JS'"
+  }
+}

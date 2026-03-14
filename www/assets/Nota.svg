@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Grafika (https://www.grafika.cc/) -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="55" height="55" viewBox="0 0 55 55" preserveAspectRatio="xMidYMid meet">
+	<g transform="matrix(1, 0, 0, 1, 27.5, 27.5)">
+		<rect x="-27.5" y="-27.5" width="55" height="55" opacity="0" style="fill:#000000;" />
+		<path d="M-18,-13.5 C-18,-15.985280991 -15.985280991,-18 -13.5,-18 L0,-18 C2.485281467,-18 18,-2.485281467 18,0 L18,13.5 C18,15.985280991 15.985280991,18 13.5,18 L-13.5,18 C-15.985280991,18 -18,15.985280991 -18,13.5 L-18,-13.5 Z" style="fill:none;stroke:#FFFFFF;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.139955521;" />
+		<path d="M0.080982208,-18 Q0,0 18,0" fill-rule="evenodd" style="fill:none;stroke:#FFFFFF;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.139955521;" />
+	</g>
+</svg>

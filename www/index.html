@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <script src="cdn/jquery.js"></script>
+    <script src="cdn/jquery.mobile-1.3.2.min.js"></script>
+    <script src="cdn/browser@4.js"></script>
+    <script src="cdn/index.global.min.js"></script>
+    <script src="cdn/cdn.min.js" defer></script>
+    <script src="main.js"></script>
+    <link rel="stylesheet" href="cdn/jquery.mobile-1.3.2.min.css"/>
+    <link rel="stylesheet" href="cdn/daisyui@5.css" />
+    <link rel="stylesheet" href="style.css"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body x-data="inicio">
+   <!--main page-->
+    <div data-role="page" id="main">
+      <div data-role="header" class="barui" data-position="fixed">
+       <img src="assets/ptlogo.svg">
+       <span>
+        <button data-icon="plus" data-iconpos="notext"></button>
+       </span>
+      </div>
+      <div data-role="content">
+       <ul data-role="listview">
+        
+       </ul>
+      </div>
+      <div x-html="renderNav()" data-role="footer" data-position="fixed" data-id="footr">
+      <!---foter navbar--->
+      </div>
+    </div>
+    <!--note page-->
+    <div data-role="page" id="notas">
+     <div data-role="header" class="barui" data-position="fixed">
+      <img src="assets/ptlogo.svg" >
+      <span>
+       <button data-icon="plus" data-iconpos="right">Nueva nota</button>
+      </span>
+     </div>
+     <div data-role="content">
+      
+     </div>
+     <div x-html="renderNav()" data-role="footer" data-position="fixed" data-id="footr">
+      <!--footer navbar-->
+     </div>
+    </div>
+    <!--calendar page-->
+    <div data-role="page" id="calen">
+     <div data-role="header" class="barui" data-position="fixed">
+      <img src="assets/ptlogo.svg" >
+      <span>
+       <button data-icon="plus" data-iconpos="right">Nuevo evento</button>
+      </span>
+     </div>
+     <div data-role="content">
+      
+     </div>
+     <div x-html="renderNav()" data-role="footer" data-position="fixed" data-id="footr">
+      <!--footer navbar-->
+     </div>
+    </div>
+    <!--search page-->
+    <div data-role="page" id="busca">
+     <div data-role="header" class="barui" data-position="fixed">
+      <img src="assets/ptlogo.svg" >
+      <form>
+       <input type="search" name="barra-busca" id="barra-busca">
+      </form>
+     </div>
+     <div data-role="content">
+      <p>Coming soon</p>
+     </div>
+     <div x-html="renderNav()" data-role="footer" data-position="fixed" data-id="footr">
+      <!--footer navbar-->
+     </div>
+    </div>
+    <!--settings page-->
+    <div data-role="page" id="ajustes">
+     <div data-role="header" class="barui" data-position="fixed">
+      <img src="assets/ptlogo.svg" >
+     </div>
+     <div data-role="content">
+      
+     </div>
+     <div x-html="renderNav()" data-role="footer" data-position="fixed" data-id="footr">
+      <!--footer navbar-->
+     </div>
+    </div>
+  </body>
+</html>

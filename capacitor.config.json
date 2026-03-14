@@ -1,0 +1,6 @@
+{
+  "appId": "com.polaris.pretexto",
+  "appName": "Pre-texto",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}
