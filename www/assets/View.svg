@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Grafika (https://www.grafika.cc/) -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="55" height="55" viewBox="0 0 55 55" preserveAspectRatio="xMidYMid meet">
+	<g transform="matrix(1, 0, 0, 1, 27.5, 27.5)">
+		<rect x="-27.5" y="-27.5" width="55" height="55" opacity="0" style="fill:#FFFFFF;" />
+		<ellipse cx="-0.000000954" cy="0" rx="18" ry="13" style="fill:none;stroke:#FFFFFF;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.411830425;" />
+		<ellipse cx="0" cy="0" rx="12.5" ry="12.5" style="fill:#FFFFFF;" />
+	</g>
+</svg>

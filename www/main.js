@@ -20,6 +20,6 @@ document.addEventListener('alpine:init', () => {
 		 this.hili = ["","","","",""]
 		 this.hili[index] = "ui-btn-active ui-state-persist"
 		},
-		recent: filerece
+		recent: filerece,
 	}))
  })

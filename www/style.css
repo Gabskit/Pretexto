@@ -13,9 +13,17 @@ canvas {
 	align-items: center;
 	justify-content: space-around;
 }
-.squicle{
-	border-radius: 20px;
-	corner-shape: squircle;
+.squircle{
+	border-radius: 1em;
+	corner-shape: squircle !important;
+}
+.edit-btn{
+	border: 2px solid transparent !important;
+	background: linear-gradient(#000, #444) padding-box, linear-gradient(90deg, #444, #222) border-box !important;
+}
+.edit-btn:hover{
+	border: 2px solid transparent !important;
+	background: linear-gradient(#222, #444) padding-box, linear-gradient(90deg, #000, #222) border-box !important;
 }
 /*iconos*/
 .ui-icon-nota {
@@ -24,5 +32,9 @@ canvas {
 }
 .ui-icon-calen {
 	background-image: url("assets/Calen.svg");
+	background-size: 18px 18px;
+}
+.ui-icon-view {
+	background-image: url("assets/View.svg");
 	background-size: 18px 18px;
 }
