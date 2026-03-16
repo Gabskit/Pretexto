@@ -1,12 +1,4 @@
-
-let filerece = []
-
-document.addEventListener('alpine:init', () => {
-	Alpine.data('inicio', () => ({
-		hili: ["ui-btn-active ui-state-persist","","","",""],
-		renderNav() {
-		 return `
-			<div data-role="navbar" data-iconpos="top">
+const nav = `<div data-role="navbar" data-iconpos="top">
 				<ul>
 					<li><a @click="navi(0)" :class="hili[0]" href="#main" data-icon="home">Inicio</a></li>
 					<li><a @click="navi(1)" :class="hili[1]" href="#notas" data-icon="nota">Notas</a></li>
@@ -15,11 +7,55 @@ document.addEventListener('alpine:init', () => {
 					<li><a @click="navi(4)" :class="hili[4]" href="#ajustes" data-icon="gear">Ajustes</a></li>
 				</ul>
 			</div>`
-		},
+let jqmui = "a"
+let logosvg = "assets/ptlogo.svg"
+let doc = []
+let doci = -1
+let docres
+document.addEventListener('alpine:init', () => {
+	Alpine.data('inicio', () => ({
+		hili: ["ui-btn-active ui-state-persist","","","",""],
+		datadoc: [],
+		navbar: nav,
 		navi(index){
 		 this.hili = ["","","","",""]
 		 this.hili[index] = "ui-btn-active ui-state-persist"
 		},
-		recent: filerece,
+		docu: docres,
+		jqmtheme: jqmui,
+		logo: logosvg,
+		dataget(index){
+			
+		}
 	}))
  })
+
+function addtodoc(type) {
+	const types = []
+	doci++
+	switch (type) {
+		case 'titl':
+			
+			break;
+		
+		default:
+			// Tab to edit
+	}
+}
+function logocol() {
+	if (jqmui == ("c" || "d" || "e")) {
+		logosvg = "assets/ptlogoblack.svg"
+	} else {
+		logosvg = "assets/ptlogo.svg"
+	}
+}
+function jqmtemaw() {
+	let radjqm = document.querySelectorAll("input[name='jqmtema']")
+	radjqm.forEach((radio) => {
+		radio.addEventListener("change", (e) =>{
+			jqmui = e.target.value
+			console.log(jqmui)
+		})
+	})
+	logocol()
+}

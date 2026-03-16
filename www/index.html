@@ -18,93 +18,120 @@
   <body x-data="inicio">
    <!--main page-->
     <div data-role="page" id="main">
-      <div data-role="header" class="barui" data-position="fixed">
-       <img src="assets/ptlogo.svg">
+      <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
+       <img :src="logo">
        <span>
         <button data-icon="plus" data-iconpos="notext"></button>
        </span>
       </div>
-      <div data-role="content">
+      <div data-role="content" :data-theme="jqmtheme">
        <ul data-role="listview">
         <a href="#edit">#edit</a>
        </ul>
       </div>
-      <div x-html="renderNav()" data-role="footer" data-position="fixed" data-id="footr">
+      <div x-html="navbar" data-role="footer" data-position="fixed" data-id="footr" :data-theme="jqmtheme">
       <!---foter navbar--->
       </div>
     </div>
     <!--note page-->
     <div data-role="page" id="notas">
-     <div data-role="header" class="barui" data-position="fixed">
-      <img src="assets/ptlogo.svg" >
+     <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
+      <img :src="logo" >
       <span>
        <button data-icon="plus" data-iconpos="right">Nueva nota</button>
       </span>
      </div>
-     <div data-role="content">
+     <div data-role="content" :data-theme="jqmtheme">
       
      </div>
-     <div x-html="renderNav()" data-role="footer" data-position="fixed" data-id="footr">
+     <div x-html="navbar" data-role="footer" data-position="fixed" data-id="footr" :data-theme="jqmtheme">
       <!--footer navbar-->
      </div>
     </div>
     <!--calendar page-->
     <div data-role="page" id="calen">
-     <div data-role="header" class="barui" data-position="fixed">
-      <img src="assets/ptlogo.svg" >
+     <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
+      <img :src="logo" >
       <span>
        <button data-icon="plus" data-iconpos="right">Nuevo evento</button>
       </span>
      </div>
-     <div data-role="content">
+     <div data-role="content" :data-theme="jqmtheme">
       
      </div>
-     <div x-html="renderNav()" data-role="footer" data-position="fixed" data-id="footr">
+     <div x-html="navbar" data-role="footer" data-position="fixed" data-id="footr" :data-theme="jqmtheme">
       <!--footer navbar-->
      </div>
     </div>
     <!--search page-->
     <div data-role="page" id="busca">
-     <div data-role="header" class="barui" data-position="fixed">
-      <img src="assets/ptlogo.svg" >
+     <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
+      <img :src="logo" >
       <form>
        <input type="search" name="barra-busca" id="barra-busca">
       </form>
      </div>
-     <div data-role="content">
+     <div data-role="content" :data-theme="jqmtheme">
       <p>Coming soon</p>
      </div>
-     <div x-html="renderNav()" data-role="footer" data-position="fixed" data-id="footr">
+     <div x-html="navbar" data-role="footer" data-position="fixed" data-id="footr" :data-theme="jqmtheme">
       <!--footer navbar-->
      </div>
     </div>
     <!--settings page-->
     <div data-role="page" id="ajustes">
-     <div data-role="header" class="barui" data-position="fixed">
-      <img src="assets/ptlogo.svg" >
+     <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
+      <img :src="logo" >
      </div>
-     <div data-role="content">
-      
+     <div data-role="content" :data-theme="jqmtheme">
+      <div data-role="controlgroup" data-type="horizontal" id="jqmtemas">
+       <p>Tema</p>
+       <label><input type="radio" name="jqmtema" id="jqmtemaa" data-theme="a" value="a" checked/>A</label>
+       <label><input type="radio" name="jqmtema" id="jqmtemab" data-theme="b" value="b"/>B</label>
+       <label><input type="radio" name="jqmtema" id="jqmtemac" data-theme="c" value="c"/>C</label>
+       <label><input type="radio" name="jqmtema" id="jqmtemad" data-theme="d" value="d"/>D</label>
+       <label><input type="radio" name="jqmtema" id="jqmtemae" data-theme="e" value="e"/>E</label>
+      </div>
      </div>
-     <div x-html="renderNav()" data-role="footer" data-position="fixed" data-id="footr">
+     <div x-html="navbar" data-role="footer" data-position="fixed" data-id="footr" :data-theme="jqmtheme">
       <!--footer navbar-->
      </div>
     </div>
     <!--edit page-->
     <div data-role="page" id="edit">
-     <div data-role="header" class="barui" data-position="fixed">
-      <img src="assets/ptlogo.svg">
+     <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
+      <img :src="logo">
       <span style="display: flex; align-items: center;">
-       <button data-role="none" class="btn" popovertarget="popadd" data-theme="cmyk" style="anchor-name:--anchor-1">+ widget</button>
-       <ul class="dropdown menu rounded-box bg-base-300 squircle" popover id="popadd" style="position-anchor:--anchor-1">
+       <button data-role="none" class="btn" popovertarget="popadd" style="anchor-name:--addwid">+ widget</button>
+       <ul class="dropdown menu rounded-box bg-base-300" popover id="popadd" style="position-anchor:--addwid">
         <li><button data-role="none" class="squircle edit-btn">Texto</button></li>
        </ul>
        <a data-role="button" data-icon="view" href="#view">Ver</a>
        </span>
-      </div>
      </div>
-     <div data-role="content">
-      
+     <div data-role="content" :data-theme="jqmtheme">
+      <ul data-role="listview" data-inset="true" id="doccreate">
+       <li><div>
+        <h1>Titulo</h1>
+        <input type="text" name="" id="" value="" />
+       </div></li>
+       <li><div>
+        <h1>Texto</h1>
+        <textarea name="" id="" rows="8" cols="40"></textarea>
+       </div></li>
+       <li><div>
+        <h1>Imagen</h1>
+        <input data-role="none" type="file" class="file-input" accept="image/*"/>
+       </div></li>
+       <li><div>
+        <h1>Etiqueta</h1>
+        <span class="barui">
+         <input type="text" name="" id="" value="" />
+         <p>Color fondo</p>
+         <button data-role="none" class="btn" popovertarget="badgecol"></button>
+        </span>
+       </div></li>
+      </ul>
      </div>
      
     </div>

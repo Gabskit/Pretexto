@@ -13,6 +13,13 @@ canvas {
 	align-items: center;
 	justify-content: space-around;
 }
+.setui {
+	display: flex !important;
+	flex: 1;
+	flex-direction: row;
+	align-items: center;
+	justify-content: start;
+}
 .squircle{
 	border-radius: 1em;
 	corner-shape: squircle !important;
