@@ -28,6 +28,7 @@ document.addEventListener('alpine:init', () => {
 			
 		}
 	}))
+	
  })
 
 function addtodoc(type) {
@@ -49,13 +50,14 @@ function logocol() {
 		logosvg = "assets/ptlogo.svg"
 	}
 }
-function jqmtemaw() {
-	let radjqm = document.querySelectorAll("input[name='jqmtema']")
-	radjqm.forEach((radio) => {
-		radio.addEventListener("change", (e) =>{
-			jqmui = e.target.value
-			console.log(jqmui)
-		})
-	})
+
+function jqmtemas() {
+	let radjqm = document.querySelector("input[name='jqmtema']:checked")
+	if (radjqm) {
+		jqmui = radjqm.getAttribute("value")
+	} else {
+		jqmui = 'a'
+	}
 	logocol()
 }
+

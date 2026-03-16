@@ -84,10 +84,10 @@
       <img :src="logo" >
      </div>
      <div data-role="content" :data-theme="jqmtheme">
-      <div data-role="controlgroup" data-type="horizontal" id="jqmtemas">
+      <div data-role="controlgroup" data-type="horizontal" id="jqm">
        <p>Tema</p>
-       <label><input type="radio" name="jqmtema" id="jqmtemaa" data-theme="a" value="a" checked/>A</label>
-       <label><input type="radio" name="jqmtema" id="jqmtemab" data-theme="b" value="b"/>B</label>
+       <label><input type="radio" name="jqmtema" id="jqmtemaa" data-theme="a" value="a" onchange="jqmtemas()" checked/>A</label>
+       <label><input type="radio" name="jqmtema" id="jqmtemab" data-theme="b" value="b" onchange="jqmtemas()"/>B</label>
        <label><input type="radio" name="jqmtema" id="jqmtemac" data-theme="c" value="c"/>C</label>
        <label><input type="radio" name="jqmtema" id="jqmtemad" data-theme="d" value="d"/>D</label>
        <label><input type="radio" name="jqmtema" id="jqmtemae" data-theme="e" value="e"/>E</label>
