@@ -7,7 +7,6 @@ const nav = `<div data-role="navbar" data-iconpos="top">
 					<li><a @click="navi(4)" :class="hili[4]" href="#ajustes" data-icon="gear">Ajustes</a></li>
 				</ul>
 			</div>`
-let jqmui = "a"
 let logosvg = "assets/ptlogo.svg"
 let doc = []
 let doci = -1
@@ -22,11 +21,20 @@ document.addEventListener('alpine:init', () => {
 		 this.hili[index] = "ui-btn-active ui-state-persist"
 		},
 		docu: docres,
-		jqmtheme: jqmui,
-		logo: logosvg,
+		jqmtheme: "a",
+		logo: "assets/ptlogo.svg",
 		dataget(index){
 			
-		}
+		},
+		logocol() {
+			if (["c","e"].includes(this.jqmtheme)) {
+				this.logo = "assets/ptlogoblack.svg"
+			} else {
+				this.logo= "assets/ptlogo.svg"
+			}
+			console.log(this.jqmtheme)
+			$( ".ui-page" ).trigger( "create" )
+		},
 	}))
 	
  })
@@ -42,22 +50,5 @@ function addtodoc(type) {
 		default:
 			// Tab to edit
 	}
-}
-function logocol() {
-	if (jqmui == ("c" || "d" || "e")) {
-		logosvg = "assets/ptlogoblack.svg"
-	} else {
-		logosvg = "assets/ptlogo.svg"
-	}
-}
-
-function jqmtemas() {
-	let radjqm = document.querySelector("input[name='jqmtema']:checked")
-	if (radjqm) {
-		jqmui = radjqm.getAttribute("value")
-	} else {
-		jqmui = 'a'
-	}
-	logocol()
 }
 
