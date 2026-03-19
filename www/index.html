@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <script src="main.js"></script>
     <script src="cdn/jquery.js"></script>
     <script src="cdn/jquery.mobile-1.3.2.min.js"></script>
     <script src="cdn/browser@4.js"></script>
     <script src="cdn/index.global.min.js"></script>
     <script src="cdn/cdn.min.js" defer></script>
     <script src="cdn/index.global.min.js"></script>
+    <script src="main.js"></script>
     <link rel="stylesheet" href="cdn/jquery.mobile-1.3.2.min.css"/>
     <link rel="stylesheet" href="cdn/daisyui@5.css"/>
     <link rel="stylesheet" href="cdn/themes.css"/>
@@ -15,14 +15,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
-  <body x-data="inicio">
+  <body x-data="inicio" x-effect="logocol()">
    <!--main page-->
     <div data-role="page" id="main">
       <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
        <img :src="logo">
-       <span>
+       <div data-role="controlgroup" data-type="horizontal">
         <button data-icon="plus" data-iconpos="notext"></button>
-       </span>
+        <a data-ajax="false" data-role="button" data-icon="gear" data-iconpos="notext" href="set.html"></a>
+       </div>
       </div>
       <div data-role="content" :data-theme="jqmtheme">
        <ul data-role="listview">
@@ -78,25 +79,6 @@
       <!--footer navbar-->
      </div>
     </div>
-    <!--settings page-->
-    <div data-role="page" id="ajustes">
-     <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
-      <img :src="logo" >
-     </div>
-     <div data-role="content" :data-theme="jqmtheme">
-      <div data-role="controlgroup" data-type="horizontal" id="jqm">
-       <p>Tema</p>
-       <label><input type="radio" name="jqmtema" id="jqmtemaa" data-theme="a" x-model="jqmtheme" value="a" @change="logocol()" checked/>A</label>
-       <label><input type="radio" name="jqmtema" id="jqmtemab" data-theme="b" x-model="jqmtheme" value="b" @change="logocol()"/>B</label>
-       <label><input type="radio" name="jqmtema" id="jqmtemac" data-theme="c" x-model="jqmtheme" value="c" @change="logocol()"/>C</label>
-       <label><input type="radio" name="jqmtema" id="jqmtemad" data-theme="d" x-model="jqmtheme" value="d" @change="logocol()"/>D</label>
-       <label><input type="radio" name="jqmtema" id="jqmtemae" data-theme="e" x-model="jqmtheme" value="e" @change="logocol()"/>E</label>
-      </div>
-     </div>
-     <div x-html="navbar" data-role="footer" data-position="fixed" data-id="footr" :data-theme="jqmtheme">
-      <!--footer navbar-->
-     </div>
-    </div>
     <!--edit page-->
     <div data-role="page" id="edit">
      <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
@@ -113,7 +95,17 @@
       <ul data-role="listview" data-inset="true" id="doccreate">
        <li><div>
         <h1>Titulo</h1>
-        <input type="text" name="" id="" value="" />
+        <span class="barui">
+         <input type="text" name="" id="" value="" />
+         <button data-role="none" class="btn" popovertarget="titlefon" style="anchor-name: --backti;">Fondo</button>
+         <ul class="dropdown menu rounded-box bg-base-200" popover id="titlefon" style="position-anchor: --backti;">
+          <li><button data-theme="a">a</button></li>
+          <li><button data-theme="b">b</button></li>
+          <li><button data-theme="c">c</button></li>
+          <li><button data-theme="d">d</button></li>
+          <li><button data-theme="e">e</button></li>
+         </ul>
+        </span>
        </div></li>
        <li><div>
         <h1>Texto</h1>
@@ -127,8 +119,11 @@
         <h1>Etiqueta</h1>
         <span class="barui">
          <input type="text" name="" id="" value="" />
-         <p>Color fondo</p>
-         <button data-role="none" class="btn" popovertarget="badgecol"></button>
+         <button data-role="none" class="btn" popovertarget="badgecol" style="anchor-name: --coleti;">Color</button>
+         <ul class="dropdown menu rounded-box bg-base-200" popover id="badgecol" style="position-anchor: --coleti;">
+          <li><button data-role="none" class="btn btn-primary" data-theme="light">Color 1</button></li>
+          <li><button data-role="none" class="btn btn-secondary" data-theme="light">Color 2</button></li>
+         </ul>
         </span>
        </div></li>
       </ul>

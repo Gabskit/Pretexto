@@ -27,10 +27,12 @@ canvas {
 .edit-btn{
 	border: 2px solid transparent !important;
 	background: linear-gradient(#000, #444) padding-box, linear-gradient(90deg, #444, #222) border-box !important;
+	color: #fff;
 }
 .edit-btn:hover{
 	border: 2px solid transparent !important;
 	background: linear-gradient(#222, #444) padding-box, linear-gradient(90deg, #000, #222) border-box !important;
+	color: #fff;
 }
 /*iconos*/
 .ui-icon-nota {
