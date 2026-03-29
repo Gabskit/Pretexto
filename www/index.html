@@ -92,10 +92,14 @@
        </span>
      </div>
      <div data-role="content" :data-theme="jqmtheme">
+      <div>
+       <label for="namedoc">Nombre:</label>
+       <input type="text" name="namedoc" id="namedoc">
+      </div>
       <ul data-role="listview" data-inset="true" id="doccreate">
        <li><div>
-        <h1>Titulo</h1>
-        <span class="barui">
+        <h1 class="setui">Titulo&nbsp<button data-icon="delete" data-iconpos="notext"></button></h1>
+        <span class="setui">
          <input type="text" name="" id="" value="" />
          <button data-role="none" class="btn" popovertarget="titlefon" style="anchor-name: --backti;">Fondo</button>
          <ul class="dropdown menu rounded-box bg-base-200" popover id="titlefon" style="position-anchor: --backti;">
@@ -108,15 +112,15 @@
         </span>
        </div></li>
        <li><div>
-        <h1>Texto</h1>
+        <h1 class="setui">Texto&nbsp<button data-icon="delete" data-iconpos="notext"></button></h1>
         <textarea name="" id="" rows="8" cols="40"></textarea>
        </div></li>
        <li><div>
-        <h1>Imagen</h1>
+        <h1 class="setui">Imagen&nbsp <button data-icon="delete" data-iconpos="notext"></button></h1>
         <input data-role="none" type="file" class="file-input" accept="image/*"/>
        </div></li>
        <li><div>
-        <h1>Etiqueta</h1>
+        <h1 class="setui">Etiqueta&nbsp<button data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="barui">
          <input type="text" name="" id="" value="" />
          <button data-role="none" class="btn" popovertarget="badgecol" style="anchor-name: --coleti;">Color</button>
@@ -126,9 +130,18 @@
          </ul>
         </span>
        </div></li>
+       <li><div>
+        <h1 class="setui">Divisor&nbsp <button data-icon="delete" data-iconpos="notext"></button></h1>
+       </div></li>
       </ul>
      </div>
-     
+     <div data-role="footer" class="barui" data-position="fixed" :data-theme="jqmtheme">
+      <input type="color" name="" id="" value="" />
+      <input type="number" name="" id="" value="" />
+      <div>
+       <button>Guardar</button>
+      </div>
+     </div>
     </div>
   </body>
 </html>
