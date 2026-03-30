@@ -1,10 +1,20 @@
+*{
+	transition: 0.3s all ease-in !important;
+}
 html, body {
  margin: 0;
  padding: 0;
-
 }
 canvas {
  display: block;
+}
+body.ui-mobile-viewport {
+ overflow-y: auto !important;
+}
+.ui-page.ui-page-active {
+ overflow-y: auto !important;
+ min-height: 100vh !important;
+ -webkit-overflow-scrolling: touch !important; 
 }
 .barui {
 	display: flex !important;
@@ -33,6 +43,9 @@ canvas {
 	border: 2px solid transparent !important;
 	background: linear-gradient(#222, #444) padding-box, linear-gradient(90deg, #000, #222) border-box !important;
 	color: #fff;
+}
+.edit-content{
+	padding: 1em !important;
 }
 .widget{
 	display: flex!important;
