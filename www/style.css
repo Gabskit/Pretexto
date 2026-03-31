@@ -31,7 +31,7 @@ body.ui-mobile-viewport {
 	justify-content: space-between;
 }
 .squircle{
-	border-radius: 1em;
+	border-radius: 1.75em !important;
 	corner-shape: squircle !important;
 }
 .edit-btn{
@@ -65,5 +65,9 @@ body.ui-mobile-viewport {
 }
 .ui-icon-view {
 	background-image: url("assets/View.svg");
+	background-size: 18px 18px;
+}
+.ui-icon-save {
+	background-image: url("assets/Save.svg");
 	background-size: 18px 18px;
 }

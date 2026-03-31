@@ -20,15 +20,12 @@
     <div data-role="page" id="main">
       <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
        <img :src="logo">
-       <div data-role="controlgroup" data-type="horizontal">
+       <div style="display: flex;">
         <button data-icon="plus" data-iconpos="notext"></button>
-        <a data-ajax="false" data-role="button" data-icon="gear" data-iconpos="notext" href="set.html"></a>
+        <a data-ajax="false" class="squircle" data-role="button" data-icon="gear" data-iconpos="notext" href="set.html"></a>
        </div>
       </div>
       <div data-role="content" :data-theme="jqmtheme">
-       <ul data-role="listview">
-        <a href="#edit">#edit</a>
-       </ul>
       </div>
       <div x-html="navbar" data-role="footer" data-position="fixed" data-id="footr" :data-theme="jqmtheme">
       <!---foter navbar--->
@@ -39,7 +36,7 @@
      <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
       <img :src="logo" >
       <span>
-       <button data-icon="plus" data-iconpos="right">Nueva nota</button>
+       <a data-role="button" href="#edit" data-icon="plus" class="squircle" data-iconpos="right">Nueva nota</a>
       </span>
      </div>
      <div data-role="content" :data-theme="jqmtheme">
@@ -82,13 +79,16 @@
     <!--edit page-->
     <div data-role="page" id="edit">
      <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
+      <div>
+       <a data-role="button" data-icon="back" data-rel="back" href="main" class="squircle">Regresar</a>
+      </div>
       <img :src="logo">
       <span style="display: flex; align-items: center;">
-       <button data-role="none" class="btn" popovertarget="popadd" style="anchor-name:--addwid">+ widget</button>
-       <ul class="dropdown menu rounded-box bg-base-300" popover id="popadd" style="position-anchor:--addwid">
+       <button data-role="none" class="btn squircle" popovertarget="popadd" style="anchor-name:--addwid">+ widget</button>
+       <ul class="dropdown menu rounded-box bg-base-300 squircle" popover id="popadd" style="position-anchor:--addwid">
         <li><button data-role="none" class="squircle edit-btn">Texto</button></li>
        </ul>
-       <a data-role="button" data-icon="view" href="#view">Ver</a>
+       <a data-role="button" data-icon="view" href="#view" class="squircle">Ver</a>
        </span>
      </div>
      <div data-role="content" class="edit-content" :data-theme="jqmtheme">
@@ -101,8 +101,8 @@
         <h1 class="setui">Titulo&nbsp<button data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
          <input type="text" name="" id="" value="" />
-         <button data-role="none" class="btn" popovertarget="titlefon" style="anchor-name: --backti;">Fondo</button>
-         <ul class="dropdown menu rounded-box bg-base-200" popover id="titlefon" style="position-anchor: --backti;">
+         <button data-role="none" class="btn squircle" popovertarget="titlefon" style="anchor-name: --backti;">Fondo</button>
+         <ul class="dropdown menu rounded-box bg-base-200 squircle" popover id="titlefon" style="position-anchor: --backti;">
           <li><button data-theme="a">a</button></li>
           <li><button data-theme="b">b</button></li>
           <li><button data-theme="c">c</button></li>
@@ -117,16 +117,21 @@
        </div></li>
        <li><div>
         <h1 class="setui">Imagen&nbsp<button data-icon="delete" data-iconpos="notext"></button></h1>
-        <input data-role="none" type="file" class="file-input" accept="image/*"/>
+        <input data-role="none" type="file" class="file-input squircle" accept="image/*"/>
        </div></li>
        <li><div>
         <h1 class="setui">Etiqueta&nbsp<button data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
          <input type="text" name="" id="" value="" />
-         <button data-role="none" class="btn" popovertarget="badgecol" style="anchor-name: --coleti;">Color</button>
-         <ul class="dropdown menu rounded-box bg-base-200" popover id="badgecol" style="position-anchor: --coleti;">
-          <li><button data-role="none" class="btn btn-primary" data-theme="light">Color 1</button></li>
-          <li><button data-role="none" class="btn btn-secondary" data-theme="light">Color 2</button></li>
+         <button data-role="none" class="btn squircle" popovertarget="badgecol" style="anchor-name: --coleti;">Color</button>
+         <ul class="dropdown menu rounded-box bg-base-200 squircle" popover id="badgecol" style="position-anchor: --coleti;">
+          <li><button data-role="none" class="btn btn-primary squircle" data-theme="light">Primario</button></li>
+          <li><button data-role="none" class="btn btn-secondary squircle" data-theme="light">Secundario</button></li>
+          <li><button data-role="none" class="btn btn-accent squircle" data-theme="light">Acento</button></li>
+         </ul>
+         <button data-role="none" class="btn squircle" popovertarget="badgethe" style="anchor-name: --themeti;"></button>
+         <ul class="dropdown menu rounded-box bg-base-200 squircle" popover id="badgethe" style="position-anchor: --themeti;">
+          <li><button data-role="none" class="btn squircle" data-theme="light">Claro</button></li>
          </ul>
         </span>
        </div></li>
@@ -137,9 +142,18 @@
      </div>
      <div data-role="footer" class="barui" data-position="fixed" data-fullscreen="true" :data-theme="jqmtheme">
       <input type="color" name="" id="" value="" />
-      <input type="number" name="" id="" value="" />
+      <div data-role="controlgroup" data-type="horizontal">
+       <label for="stng"><strong>B</strong></label>
+       <input type="checkbox" name="stng" id="stng">
+       <label for="ital"><em>I</em></label>
+       <input type="checkbox" name="ital" id="ital">
+       <label for="unde"><u>U</u></label>
+       <input type="checkbox" name="unde" id="unde">
+       <label for="stri"><s>S</s></label>
+       <input type="checkbox" name="stri" id="stri">
+      </div>
       <div>
-       <button>Guardar</button>
+       <button data-icon="save" data-iconpos="notext"></button>
       </div>
      </div>
     </div>

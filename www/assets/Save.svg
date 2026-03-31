@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Grafika (https://www.grafika.cc/) -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="55" height="55" viewBox="0 0 55 55" preserveAspectRatio="xMidYMid meet">
+	<rect x="0" y="0" width="55" height="55" opacity="0" style="fill:#FFFFFF;" />
+	<path d="M9.5,17 C9.5,12.85786438 12.85786438,9.5 17,9.5 L33.5,9.5 Q42.5,12.5 45.5,21.5 L45.5,38 C45.5,42.14213562 42.14213562,45.5 38,45.5 L17,45.5 C12.85786438,45.5 9.5,42.14213562 9.5,38 L9.5,17 Z" style="fill:none;stroke:#FFFFFF;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.14;" />
+	<path d="M21.5,9.5 L21.5,18.5 Q21.5,21.5 24.5,21.5 L30.5,21.5 Q33.5,21.5 33.5,18.5 L33.5,9.5" fill-rule="evenodd" style="fill:none;stroke:#FFFFFF;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.14;" />
+	<path d="M18.5,45.5 L18.5,33.5 Q18.5,30.5 21.5,30.5 L33.5,30.5 Q36.5,30.5 36.5,33.5 L36.5,45.5" fill-rule="evenodd" style="fill:none;stroke:#FFFFFF;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.14;" />
+</svg>
