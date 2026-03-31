@@ -80,7 +80,7 @@
     <div data-role="page" id="edit">
      <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
       <div>
-       <a data-role="button" data-icon="back" data-rel="back" href="main" class="squircle">Regresar</a>
+       <a data-role="button" data-icon="back" href="#main" class="squircle">Regresar</a>
       </div>
       <img :src="logo">
       <span style="display: flex; align-items: center;">
@@ -96,11 +96,14 @@
        <label for="namedoc">Nombre:</label>
        <input type="text" name="namedoc" id="namedoc">
       </div>
-      <ul data-role="listview" data-inset="true" id="doccreate">
-       <li><div>
-        <h1 class="setui">Titulo&nbsp<button data-icon="delete" data-iconpos="notext"></button></h1>
+      <ul data-role="listview" data-inset="true" id="docreate">
+       <li pt-type="title">
+        <h1 class="setui">Titulo<div data-role="controlgroup" data-type="horizontal">
+         <button data-icon="arrow-u" data-iconpos="notext"></button>
+         <button data-icon="arrow-d" data-iconpos="notext"></button>
+        </div><button data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
-         <input type="text" name="" id="" value="" />
+         <input type="text" name="titlewid" id="titletext" value="" />
          <button data-role="none" class="btn squircle" popovertarget="titlefon" style="anchor-name: --backti;">Fondo</button>
          <ul class="dropdown menu rounded-box bg-base-200 squircle" popover id="titlefon" style="position-anchor: --backti;">
           <li><button data-theme="a">a</button></li>
@@ -110,17 +113,42 @@
           <li><button data-theme="e">e</button></li>
          </ul>
         </span>
-       </div></li>
-       <li><div>
-        <h1 class="setui">Texto&nbsp<button data-icon="delete" data-iconpos="notext"></button></h1>
-        <textarea name="" id="" rows="8" cols="40"></textarea>
-       </div></li>
-       <li><div>
-        <h1 class="setui">Imagen&nbsp<button data-icon="delete" data-iconpos="notext"></button></h1>
+       </li>
+       <li pt-type="text">
+        <h1 class="setui">Texto<div data-role="controlgroup" data-type="horizontal">
+         <button data-icon="arrow-u" data-iconpos="notext"></button>
+         <button data-icon="arrow-d" data-iconpos="notext"></button>
+         </div><button data-icon="delete" data-iconpos="notext"></button></h1>
+        <div class="widui">
+         <textarea name="textwid" id="textext" rows="8" cols="20"></textarea>
+         <div data-role="controlgroup" data-type="horizontal">
+          <p>Posicion</p>
+          <label for="lef">◧</label>
+          <input type="radio" name="textpos" id="lef" checked>
+          <label for="cen">▣</label>
+          <input type="radio" name="textpos" id="cen">
+          <label for="righ">◨</label>
+          <input type="radio" name="textpos" id="righ">
+          <label for="jus">⬛︎</label>
+          <input type="radio" name="textpos" id="jus">
+         </div>
+        </div>
+       </li>
+       <li pt-type="image">
+        <h1 class="setui">Imagen<div data-role="controlgroup" data-type="horizontal">
+         <button data-icon="arrow-u" data-iconpos="notext"></button>
+         <button data-icon="arrow-d" data-iconpos="notext"></button>
+        </div><button data-icon="delete" data-iconpos="notext"></button></h1>
         <input data-role="none" type="file" class="file-input squircle" accept="image/*"/>
-       </div></li>
-       <li><div>
-        <h1 class="setui">Etiqueta&nbsp<button data-icon="delete" data-iconpos="notext"></button></h1>
+        <div>
+         <img src="" alt="" />
+        </div>
+       </li>
+       <li pt-type="badge">
+        <h1 class="setui">Etiqueta<div data-role="controlgroup" data-type="horizontal">
+         <button data-icon="arrow-u" data-iconpos="notext"></button>
+         <button data-icon="arrow-d" data-iconpos="notext"></button>
+         </div><button data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
          <input type="text" name="" id="" value="" />
          <button data-role="none" class="btn squircle" popovertarget="badgecol" style="anchor-name: --coleti;">Color</button>
@@ -129,16 +157,25 @@
           <li><button data-role="none" class="btn btn-secondary squircle" data-theme="light">Secundario</button></li>
           <li><button data-role="none" class="btn btn-accent squircle" data-theme="light">Acento</button></li>
          </ul>
-         <button data-role="none" class="btn squircle" popovertarget="badgethe" style="anchor-name: --themeti;"></button>
+         <button data-role="none" class="btn squircle" popovertarget="badgethe" style="anchor-name: --themeti;">Tema</button>
          <ul class="dropdown menu rounded-box bg-base-200 squircle" popover id="badgethe" style="position-anchor: --themeti;">
           <li><button data-role="none" class="btn squircle" data-theme="light">Claro</button></li>
          </ul>
         </span>
-       </div></li>
-       <li><div>
-        <h1 class="setui">Divisor&nbsp<button data-icon="delete" data-iconpos="notext"></button></h1>
-       </div></li>
+       </li>
+       <li pt-type="div">
+        <h1 class="setui">Divisor<div data-role="controlgroup" data-type="horizontal">
+         <button data-icon="arrow-u" data-iconpos="notext"></button>
+         <button data-icon="arrow-d" data-iconpos="notext"></button>
+         </div><button data-icon="delete" data-iconpos="notext"></button></h1>
+       </li>
       </ul>
+      <div id="preview">
+       
+      </div>
+      <div id="result">
+       
+      </div>
      </div>
      <div data-role="footer" class="barui" data-position="fixed" data-fullscreen="true" :data-theme="jqmtheme">
       <input type="color" name="" id="" value="" />
@@ -153,7 +190,7 @@
        <input type="checkbox" name="stri" id="stri">
       </div>
       <div>
-       <button data-icon="save" data-iconpos="notext"></button>
+       <button data-icon="save" data-iconpos="notext" @click="compilefile"></button>
       </div>
      </div>
     </div>

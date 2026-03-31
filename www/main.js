@@ -6,12 +6,13 @@ const nav = `<div data-role="navbar" data-iconpos="top">
 					<!--li><a @click="navi(3)" :class="hili[3]" href="#busca" data-icon="search">Buscar</a></li-->
 				</ul>
 			</div>`
-let doc = []
+
+let widlist
 let doci = -1
 let docres
 const keys = ["theme"]
 let preferences = {
-	theme: 'd'
+	theme: 'a'
 }
 document.addEventListener('alpine:init', () => {
 	Alpine.data('inicio', () => ({
@@ -37,6 +38,25 @@ document.addEventListener('alpine:init', () => {
 		},
 	}))
 })
+function compilefile() {
+	widlist = document.getElementById('docreate').children
+	for (var i = 0; i < widlist.length; i++) {
+		console.log(i)
+		let widgetype = widlist[i].getAttribute('pt-type')
+		console.log(widgetype)
+		let widchild = widlist[i].children
+		switch (widgetype) {
+			case 'title':
+				let subchild = widchild[1].children
+				let titletext = subchild[0].getAttribute('value')
+				console.log(titletext)
+				break;
+			
+			default:
+				// Tab to edit
+		}
+	}
+}
 function addtodoc(type) {
 	const types = []
 	doci++

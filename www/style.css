@@ -16,6 +16,9 @@ body.ui-mobile-viewport {
  min-height: 100vh !important;
  -webkit-overflow-scrolling: touch !important; 
 }
+div[data-role="content"]{
+	min-height: 100vh;
+}
 .barui {
 	display: flex !important;
 	flex: 1;
@@ -28,6 +31,13 @@ body.ui-mobile-viewport {
 	flex: 1;
 	flex-direction: row;
 	align-items: center;
+	justify-content: space-between;
+}
+.widui {
+	display: flex !important;
+	flex: 1;
+	flex-direction: column;
+	align-items: stretch;
 	justify-content: space-between;
 }
 .squircle{
