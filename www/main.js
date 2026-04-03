@@ -6,7 +6,7 @@ const nav = `<div data-role="navbar" data-iconpos="top">
 					<!--li><a @click="navi(3)" :class="hili[3]" href="#busca" data-icon="search">Buscar</a></li-->
 				</ul>
 			</div>`
-
+let doc = []
 let widlist
 let doci = -1
 let docres
@@ -38,24 +38,63 @@ document.addEventListener('alpine:init', () => {
 		},
 	}))
 })
+function makefile() {
+	let datafile = compilefile()
+}
 function compilefile() {
-	widlist = document.getElementById('docreate').children
-	for (var i = 0; i < widlist.length; i++) {
-		console.log(i)
-		let widgetype = widlist[i].getAttribute('pt-type')
-		console.log(widgetype)
-		let widchild = widlist[i].children
-		switch (widgetype) {
+	const lista = document.getElementById('docreate');
+	if (!lista) return;
+	const namefile = document.querySelector('input[name="namedoc"]')
+	const widgets = lista.children;
+	doc = [];
+	
+	
+	for (let i = 0; i < widgets.length; i++) {
+		const widget = widgets[i];
+		const tipo = widget.getAttribute('pt-type');
+		let datosWidget = { tipo: tipo };
+		
+		switch (tipo) {
 			case 'title':
-				let subchild = widchild[1].children
-				let titletext = subchild[0].getAttribute('value')
-				console.log(titletext)
+				const inputTitle = widget.querySelector('input[name="titlewid"]')
+				const styleTitle = widget.querySelector('select[name="titlestyle"]')
+				datosWidget.valor = inputTitle ? inputTitle.value : ""
+				datosWidget.estilo = styleTitle ? styleTitle.value : ""
 				break;
-			
+				
+			case 'text':
+				const areaText = widget.querySelector('textarea[name="textwid"]')
+				const alignText = widget.querySelector('input[name="textpos"]:checked')
+				datosWidget.valor = areaText ? areaText.value : ""
+				datosWidget.posicion = alignText ? alignText.value : ""
+				break;
+				
+			case 'image':
+				// Si añades un widget de imagen con un input de URL o base64
+				const inputImg = widget.querySelector('input[name="imagewid"]');
+				datosWidget.url = inputImg ? inputImg.value : "";
+				break;
+				
+			case 'badge':
+				const inputBadge = widget.querySelector('input[name="badgewid"]');
+				
+				datosWidget.etiqueta = inputBadge ? inputBadge.value : "";
+				break;
+				
+			case 'div':
+				// Los divisores no suelen tener valor, solo existen
+				datosWidget.separador = true;
+				break;
+				
 			default:
-				// Tab to edit
+				console.warn("Tipo de widget no reconocido:", tipo);
 		}
+		
+		doc.push(datosWidget);
 	}
+	
+	console.log( doc);
+	return doc;
 }
 function addtodoc(type) {
 	const types = []
