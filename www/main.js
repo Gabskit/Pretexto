@@ -93,9 +93,10 @@ function compilefile() {
 		doc.push(datosWidget);
 	}
 	
-	console.log( doc);
+	console.log(doc);
 	return doc;
 }
+
 function addtodoc(type) {
 	const types = []
 	doci++
