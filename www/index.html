@@ -4,14 +4,16 @@
     <script src="cdn/jquery.js"></script>
     <script src="cdn/jquery.mobile-1.3.2.min.js"></script>
     <script src="cdn/browser@4.js"></script>
-    <script src="cdn/index.global.min.js"></script>
     <script src="cdn/cdn.min.js" defer></script>
-    <script src="cdn/index.global.min.js"></script>
+    <script src="cdn/calendar.min.js"></script>
+    <script src="cdn/calendar.jquery.min.js"></script>
+    <script src="cdn/calendar.translations.es.js"></script>
     <script src="cdn/p5.min.js"></script>
     <script src="main.js"></script>
     <link rel="stylesheet" href="cdn/jquery.mobile-1.3.2.min.css"/>
     <link rel="stylesheet" href="cdn/daisyui@5.css"/>
     <link rel="stylesheet" href="cdn/themes.css"/>
+    <link rel="stylesheet" href="cdn/calendar.js.min.css"/>
     <link rel="stylesheet" href="style.css"/>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -51,12 +53,28 @@
     <div data-role="page" id="calen">
      <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
       <img :src="logo" >
-      <span>
+      <!--span>
        <button data-icon="plus" data-iconpos="right">Nuevo evento</button>
-      </span>
+      </span-->
      </div>
      <div data-role="content" :data-theme="jqmtheme">
-      
+      <div id="calendar"></div>
+      <script type="text/javascript">
+ $(document).on("pageshow", "#calen", function() {
+  // Evitar duplicados si la página se recarga
+  if (!$("#calendar").hasClass("calendar-initialized")) {
+   
+   const options = {
+    useLocalStorageForEvents: true,
+    // Si __TRANSLATION_OPTIONS no está definido, usa un objeto vacío
+    ...(typeof __TRANSLATION_OPTIONS !== 'undefined' ? __TRANSLATION_OPTIONS : {})
+   };
+   
+   $("#calendar").calendarJs(options);
+   $("#calendar").addClass("calendar-initialized");
+  }
+ });
+</script>
      </div>
      <div x-html="navbar" data-role="footer" data-position="fixed" data-id="footr" :data-theme="jqmtheme">
       <!--footer navbar-->
@@ -81,7 +99,7 @@
     <div data-role="page" id="edit">
      <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
       <div>
-       <a data-role="button" data-icon="back" href="#main" class="squircle">Regresar</a>
+       <a data-role="button" data-icon="back"  data-iconpos="notext" href="#" class="squircle"></a>
       </div>
       <img :src="logo">
       <span style="display: flex; align-items: center;">
@@ -134,7 +152,7 @@
          </div>
         </div>
        </li>
-       <li pt-type="image">
+       <!--li pt-type="image">
         <h1 class="setui">Imagen<div data-role="controlgroup" data-type="horizontal">
          <button data-icon="arrow-u" data-iconpos="notext"></button>
          <button data-icon="arrow-d" data-iconpos="notext"></button>
@@ -143,7 +161,7 @@
         <div>
          <img class="squircle" name="preview" src="" alt="" />
         </div>
-       </li>
+       </li-->
        <li pt-type="badge">
         <h1 class="setui">Etiqueta<div data-role="controlgroup" data-type="horizontal">
          <button data-icon="arrow-u" data-iconpos="notext"></button>

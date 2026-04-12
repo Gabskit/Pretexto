@@ -6,6 +6,7 @@ const nav = `<div data-role="navbar" data-iconpos="top">
 					<!--li><a @click="navi(3)" :class="hili[3]" href="#busca" data-icon="search">Buscar</a></li-->
 				</ul>
 			</div>`
+let eventos
 let doc = []
 let widlist
 let doci = -1
@@ -69,11 +70,11 @@ function compilefile() {
 				datosWidget.posicion = alignText ? alignText.value : ""
 				break;
 				
-			case 'image':
+			/*case 'image':
 				// Si añades un widget de imagen con un input de URL o base64
 				const inputImg = widget.querySelector('input[name="imagewid"]');
 				datosWidget.url = inputImg ? inputImg.value : "";
-				break;
+				break;*/
 				
 			case 'badge':
 				const inputBadge = widget.querySelector('input[name="badgewid"]');
@@ -119,3 +120,4 @@ function ajusdataload(key) {
 	}
 }
 preferences.theme = localStorage.getItem(keys[0])
+
