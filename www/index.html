@@ -96,7 +96,7 @@
      </div>
     </div>
     <!--edit page-->
-    <div data-role="page" id="edit">
+    <div data-role="page" id="edit" x-effect="delwidg">
      <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
       <div>
        <a data-role="button" data-icon="back"  data-iconpos="notext" href="#notas" class="squircle"></a>
@@ -105,9 +105,11 @@
       <span style="display: flex; align-items: center;">
        <button data-role="none" class="btn squircle" popovertarget="popadd" style="anchor-name:--addwid">+ widget</button>
        <ul class="dropdown menu rounded-box bg-base-300 squircle" popover id="popadd" style="position-anchor:--addwid">
-        <li><button data-role="none" class="squircle edit-btn">Texto</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('title')">Titulo</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('text')">Texto</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('badge')">Etiqueta</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('div')">Divisor</button></li>
        </ul>
-       <a data-role="button" data-icon="view" href="#view" class="squircle">Ver</a>
        </span>
      </div>
      <div data-role="content" class="edit-content" :data-theme="jqmtheme">
@@ -115,91 +117,35 @@
        <label for="namedoc">Nombre:</label>
        <input type="text" name="namedoc" id="namedoc">
       </div>
-      <ul data-role="listview" data-inset="true" id="docreate">
-       <li pt-type="title">
-        <h1 class="setui">Titulo<div data-role="controlgroup" data-type="horizontal">
-         <button data-icon="arrow-u" data-iconpos="notext"></button>
-         <button data-icon="arrow-d" data-iconpos="notext"></button>
-        </div><button data-icon="delete" data-iconpos="notext"></button></h1>
-        <span class="setui">
-         <input type="text" name="titlewid" value="" />
-         <select name="titlestyle" data-native-menu="false" data-mini="true">
-          <option value="a">a</option>
-          <option value="b">b</option>
-          <option value="c">c</option>
-          <option value="d">d</option>
-          <option value="e">e</option>
-         </select>
-        </span>
-       </li>
-       <li pt-type="text">
-        <h1 class="setui">Texto<div data-role="controlgroup" data-type="horizontal">
-         <button data-icon="arrow-u" data-iconpos="notext"></button>
-         <button data-icon="arrow-d" data-iconpos="notext"></button>
-         </div><button data-icon="delete" data-iconpos="notext"></button></h1>
-        <div class="widui">
-         <textarea name="textwid" rows="8" cols="20"></textarea>
-         <div data-role="controlgroup" data-type="horizontal">
-          <p>Posicion</p>
-          <label for="lef">◧</label>
-          <input type="radio" name="textpos" id="lef" value="l" checked>
-          <label for="cen">▣</label>
-          <input type="radio" name="textpos" id="cen" value="c">
-          <label for="righ">◨</label>
-          <input type="radio" name="textpos" id="righ" value="r">
-          <label for="jus">⬛︎</label>
-          <input type="radio" name="textpos" id="jus" value="j">
-         </div>
-        </div>
-       </li>
+      <div class="tabs tabs-lift">
+       <input data-role="none" type="radio" name="tab" class="tab" aria-label="Editar" checked>
+       <div class="tab-content bg-base-100 border-base-300 p-1">
+        <ul data-role="listview" data-inset="true" id="docreate">
+       
        <!--li pt-type="image">
         <h1 class="setui">Imagen<div data-role="controlgroup" data-type="horizontal">
          <button data-icon="arrow-u" data-iconpos="notext"></button>
          <button data-icon="arrow-d" data-iconpos="notext"></button>
-        </div><button data-icon="delete" data-iconpos="notext"></button></h1>
+        </div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
         <input data-role="none" type="file" class="file-input squircle" accept="image/*" name="imgwid" />
         <div>
          <img class="squircle" name="preview" src="" alt="" />
         </div>
        </li-->
-       <li pt-type="badge">
-        <h1 class="setui">Etiqueta<div data-role="controlgroup" data-type="horizontal">
-         <button data-icon="arrow-u" data-iconpos="notext"></button>
-         <button data-icon="arrow-d" data-iconpos="notext"></button>
-         </div><button data-icon="delete" data-iconpos="notext"></button></h1>
-        <span class="setui">
-         <input type="text" name="badwid" value="" />
-         <select name="badcol" data-native-menu="false" data-mini="true">
-          <option value="Primario">Primario</option>
-          <option value="Secundario">Secundario</option>
-          <option value="Acento">Acento</option>
-          <option value="Info">Info</option>
-          <option value="Exito">Exito</option>
-          <option value="Advertencia">Advertencia</option>
-          <option value="Error">Error</option>
-         </select>
-         <select name="badtheme" data-native-menu="false" data-mini="true">
-          <option value="Claro">Claro</option>
-          <option value="Oscuro">Oscuro</option>
-         </select>
-        </span>
-       </li>
-       <li pt-type="div">
-        <h1 class="setui">Divisor<div data-role="controlgroup" data-type="horizontal">
-         <button data-icon="arrow-u" data-iconpos="notext"></button>
-         <button data-icon="arrow-d" data-iconpos="notext"></button>
-         </div><button data-icon="delete" data-iconpos="notext"></button></h1>
-       </li>
-      </ul>
-      <div id="preview">
        
+      </ul>
+       </div>
+       <input data-role="none" type="radio" name="tab" class="tab" aria-label="Ver">
+       <div class="tab-content bg-base-100 border-base-300 p-1">
+        <div id="preview"></div>
+       </div>
       </div>
       <div id="result">
        
       </div>
      </div>
      <div data-role="footer" class="barui" data-position="fixed" data-fullscreen="true" :data-theme="jqmtheme">
-      <input type="color" name="" id="" value="" />
+      <!--input type="color" name="" id="" value="" />
       <div data-role="controlgroup" data-type="horizontal">
        <label for="stng"><strong>B</strong></label>
        <input type="checkbox" name="stng" id="stng">
@@ -209,7 +155,7 @@
        <input type="checkbox" name="unde" id="unde">
        <label for="stri"><s>S</s></label>
        <input type="checkbox" name="stri" id="stri">
-      </div>
+      </div-->
       <div>
        <button data-icon="save" data-iconpos="notext" @click="makefile"></button>
       </div>
