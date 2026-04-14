@@ -1,5 +1,6 @@
 *{
 	transition: 0.3s all ease-in !important;
+	font-family: lexend-deca !important;
 }
 html, body {
  margin: 0;
@@ -19,6 +20,11 @@ body.ui-mobile-viewport {
 div[data-role="content"]{
 	min-height: 100vh;
 }
+@font-face {
+	font-family: lexend-deca;
+	src: url("assets/LexendDeca-Regular.ttf");
+}
+
 .barui {
 	display: flex !important;
 	flex: 1;
