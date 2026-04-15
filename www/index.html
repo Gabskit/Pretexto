@@ -109,6 +109,7 @@
         <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('text')">Texto</button></li>
         <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('badge')">Etiqueta</button></li>
         <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('div')">Divisor</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('flow')">Contenedor</button></li>
        </ul>
        </span>
      </div>
@@ -132,24 +133,7 @@
          <img class="squircle" name="preview" src="" alt="" />
         </div>
        </li-->
-       <li pt-type="flow">
-        <h1 class="setui">Contenedor<!--div data-role="controlgroup" data-type="horizontal">
-         <button data-icon="arrow-u" data-iconpos="notext"></button>
-         <button data-icon="arrow-d" data-iconpos="notext"></button>
-         </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
-         <span class="setui">
-          <button data-role="none" class="btn squircle" popovertarget="popminiadd" style="anchor-name:--addminiwid">+ widget</button>
-          <ul class="dropdown menu rounded-box bg-base-300 squircle" popover id="popminiadd" style="position-anchor:--addminiwid">
-        <li><button data-role="none" class="squircle edit-btn" @click="addtolist('text', $el)">Texto</button></li>
-        <li><button data-role="none" class="squircle edit-btn" @click="addtolist('badge', $el)">Etiqueta</button></li>
-       </ul>
-         </span>
-         <div>
-          <ul data-role="listview" data-inset="true" name="minilist">
-          
-          </ul>
-         </div>
-       </li>
+       
       </ul>
        </div>
        <input data-role="none" type="radio" name="tab" class="tab" aria-label="Ver">

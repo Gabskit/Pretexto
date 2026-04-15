@@ -25,12 +25,8 @@ document.addEventListener('alpine:init', () => {
 		 this.hili = ["","","","",""]
 		 this.hili[index] = "ui-btn-active ui-state-persist"
 		},
-		docu: docres,
 		jqmtheme: preferences.theme,
 		logo: "assets/ptlogo.svg",
-		dataget(index){
-			
-		},
 		logocol() {
 			this.logo = ["c", "d", "e"].includes(this.jqmtheme) ? "assets/ptlogoblack.svg" : "assets/ptlogo.svg"
 		},
@@ -62,7 +58,7 @@ function compilefile() {
 				const styleTitle = widget.querySelector('select[name="titlestyle"]')
 				datosWidget.valor = inputTitle ? inputTitle.value : ""
 				datosWidget.estilo = styleTitle ? styleTitle.value : ""
-				docres[i] = `<div class="ui-bar-${datosWidget.estilo}">
+				docres[i] = `<div class="ui-bar-${datosWidget.estilo} p-2">
         <h1>${datosWidget.valor}</h1>
        </div>`
 				break;
@@ -134,16 +130,18 @@ function compilefile() {
 						default:
 							// Tab to edit
 					}
-					flowHtml += "</div>"
-					docres[i] = flowHtml
+					
 					datosWidget.minilista.push(innerDatosWidget)
 				}
+				flowHtml += "</div>"
+				docres[i] = flowHtml
 				break;
 			default:
 				console.warn("Tipo de widget no reconocido:", tipo);
 		}
 		doc.push(datosWidget);
 	}
+	
 	console.log(doc);
 	return doc;
 }
@@ -151,6 +149,7 @@ function addtodoc(type) {
 	const $lista = $('#docreate');
 	if (!$lista.length) return;
 	let html
+	let uid = Math.random()
 	switch (type) {
 		case 'title':
 			html = `<li pt-type="title">
@@ -196,7 +195,7 @@ function addtodoc(type) {
         <span class="setui">
          <input type="text" name="badwid" value="" />
          <select name="badcol" data-native-menu="false" data-mini="true">
-          <option value="light">Primario</option>
+          <option value="primary">Primario</option>
           <option value="secondary">Secundario</option>
           <option value="accent">Acento</option>
           <option value="info">Info</option>
@@ -219,6 +218,26 @@ function addtodoc(type) {
          <button data-icon="arrow-u" data-iconpos="notext"></button>
          <button data-icon="arrow-d" data-iconpos="notext"></button>
          </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
+       </li>`
+      break;
+      case "flow":
+      	html = `<li pt-type="flow">
+        <h1 class="setui">Contenedor<!--div data-role="controlgroup" data-type="horizontal">
+         <button data-icon="arrow-u" data-iconpos="notext"></button>
+         <button data-icon="arrow-d" data-iconpos="notext"></button>
+         </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
+         <span class="setui">
+          <button data-role="none" class="btn squircle" popovertarget="popminiadd-${uid}" style="anchor-name:--addminiwid-${uid}">+ widget</button>
+          <ul class="dropdown menu rounded-box bg-base-300 squircle" popover id="popminiadd-${uid}" style="position-anchor:--addminiwid-${uid}">
+        <li><button data-role="none" class="squircle edit-btn" @click="addtolist('text', $el)">Texto</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="addtolist('badge', $el)">Etiqueta</button></li>
+       </ul>
+         </span>
+         <div>
+          <ul data-role="listview" data-inset="true" name="minilist">
+          
+          </ul>
+         </div>
        </li>`
       break;
 		default:
@@ -267,7 +286,7 @@ function addtolist(type, element) {
         <span class="setui">
          <input type="text" name="badwid" value="" />
          <select name="badcol" data-native-menu="false" data-mini="true">
-          <option value="light">Primario</option>
+          <option value="primary">Primario</option>
           <option value="secondary">Secundario</option>
           <option value="accent">Acento</option>
           <option value="info">Info</option>
@@ -293,6 +312,13 @@ function addtolist(type, element) {
 	$list.listview().listview("refresh");
 	$nuevoItem.trigger('create')
 }
+function showres() {
+	const $res = $("#preview")
+	$res.empty()
+	for (var i = 0; i < docres.length; i++) {
+		$res.append(docres[i])
+	}
+}
 function delwidg() {
 	const lista = document.getElementById('docreate')
 	const widgets = lista.children;
@@ -306,13 +332,7 @@ function delwidg() {
 		})
 	}
 }
-function showres() {
-	let $result = $('#preview')
-	$result.empty()
-	for (var i = 0; i < docres.length; i++) {
-		$result.append(docres[i])
-	}
-}
+
 function ajusdatasave(key, data) {
 	localStorage.setItem(key, data)
 }
