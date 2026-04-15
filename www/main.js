@@ -12,7 +12,6 @@ let widlist
 let doci = -1
 let docres = []
 const keys = ["theme"]
-
 let preferences = {
 	theme: 'a'
 }
@@ -340,6 +339,6 @@ function ajusdataload(key) {
 	let data = localStorage.getItem(key)
 	if (data) {
 		return data
-	}
+	} 
 }
-preferences.theme = localStorage.getItem(keys[0])
+preferences.theme = ajusdataload(keys[0]) ||  "a"
