@@ -110,7 +110,7 @@ function compilefile() {
 					const innerType = innerWid[j].getAttribute("pt-type")
 					let innerDatosWidget = { subtipo : innerType}
 					switch (innerType) {
-						case 'minitext':
+						case 'text':
 							const areaText = miniwidget.querySelector('textarea[name="textwid"]')
 							const alignText = miniwidget.querySelector('select[name="textpos"]')
 							innerDatosWidget.valor = areaText ? areaText.value : ""
@@ -119,7 +119,7 @@ function compilefile() {
         ${innerDatosWidget.valor}
        </p>`
 							break;
-						case 'minibadge':
+						case 'badge':
 							const inputBadge = miniwidget.querySelector('input[name="badwid"]');
 							const semanBadge = miniwidget.querySelector('select[name="badcol"]')
 							const themeBadge = miniwidget.querySelector('select[name="badtheme"]')
@@ -242,7 +242,7 @@ function addtolist(type, element) {
 	let html
 	switch (type) {
 		case 'text':
-			html = `<li pt-type="minitext">
+			html = `<li pt-type="text">
         <h1 class="setui">Texto<!--div data-role="controlgroup" data-type="horizontal">
          <button data-icon="arrow-u" data-iconpos="notext"></button>
          <button data-icon="arrow-d" data-iconpos="notext"></button>
@@ -259,7 +259,7 @@ function addtolist(type, element) {
        </li>`
       break;
       case "badge":
-      	html = `<li pt-type="minibadge">
+      	html = `<li pt-type="badge">
         <h1 class="setui">Etiqueta<!--div data-role="controlgroup" data-type="horizontal">
          <button data-icon="arrow-u" data-iconpos="notext"></button>
          <button data-icon="arrow-d" data-iconpos="notext"></button>
