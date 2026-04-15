@@ -50,6 +50,7 @@ function compilefile() {
 	const namefile = document.querySelector('input[name="namedoc"]')
 	const widgets = lista.children;
 	doc = [];
+	docres = []
 	for (let i = 0; i < widgets.length; i++) {
 		const widget = widgets[i];
 		const tipo = widget.getAttribute('pt-type');
@@ -99,11 +100,48 @@ function compilefile() {
 				datosWidget.separador = true;
 				docres[i] = `<hr/>`
 				break;
-				
+			case 'flow':
+				const listFlow = widget.querySelector("ul[name='minilist']")
+				const innerWid = listFlow ? listFlow.children : []
+				let flowHtml = `<div class="setui p-2">`;
+				datosWidget.minilista = []
+				for (var j = 0; j < innerWid.length; j++) {
+					const miniwidget = innerWid[j]
+					const innerType = innerWid[j].getAttribute("pt-type")
+					let innerDatosWidget = { subtipo : innerType}
+					switch (innerType) {
+						case 'minitext':
+							const areaText = miniwidget.querySelector('textarea[name="textwid"]')
+							const alignText = miniwidget.querySelector('select[name="textpos"]')
+							innerDatosWidget.valor = areaText ? areaText.value : ""
+							innerDatosWidget.posicion = alignText ? alignText.value : ""
+							flowHtml += `<p align="${innerDatosWidget.posicion}">
+        ${innerDatosWidget.valor}
+       </p>`
+							break;
+						case 'minibadge':
+							const inputBadge = miniwidget.querySelector('input[name="badwid"]');
+							const semanBadge = miniwidget.querySelector('select[name="badcol"]')
+							const themeBadge = miniwidget.querySelector('select[name="badtheme"]')
+							innerDatosWidget.valor = inputBadge ? inputBadge.value : "";
+							innerDatosWidget.semantica = semanBadge ? semanBadge.value : ""
+							innerDatosWidget.tema = themeBadge ? themeBadge.value : ""
+							flowHtml += `<div class="badge badge-${innerDatosWidget.semantica}" data-theme="${innerDatosWidget.tema}">
+        ${innerDatosWidget.valor}
+       </div>`
+							break;
+						
+						default:
+							// Tab to edit
+					}
+					flowHtml += "</div>"
+					docres[i] = flowHtml
+					datosWidget.minilista.push(innerDatosWidget)
+				}
+				break;
 			default:
 				console.warn("Tipo de widget no reconocido:", tipo);
 		}
-		
 		doc.push(datosWidget);
 	}
 	console.log(doc);
@@ -116,10 +154,10 @@ function addtodoc(type) {
 	switch (type) {
 		case 'title':
 			html = `<li pt-type="title">
-        <h1 class="setui">Titulo<div data-role="controlgroup" data-type="horizontal">
+        <h1 class="setui">Titulo<!--div data-role="controlgroup" data-type="horizontal">
          <button data-icon="arrow-u" data-iconpos="notext"></button>
          <button data-icon="arrow-d" data-iconpos="notext"></button>
-        </div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
+        </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
          <input type="text" name="titlewid" value="" />
          <select name="titlestyle" data-native-menu="false" data-mini="true">
@@ -134,11 +172,11 @@ function addtodoc(type) {
 			break;
 		case 'text':
 			html = `<li pt-type="text">
-        <h1 class="setui">Texto<div data-role="controlgroup" data-type="horizontal">
+        <h1 class="setui">Texto<!--div data-role="controlgroup" data-type="horizontal">
          <button data-icon="arrow-u" data-iconpos="notext"></button>
          <button data-icon="arrow-d" data-iconpos="notext"></button>
-         </div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
-        <div class="setui">
+         </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
+        <span class="setui">
          <textarea name="textwid" rows="8" cols="20"></textarea>
          <select name="textpos" data-native-menu="false" data-mini="true">
           <option value="left">◧</option>
@@ -146,15 +184,15 @@ function addtodoc(type) {
           <option value="right">◨</option>
           <option value="justify">⬛︎</option>
          </select>
-        </div>
+        </span>
        </li>`
       break;
       case "badge":
       	html = `<li pt-type="badge">
-        <h1 class="setui">Etiqueta<div data-role="controlgroup" data-type="horizontal">
+        <h1 class="setui">Etiqueta<!--div data-role="controlgroup" data-type="horizontal">
          <button data-icon="arrow-u" data-iconpos="notext"></button>
          <button data-icon="arrow-d" data-iconpos="notext"></button>
-         </div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
+         </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
          <input type="text" name="badwid" value="" />
          <select name="badcol" data-native-menu="false" data-mini="true">
@@ -177,10 +215,10 @@ function addtodoc(type) {
       break;
       case "div":
       	html = `<li pt-type="div">
-        <h1 class="setui">Divisor<div data-role="controlgroup" data-type="horizontal">
+        <h1 class="setui">Divisor<!--div data-role="controlgroup" data-type="horizontal">
          <button data-icon="arrow-u" data-iconpos="notext"></button>
          <button data-icon="arrow-d" data-iconpos="notext"></button>
-         </div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
+         </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
        </li>`
       break;
 		default:
@@ -192,14 +230,76 @@ function addtodoc(type) {
 	$nuevoItem.trigger('create')
 	delwidg()
 }
-
+function addtolist(type, element) {
+	const target = element || this
+	const $container = $(target).closest('li[pt-type="flow"]');
+	const $list = $container.find("ul[name='minilist']");
+	if (!$list.length) {
+		console.error("No se encontró 'minilist'. Revisa la estructura HTML.");
+		return;
+		
+	}
+	let html
+	switch (type) {
+		case 'text':
+			html = `<li pt-type="minitext">
+        <h1 class="setui">Texto<!--div data-role="controlgroup" data-type="horizontal">
+         <button data-icon="arrow-u" data-iconpos="notext"></button>
+         <button data-icon="arrow-d" data-iconpos="notext"></button>
+         </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
+        <span class="setui">
+         <textarea name="textwid" rows="8" cols="20"></textarea>
+         <select name="textpos" data-native-menu="false" data-mini="true">
+          <option value="left">◧</option>
+          <option value="center">▣</option>
+          <option value="right">◨</option>
+          <option value="justify">⬛︎</option>
+         </select>
+        </span>
+       </li>`
+      break;
+      case "badge":
+      	html = `<li pt-type="minibadge">
+        <h1 class="setui">Etiqueta<!--div data-role="controlgroup" data-type="horizontal">
+         <button data-icon="arrow-u" data-iconpos="notext"></button>
+         <button data-icon="arrow-d" data-iconpos="notext"></button>
+         </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
+        <span class="setui">
+         <input type="text" name="badwid" value="" />
+         <select name="badcol" data-native-menu="false" data-mini="true">
+          <option value="light">Primario</option>
+          <option value="secondary">Secundario</option>
+          <option value="accent">Acento</option>
+          <option value="info">Info</option>
+          <option value="success">Exito</option>
+          <option value="warning">Advertencia</option>
+          <option value="error">Error</option>
+         </select>
+         <select name="badtheme" data-native-menu="false" data-mini="true">
+          <option value="light">Claro</option>
+          <option value="dark">Oscuro</option>
+          <option value="cupcake">Cupcake</option>
+          <option value="bumblebee">Bumblebee</option>
+         </select>
+        </span>
+       </li>`
+      break;
+    
+		default:
+			// Tab to edit
+	}
+	const $nuevoItem = $(html)
+	$list.append($nuevoItem);
+	$list.listview().listview("refresh");
+	$nuevoItem.trigger('create')
+}
 function delwidg() {
 	const lista = document.getElementById('docreate')
 	const widgets = lista.children;
 	for (var i = 0; i < widgets.length; i++) {
 		widgets[i].addEventListener('click', (e) => {
 			let btn = e.target.getAttribute("name")
-			if (btn == 'delwid'){
+			if (btn == 'delwid') {
 				e.target.closest("li").remove()
 				$("#docreate").listview('refresh')
 			}
