@@ -165,7 +165,7 @@ async function savefile(data) {
         await Filesystem.requestPermissions();
       }
       await Filesystem.writeFile({
-        path: `Pretexto/${data.metadato.name}.json`,
+        path: `${data.metadato.name}.json`,
         data: JSON.stringify(data),
         directory: 'DATA',
         encoding: 'utf8',
@@ -194,29 +194,52 @@ async function savefile(data) {
   }
 }
 async function abrirArchivo() {
-  console.log(fileHandle)
+  const isCapacitor = window.hasOwnProperty('Capacitor');
+  
+  if (isCapacitor) {
     try {
-      //$.mobile.loading('show')
-        [fileHandle] = await window.showOpenFilePicker({
-            types: [{
-                description: 'Notas Pretexto',
-                accept: { 'application/json': ['.json'] }
-            }],
-            multiple: false
-        });
-        const file = await fileHandle.getFile();
-        const contenido = await file.text();
-        const nota = JSON.parse(contenido);
-        if (nota.metadato.filetype === "pretexto-note") {
-            cargarNotaEnEditor(nota);
-        } else {
-            alert("Archivo invalido");
-        }
-        
+      const { Filesystem } = Capacitor.Plugins;
+      
+      // 1. Listar todos los archivos en la carpeta DATA
+      const result = await Filesystem.readdir({
+        path: '',
+        directory: 'DATA'
+      });
+      
+      // Si no hay archivos, avisar
+      if (result.files.length === 0) {
+        alert("No hay notas guardadas.");
+        return;
+      }
+      
+      // 2. Por ahora, vamos a abrir el primer archivo de la lista
+      // (Luego puedes hacer un menú para elegir entre result.files)
+      const primerArchivo = result.files[0].name || result.files[0];
+      
+      const contenido = await Filesystem.readFile({
+        path: primerArchivo,
+        directory: 'DATA',
+        encoding: 'utf8'
+      });
+      
+      const nota = JSON.parse(contenido.data);
+      cargarNotaEnEditor(nota);
+      alert("Cargada: " + nota.metadato.name);
+      
     } catch (err) {
-        console.error( err);
+      alert("Error al leer archivos: " + err.message);
     }
-    //$.mobile.loading('hide')
+  } else {
+    // Lógica original de PC si no es Capacitor
+    try {
+      [fileHandle] = await window.showOpenFilePicker({
+        types: [{ accept: { 'application/json': ['.json'] } }]
+      });
+      const file = await fileHandle.getFile();
+      const text = await file.text();
+      cargarNotaEnEditor(JSON.parse(text));
+    } catch (e) {}
+  }
 }
 function cargarNotaEnEditor(nota) {
     $("#namedoc").val(nota.metadato.name);
