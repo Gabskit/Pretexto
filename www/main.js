@@ -150,37 +150,44 @@ function compilefile() {
 	console.log(file)
 	return file;
 }
-function savefile(data) {
-    if (!data) return;
-
+async function savefile(data) {
+  if (!data) return;
+  
+  // Detectar si estamos en Capacitor o en Navegador
+  const isCapacitor = window.hasOwnProperty('Capacitor');
+  
+  if (isCapacitor) {
+    // --- LÓGICA PARA CELULAR (Capacitor) ---
     try {
-        const contenido = JSON.stringify(data, null, 2);
-        // Aseguramos que el nombre tenga .json
-        const nombreBase = data.metadato.name.trim() || "nota";
-        const nombreArchivo = nombreBase.endsWith('.json') ? nombreBase : nombreBase + ".json";
-
-        const blob = new Blob([contenido], { type: 'application/json' });
-        const url = window.URL.createObjectURL(blob);
-        
-        const link = document.createElement('a');
-        link.style.display = 'none'; // Asegurar que sea invisible
-        link.href = url;
-        link.setAttribute('download', nombreArchivo); // Atributo clave
-        
-        // Es vital añadirlo al DOM antes del click
-        document.body.appendChild(link);
-        link.click();
-        
-        // Limpieza con retraso para que el navegador procese el click
-        setTimeout(() => {
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-        }, 100);
-
-        console.log("Descarga iniciada: " + nombreArchivo);
+      const { Filesystem } = Capacitor.Plugins;
+      await Filesystem.writeFile({
+        path: `Pretexto/${data.metadato.name}.json`,
+        data: JSON.stringify(data),
+        directory: 'DOCUMENTS',
+        encoding: 'utf8',
+        recursive: true // Crea la carpeta si no existe
+      });
+      alert("Guardado en Documentos/Pretexto");
     } catch (e) {
-        alert("Error al generar descarga: " + e.message);
+      alert("Error en Capacitor: " + e.message);
     }
+  } else {
+    // --- LÓGICA PARA IDE / NAVEGADOR (Tu código actual) ---
+    try {
+      if (!fileHandle) {
+        fileHandle = await window.showSaveFilePicker({
+          suggestedName: (data.metadato.name || "nota") + ".json",
+          types: [{ accept: { 'application/json': ['.json'] } }]
+        });
+      }
+      const writable = await fileHandle.createWritable();
+      await writable.write(JSON.stringify(data));
+      await writable.close();
+      alert("Guardado en disco");
+    } catch (e) {
+      if (e.name !== 'AbortError') alert("Error: " + e.message);
+    }
+  }
 }
 async function abrirArchivo() {
     try {
