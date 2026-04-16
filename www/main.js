@@ -167,7 +167,7 @@ async function savefile(data) {
       await Filesystem.writeFile({
         path: `Pretexto/${data.metadato.name}.json`,
         data: JSON.stringify(data),
-        directory: 'Documents',
+        directory: 'DOCUMENTS',
         encoding: 'utf8',
         recursive: true // Crea la carpeta si no existe
       });
