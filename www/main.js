@@ -199,28 +199,22 @@ async function abrirArchivo() {
   if (isCapacitor) {
     try {
       const { Filesystem } = Capacitor.Plugins;
-      
-      // 1. Listar todos los archivos en la carpeta DATA
       const result = await Filesystem.readdir({
         path: '',
         directory: 'DATA'
       });
-      
-      // Si no hay archivos, avisar
       if (result.files.length === 0) {
         alert("No hay notas guardadas.");
         return;
       }
-      
-      // 2. Por ahora, vamos a abrir el primer archivo de la lista
-      // (Luego puedes hacer un menú para elegir entre result.files)
-      const primerArchivo = result.files[0].name || result.files[0];
-      
+      const archivoInfo = result.files[0];
+      const nombreArchivo = typeof archivoInfo === 'object' ? archivoInfo.name : archivoInfo;
       const contenido = await Filesystem.readFile({
-        path: primerArchivo,
+        path: nombreArchivo,
         directory: 'DATA',
         encoding: 'utf8'
-      });
+        
+      }); 
       
       const nota = JSON.parse(contenido.data);
       cargarNotaEnEditor(nota);
