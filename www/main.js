@@ -245,13 +245,13 @@ function cargarNotaEnEditor(nota) {
         const $ultimoMini = $miniList.children().last();
         switch (mini.subtipo) {
         	case 'text':
-        		$ultimoWidget.find('textarea[name="textwid"]').val(mini.valor);
-            $ultimoWidget.find('select[name="textpos"]').val(mini.posicion).selectmenu('refresh');
+        		$ultimoMini.find('textarea[name="textwid"]').val(mini.valor);
+            $ultimoMini.find('select[name="textpos"]').val(mini.posicion).selectmenu('refresh');
         		break;
         	case 'badge':
-        		$ultimoWidget.find('input[name="badwid"]').val(mini.valor)
-        		$ultimoWidget.find('select[name="badcol"]').val(mini.semantica).selectmenu('refresh');
-            $ultimoWidget.find('select[name="badtheme"]').val(mini.tema).selectmenu('refresh')
+        		$ultimoMini.find('input[name="badwid"]').val(mini.valor)
+        		$ultimoMini.find('select[name="badcol"]').val(mini.semantica).selectmenu('refresh');
+            $ultimoMini.find('select[name="badtheme"]').val(mini.tema).selectmenu('refresh')
         		break;
         
         	default:
