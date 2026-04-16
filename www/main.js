@@ -33,8 +33,10 @@ document.addEventListener('alpine:init', () => {
 	}))
 })
 function makefile() {
+  $.mobile.loading('show')
 	let datafile = compilefile()
 	showres()
+	$.mobile.loading('hide')
 	savefile(datafile)
 }
 function compilefile() {
@@ -99,7 +101,6 @@ function compilefile() {
 				
 			case 'div':
 				// Los divisores no suelen tener valor, solo existen
-				datosWidget.separador = true;
 				docres[i] = `<hr/>`
 				break;
 			case 'flow':
@@ -147,7 +148,6 @@ function compilefile() {
 		}
 		file.dataWid.push(datosWidget);
 	}
-	console.log(file)
 	return file;
 }
 async function savefile(data) {
@@ -190,7 +190,9 @@ async function savefile(data) {
   }
 }
 async function abrirArchivo() {
+  console.log(fileHandle)
     try {
+      //$.mobile.loading('show')
         [fileHandle] = await window.showOpenFilePicker({
             types: [{
                 description: 'Notas Pretexto',
@@ -201,73 +203,74 @@ async function abrirArchivo() {
         const file = await fileHandle.getFile();
         const contenido = await file.text();
         const nota = JSON.parse(contenido);
-        if (nota.metadato && nota.metadato.filetype === "pretexto-note") {
+        if (nota.metadato.filetype === "pretexto-note") {
             cargarNotaEnEditor(nota);
         } else {
             alert("Archivo invalido");
         }
+        
     } catch (err) {
-        console.error("Carga cancelada o error:", err);
+        console.error( err);
     }
+    //$.mobile.loading('hide')
 }
 function cargarNotaEnEditor(nota) {
     $("#namedoc").val(nota.metadato.name);
     $("h1[name='filename']").text(nota.metadato.name);
     const $lista = $('#docreate');
+    let wid = nota.dataWid
     $lista.empty();
-    docres = [];
-    nota.dataWid.forEach(datos => {
-        addtodoc(datos.tipo);
-        const $ultimoWidget = $lista.children().last();
-        switch (datos.tipo) {
-        	case 'title':
-        		$ultimoWidget.find('input[name="titlewid"]').val(datos.valor);
-            $ultimoWidget.find('select[name="titlestyle"]').val(datos.estilo).selectmenu('refresh');
-        		break;
-        	case 'text':
-        		$ultimoWidget.find('textarea[name="textwid"]').val(datos.valor);
-            $ultimoWidget.find('select[name="textpos"]').val(datos.posicion).selectmenu('refresh');
-        		break;
-        	case 'badge':
-        		$ultimoWidget.find('input[name="badwid"]').val(datos.valor)
-        		$ultimoWidget.find('select[name="badcol"]').val(datos.semantica).selectmenu('refresh');
-            $ultimoWidget.find('select[name="badtheme"]').val(datos.tema).selectmenu('refresh');
-        		break;
-        	case 'div':
-        		//omitible
-        		break;
-        	case 'flow':
-        		addtodoc('flow');
-    const $contenedor = $('#docreate').children().last();
-    const $miniList = $contenedor.find("ul[name='minilist']");
-    datos.minilista.forEach(mini => {
-        addtolist(mini.subtipo, $contenedor.find('button[popovertarget^="popminiadd"]')[0]);
-        const $ultimoMini = $miniList.children().last();
-        switch (mini.subtipo) {
-        	case 'text':
-        		$ultimoMini.find('textarea[name="textwid"]').val(mini.valor);
-            $ultimoMini.find('select[name="textpos"]').val(mini.posicion).selectmenu('refresh');
-        		break;
-        	case 'badge':
-        		$ultimoMini.find('input[name="badwid"]').val(mini.valor)
-        		$ultimoMini.find('select[name="badcol"]').val(mini.semantica).selectmenu('refresh');
-            $ultimoMini.find('select[name="badtheme"]').val(mini.tema).selectmenu('refresh')
-        		break;
-        
-        	default:
-        		// Tab to edit
+    for (var i = 0; i < wid.length; i++) {
+      let typewid = wid[i].tipo
+      addtodoc(typewid)
+      let actwid = $lista.children().last()
+        switch (typewid) {
+          case 'title':
+            actwid.find("input[name='titlewid']").val(wid[i].valor)
+            actwid.find("select[name='titlestyle']").val(wid[i].estilo)
+            break;
+          case 'text':
+            actwid.find("textarea[name='textwid']").val(wid[i].valor)
+            actwid.find("select[name='textpos']").val(wid[i].posicion)
+            break;
+          case 'badge':
+            actwid.find("input[name='badwid']").val(wid[i].valor)
+            actwid.find("select[name='badcol']").val(wid[i].semantica)
+            actwid.find("select[name='badtheme']").val(wid[i].tema)
+            break;
+          case 'div':
+            // omitible
+            break;
+          case 'flow':
+            let miniwid = wid[i].minilista
+            for (var j = 0; j < miniwid.length; j++) {
+              let minitypewid = miniwid[j].subtipo
+              let addbtn = actwid.find("button[name='addwid']")
+              addtolist(minitypewid, addbtn)
+              let miniactwid = actwid.children().last()
+              switch (minitypewid) {
+                case 'text':
+                  miniactwid.find("textarea[name='textwid']").val(miniwid[j].valor)
+                  miniactwid.find("select[name='textpos']").val(miniwid[j].posicion)
+                  break;
+                case 'badge':
+                  miniactwid.find("input[name='badwid']").val(miniwid[j].valor)
+                  miniactwid.find("select[name='badcol']").val(miniwid[j].semantica)
+                  miniactwid.find("select[name='badtheme']").val(miniwid[j].tema)
+                  break;
+                
+                default:
+                  // Tab to edit
+              }
+            }
+            break;
+          
+          default:
+            // Tab to edit
         }
-    });
-    $miniList.listview("refresh");
-        		break;
-        	
-        	default:
-        		// Tab to edit
-        }
-    });
+    }
     compilefile(); 
     showres();
-    $lista.listview("refresh");
     $.mobile.changePage("#view");
 }
 function addtodoc(type) {
@@ -352,7 +355,7 @@ function addtodoc(type) {
          <button data-icon="arrow-d" data-iconpos="notext"></button>
          </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
          <span class="setui">
-          <button data-role="none" class="btn squircle" popovertarget="popminiadd-${uid}" style="anchor-name:--addminiwid-${uid}">+ widget</button>
+          <button data-role="none" class="btn squircle" popovertarget="popminiadd-${uid}" name="addwid" style="anchor-name:--addminiwid-${uid}">+ widget</button>
           <ul class="dropdown menu rounded-box bg-base-300 squircle" popover id="popminiadd-${uid}" style="position-anchor:--addminiwid-${uid}">
         <li><button data-role="none" class="squircle edit-btn" @click="addtolist('text', $el)">Texto</button></li>
         <li><button data-role="none" class="squircle edit-btn" @click="addtolist('badge', $el)">Etiqueta</button></li>
@@ -369,8 +372,10 @@ function addtodoc(type) {
 	}
 	const $nuevoItem = $(html);
 	$lista.append($nuevoItem);
-	$lista.listview("refresh");
-	$nuevoItem.trigger('create')
+	setTimeout(() => {
+	  $lista.listview("refresh");
+	  $nuevoItem.trigger('create')
+	},5)
 	delwidg()
 }
 function addtolist(type, element) {
@@ -433,8 +438,10 @@ function addtolist(type, element) {
 	}
 	const $nuevoItem = $(html)
 	$list.append($nuevoItem);
-	$list.listview().listview("refresh");
-	$nuevoItem.trigger('create')
+	setTimeout(() => {
+	  $list.listview().listview("refresh");
+	  $nuevoItem.trigger('create')
+	},5)
 }
 function showres() {
 	const $res = $("#preview1")
