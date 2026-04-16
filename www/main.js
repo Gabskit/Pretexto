@@ -6,15 +6,12 @@ const nav = `<div data-role="navbar" data-iconpos="top">
 					<!--li><a @click="navi(3)" :class="hili[3]" href="#busca" data-icon="search">Buscar</a></li-->
 				</ul>
 			</div>`
-let eventos
-let doc = []
-let widlist
-let doci = -1
 let docres = []
 const keys = ["theme"]
 let preferences = {
 	theme: 'a'
 }
+let fileHandle = null
 document.addEventListener('alpine:init', () => {
 	Alpine.data('inicio', () => ({
 		hili: ["ui-btn-active ui-state-persist","","","",""],
@@ -38,17 +35,27 @@ document.addEventListener('alpine:init', () => {
 function makefile() {
 	let datafile = compilefile()
 	showres()
+	savefile(datafile)
 }
 function compilefile() {
 	const lista = document.getElementById('docreate');
 	if (!lista) return;
 	const namefile = document.querySelector('input[name="namedoc"]')
 	const widgets = lista.children;
-	doc = [];
 	docres = []
+	let file = {
+		metadato: {
+			filetype: "pretexto-note",
+			ver: "1.0",
+			date: new Date().toDateString(),
+			name: document.querySelector("#namedoc").value || "Sin titulo",
+		},
+		dataWid: []
+	}
 	for (let i = 0; i < widgets.length; i++) {
 		const widget = widgets[i];
 		const tipo = widget.getAttribute('pt-type');
+		
 		let datosWidget = { tipo: tipo };
 		
 		switch (tipo) {
@@ -67,7 +74,7 @@ function compilefile() {
 				const alignText = widget.querySelector('select[name="textpos"]')
 				datosWidget.valor = areaText ? areaText.value : ""
 				datosWidget.posicion = alignText ? alignText.value : ""
-				docres[i] = `<p align="${datosWidget.posicion}">
+				docres[i] = `<p align="${datosWidget.posicion}" style="color: #000;" class="p-1">
         ${datosWidget.valor}
        </p>`
 				break;
@@ -98,7 +105,7 @@ function compilefile() {
 			case 'flow':
 				const listFlow = widget.querySelector("ul[name='minilist']")
 				const innerWid = listFlow ? listFlow.children : []
-				let flowHtml = `<div class="setui p-2">`;
+				let flowHtml = `<div class="flowui p-2">`;
 				datosWidget.minilista = []
 				for (var j = 0; j < innerWid.length; j++) {
 					const miniwidget = innerWid[j]
@@ -110,7 +117,7 @@ function compilefile() {
 							const alignText = miniwidget.querySelector('select[name="textpos"]')
 							innerDatosWidget.valor = areaText ? areaText.value : ""
 							innerDatosWidget.posicion = alignText ? alignText.value : ""
-							flowHtml += `<p align="${innerDatosWidget.posicion}">
+							flowHtml += `<p align="${innerDatosWidget.posicion}" style="color: #000;" class="p-1">
         ${innerDatosWidget.valor}
        </p>`
 							break;
@@ -138,11 +145,123 @@ function compilefile() {
 			default:
 				console.warn("Tipo de widget no reconocido:", tipo);
 		}
-		doc.push(datosWidget);
+		file.dataWid.push(datosWidget);
 	}
-	
-	console.log(doc);
-	return doc;
+	console.log(file)
+	return file;
+}
+function savefile(data) {
+    if (!data) return;
+
+    try {
+        const contenido = JSON.stringify(data, null, 2);
+        // Aseguramos que el nombre tenga .json
+        const nombreBase = data.metadato.name.trim() || "nota";
+        const nombreArchivo = nombreBase.endsWith('.json') ? nombreBase : nombreBase + ".json";
+
+        const blob = new Blob([contenido], { type: 'application/json' });
+        const url = window.URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.style.display = 'none'; // Asegurar que sea invisible
+        link.href = url;
+        link.setAttribute('download', nombreArchivo); // Atributo clave
+        
+        // Es vital añadirlo al DOM antes del click
+        document.body.appendChild(link);
+        link.click();
+        
+        // Limpieza con retraso para que el navegador procese el click
+        setTimeout(() => {
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        }, 100);
+
+        console.log("Descarga iniciada: " + nombreArchivo);
+    } catch (e) {
+        alert("Error al generar descarga: " + e.message);
+    }
+}
+async function abrirArchivo() {
+    try {
+        [fileHandle] = await window.showOpenFilePicker({
+            types: [{
+                description: 'Notas Pretexto',
+                accept: { 'application/json': ['.json'] }
+            }],
+            multiple: false
+        });
+        const file = await fileHandle.getFile();
+        const contenido = await file.text();
+        const nota = JSON.parse(contenido);
+        if (nota.metadato && nota.metadato.filetype === "pretexto-note") {
+            cargarNotaEnEditor(nota);
+        } else {
+            alert("Archivo invalido");
+        }
+    } catch (err) {
+        console.error("Carga cancelada o error:", err);
+    }
+}
+function cargarNotaEnEditor(nota) {
+    $("#namedoc").val(nota.metadato.name);
+    $("h1[name='filename']").text(nota.metadato.name);
+    const $lista = $('#docreate');
+    $lista.empty();
+    docres = [];
+    nota.dataWid.forEach(datos => {
+        addtodoc(datos.tipo);
+        const $ultimoWidget = $lista.children().last();
+        switch (datos.tipo) {
+        	case 'title':
+        		$ultimoWidget.find('input[name="titlewid"]').val(datos.valor);
+            $ultimoWidget.find('select[name="titlestyle"]').val(datos.estilo).selectmenu('refresh');
+        		break;
+        	case 'text':
+        		$ultimoWidget.find('textarea[name="textwid"]').val(datos.valor);
+            $ultimoWidget.find('select[name="textpos"]').val(datos.posicion).selectmenu('refresh');
+        		break;
+        	case 'badge':
+        		$ultimoWidget.find('input[name="badwid"]').val(datos.valor)
+        		$ultimoWidget.find('select[name="badcol"]').val(datos.semantica).selectmenu('refresh');
+            $ultimoWidget.find('select[name="badtheme"]').val(datos.tema).selectmenu('refresh');
+        		break;
+        	case 'div':
+        		//omitible
+        		break;
+        	case 'flow':
+        		addtodoc('flow');
+    const $contenedor = $('#docreate').children().last();
+    const $miniList = $contenedor.find("ul[name='minilist']");
+    datos.minilista.forEach(mini => {
+        addtolist(mini.subtipo, $contenedor.find('button[popovertarget^="popminiadd"]')[0]);
+        const $ultimoMini = $miniList.children().last();
+        switch (mini.subtipo) {
+        	case 'text':
+        		$ultimoWidget.find('textarea[name="textwid"]').val(mini.valor);
+            $ultimoWidget.find('select[name="textpos"]').val(mini.posicion).selectmenu('refresh');
+        		break;
+        	case 'badge':
+        		$ultimoWidget.find('input[name="badwid"]').val(mini.valor)
+        		$ultimoWidget.find('select[name="badcol"]').val(mini.semantica).selectmenu('refresh');
+            $ultimoWidget.find('select[name="badtheme"]').val(mini.tema).selectmenu('refresh')
+        		break;
+        
+        	default:
+        		// Tab to edit
+        }
+    });
+    $miniList.listview("refresh");
+        		break;
+        	
+        	default:
+        		// Tab to edit
+        }
+    });
+    compilefile(); 
+    showres();
+    $lista.listview("refresh");
+    $.mobile.changePage("#view");
 }
 function addtodoc(type) {
 	const $lista = $('#docreate');
@@ -157,7 +276,7 @@ function addtodoc(type) {
          <button data-icon="arrow-d" data-iconpos="notext"></button>
         </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
-         <input type="text" name="titlewid" value="" />
+         <input type="text" name="titlewid" value="" class="squircle"/>
          <select name="titlestyle" data-native-menu="false" data-mini="true">
           <option value="a">a</option>
           <option value="b">b</option>
@@ -175,7 +294,7 @@ function addtodoc(type) {
          <button data-icon="arrow-d" data-iconpos="notext"></button>
          </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
-         <textarea name="textwid" rows="8" cols="20"></textarea>
+         <textarea name="textwid" rows="8" cols="20" class="squircle"></textarea>
          <select name="textpos" data-native-menu="false" data-mini="true">
           <option value="left">◧</option>
           <option value="center">▣</option>
@@ -192,7 +311,7 @@ function addtodoc(type) {
          <button data-icon="arrow-d" data-iconpos="notext"></button>
          </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
-         <input type="text" name="badwid" value="" />
+         <input type="text" name="badwid" value="" class="squircle"/>
          <select name="badcol" data-native-menu="false" data-mini="true">
           <option value="primary">Primario</option>
           <option value="secondary">Secundario</option>
@@ -233,8 +352,7 @@ function addtodoc(type) {
        </ul>
          </span>
          <div>
-          <ul data-role="listview" data-inset="true" name="minilist">
-          
+          <ul data-role="listview" data-inset="true" name="minilist" class="squircle">
           </ul>
          </div>
        </li>`
@@ -266,7 +384,7 @@ function addtolist(type, element) {
          <button data-icon="arrow-d" data-iconpos="notext"></button>
          </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
-         <textarea name="textwid" rows="8" cols="20"></textarea>
+         <textarea name="textwid" rows="8" cols="20" class="squircle"></textarea>
          <select name="textpos" data-native-menu="false" data-mini="true">
           <option value="left">◧</option>
           <option value="center">▣</option>
@@ -283,7 +401,7 @@ function addtolist(type, element) {
          <button data-icon="arrow-d" data-iconpos="notext"></button>
          </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
-         <input type="text" name="badwid" value="" />
+         <input type="text" name="badwid" value="" class="squircle"/>
          <select name="badcol" data-native-menu="false" data-mini="true">
           <option value="primary">Primario</option>
           <option value="secondary">Secundario</option>
@@ -312,10 +430,13 @@ function addtolist(type, element) {
 	$nuevoItem.trigger('create')
 }
 function showres() {
-	const $res = $("#preview")
+	const $res = $("#preview1")
+	const $view = $("#preview2")
 	$res.empty()
+	$view.empty()
 	for (var i = 0; i < docres.length; i++) {
 		$res.append(docres[i])
+		$view.append(docres[i])
 	}
 }
 function delwidg() {

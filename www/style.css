@@ -1,6 +1,7 @@
 *{
 	transition: 0.3s all ease-in !important;
 	font-family: lexend-deca !important;
+	
 }
 html, body {
  margin: 0;
@@ -24,7 +25,9 @@ div[data-role="content"]{
 	font-family: lexend-deca;
 	src: url("assets/LexendDeca-Regular.ttf");
 }
-
+hr{
+	color: #000 !important;
+}
 .barui {
 	display: flex !important;
 	flex: 1;
@@ -34,10 +37,16 @@ div[data-role="content"]{
 }
 .setui {
 	display: flex !important;
-	flex: 1;
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
+}
+.flowui {
+	display: flex !important;
+	flex: 1;
+	flex-direction: row;
+	align-items: center;
+	justify-content: start;
 }
 .widui {
 	display: flex !important;
@@ -47,7 +56,7 @@ div[data-role="content"]{
 	justify-content: space-between;
 }
 .squircle{
-	border-radius: 1.75em !important;
+	border-radius: 2em !important;
 	corner-shape: squircle !important;
 }
 .edit-btn{
@@ -85,5 +94,9 @@ div[data-role="content"]{
 }
 .ui-icon-save {
 	background-image: url("assets/Save.svg");
+	background-size: 18px 18px;
+}
+.ui-icon-folder {
+	background-image: url("assets/Folder.svg");
 	background-size: 18px 18px;
 }

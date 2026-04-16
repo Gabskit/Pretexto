@@ -38,8 +38,9 @@
     <div data-role="page" id="notas">
      <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
       <img :src="logo" >
-      <span>
-       <a data-role="button" href="#edit" data-icon="plus" class="squircle" data-iconpos="right">Nueva nota</a>
+      <span class="setui">
+       <button data-role="button" data-icon="folder" onclick="abrirArchivo()">Abrir</button>
+       <a data-role="button" href="#edit" data-icon="plus" class="squircle" data-iconpos="right" data-transition="none">Nueva nota</a>
       </span>
      </div>
      <div data-role="content" :data-theme="jqmtheme">
@@ -98,9 +99,9 @@
     <!--edit page-->
     <div data-role="page" id="edit" x-effect="delwidg">
      <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
-      <div>
-       <a data-role="button" data-icon="back"  data-iconpos="notext" href="#notas" class="squircle"></a>
-      </div>
+      <span>
+       <a data-role="button" data-icon="back"  data-iconpos="notext" href="#notas" class="squircle" data-transition="none"></a>
+      </span>
       <img :src="logo">
       <span style="display: flex; align-items: center;">
        <button data-role="none" class="btn squircle" popovertarget="popadd" style="anchor-name:--addwid">+ widget</button>
@@ -111,17 +112,18 @@
         <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('div')">Divisor</button></li>
         <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('flow')">Contenedor</button></li>
        </ul>
-       </span>
+       <a data-role="button" data-icon="view" data-iconpos="notext" href="#view" class="squircle" data-transition="none"></a>
+      </span>
      </div>
      <div data-role="content" class="edit-content" :data-theme="jqmtheme">
       <div>
        <label for="namedoc">Nombre:</label>
        <input type="text" name="namedoc" id="namedoc">
       </div>
-      <div class="tabs tabs-lift">
-       <input data-role="none" type="radio" name="tab" class="tab" aria-label="Editar" checked>
-       <div class="tab-content bg-base-100 border-base-300 p-1">
-        <ul data-role="listview" data-inset="true" id="docreate">
+      <div class="tabs tabs-box squircle">
+       <input data-role="none" type="radio" name="tab" class="tab squircle" aria-label="Editar" style="color: #000;" checked>
+       <div class="tab-content bg-base-100 border-base-300 p-1 squircle">
+        <ul data-role="listview" data-inset="true" id="docreate" class="squircle">
        
        <!--li pt-type="image">
         <h1 class="setui">Imagen<div data-role="controlgroup" data-type="horizontal">
@@ -136,16 +138,16 @@
        
       </ul>
        </div>
-       <input data-role="none" type="radio" name="tab" class="tab" aria-label="Ver">
-       <div class="tab-content bg-base-100 border-base-300 p-1">
-        <div id="preview"></div>
+       <input data-role="none" type="radio" name="tab" class="tab squircle" aria-label="Ver" style="color: #000;">
+       <div class="tab-content bg-base-100 border-base-300 p-1 squircle">
+        <div id="preview1"></div>
        </div>
       </div>
       <div id="result">
        
       </div>
      </div>
-     <div data-role="footer" class="barui" data-position="fixed" data-fullscreen="true" :data-theme="jqmtheme">
+     <div data-role="footer" class="barui" data-position="fixed" :data-theme="jqmtheme">
       <!--input type="color" name="" id="" value="" />
       <div data-role="controlgroup" data-type="horizontal">
        <label for="stng"><strong>B</strong></label>
@@ -160,6 +162,22 @@
       <div>
        <button data-icon="save" data-iconpos="notext" @click="makefile"></button>
       </div>
+     </div>
+    </div>
+    <!--view page-->
+    <div data-role="page" id="view">
+     <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
+      <span>
+       <a data-role="button" data-icon="back" data-iconpos="notext" href="#notas" class="squircle" data-transition="none"></a>
+      </span>
+      <img :src="logo">
+      <h1 name="filename"></h1>
+      <span>
+       <a data-role="button" data-icon="edit" data-iconpos="notext" href="#edit" class="squircle" data-transition="none"></a>
+      </span>
+     </div>
+     <div data-role="content" data-theme="c" id="preview2" style="padding: 0;">
+      
      </div>
     </div>
   </body>
