@@ -160,6 +160,10 @@ async function savefile(data) {
     // --- LÓGICA PARA CELULAR (Capacitor) ---
     try {
       const { Filesystem } = Capacitor.Plugins;
+      const status = await Filesystem.checkPermissions();
+      if (status.publicStorage !== 'granted') {
+        await Filesystem.requestPermissions();
+      }
       await Filesystem.writeFile({
         path: `Pretexto/${data.metadato.name}.json`,
         data: JSON.stringify(data),
