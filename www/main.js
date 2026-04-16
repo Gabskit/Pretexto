@@ -167,11 +167,11 @@ async function savefile(data) {
       await Filesystem.writeFile({
         path: `Pretexto/${data.metadato.name}.json`,
         data: JSON.stringify(data),
-        directory: 'DOCUMENTS',
+        directory: 'DATA',
         encoding: 'utf8',
         recursive: true // Crea la carpeta si no existe
       });
-      alert("Guardado en Documentos/Pretexto");
+      alert("Guardado");
     } catch (e) {
       alert("Error en Capacitor: " + e.message);
     }
