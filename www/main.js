@@ -186,7 +186,7 @@ async function abrirArchivo() {
     try {
       const { FilePicker } = Capacitor.Plugins;
       const result = await FilePicker.pickFiles({
-        limit: 1,
+        multiple: false,
         types: ['.nev']
       });
       if (result.files.length === 0) {
@@ -227,7 +227,7 @@ async function listarDesdeDisco() {
     // 1. Leemos la carpeta real en Documentos
     const result = await Filesystem.readdir({
       path: 'PreTexto',
-      directory: 'DOCUMENTS'
+      directory: Directory.Documents
     });
     
     // 2. Si no hay archivos, avisamos
