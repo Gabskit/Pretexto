@@ -156,16 +156,16 @@ async function savefile(data) {
   
   // Detectar si estamos en Capacitor o en Navegador
   const isCapacitor = window.hasOwnProperty('Capacitor');
-  
+  const status = await Filesystem.checkPermissions();
+      if (status.publicStorage != 'granted') {
+        status = await Filesystem.requestPermissions()
+        
+      }
   if (isCapacitor) {
     // --- LÓGICA PARA CELULAR (Capacitor) ---
     try {
       const { Filesystem } = Capacitor.Plugins;
-      const status = await Filesystem.checkPermissions();
-      if (status.publicStorage != 'granted') {
-        await Filesystem.requestPermissions()
-        
-      }
+      
       await Filesystem.writeFile({
         path: `Pretexto/${data.metadato.name.trim()}.nev`,
         data: JSON.stringify(data),
@@ -220,10 +220,16 @@ $(document).on("pageshow", "#notas", function() {
 
 async function listarDesdeDisco() {
   const { Filesystem } = Capacitor.Plugins;
+  const status = await Filesystem.checkPermissions();
+      if (status.publicStorage != 'granted') {
+        status = await Filesystem.requestPermissions()
+        
+      }
   const $lista = $('#lista-notas-locales');
   $lista.empty();
   
   try {
+    
     // 1. Leemos la carpeta real en Documentos
     const result = await Filesystem.readdir({
       path: 'PreTexto',
@@ -231,10 +237,11 @@ async function listarDesdeDisco() {
     });
     
     // 2. Si no hay archivos, avisamos
-    if (result.files.length === 0) {
+    if (result.files.length == 0) {
       $lista.append('<li>No se encontraron notas</li>');
     } else {
       for (var i = 0; i < result.files.length; i++) {
+        alert(result.files)
         let file = result.files[i]
         if (file.name.endsWith('.nev')) {
           const nombreVisible = file.name.replace('.nev', '');
