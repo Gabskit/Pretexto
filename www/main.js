@@ -169,7 +169,7 @@ async function savefile(data) {
         
       }
       await Filesystem.writeFile({
-        path: `Pretexto/${data.metadato.name}.nev`,
+        path: `Pretexto/${data.metadato.name.trim()}.nev`,
         data: JSON.stringify(data),
         directory: 'DOCUMENTS',
         encoding: 'utf8',
@@ -262,7 +262,7 @@ async function cargarNotaLocal(fileName) {
     try {
         const { Filesystem } = Capacitor.Plugins;
         const contenido = await Filesystem.readFile({
-            path: `PreTexto/${fileName}.nve`,
+            path: `PreTexto/${fileName}`,
             directory: 'DOCUMENTS',
             encoding: 'utf8'
         });
