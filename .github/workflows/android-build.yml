@@ -11,12 +11,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Install Dependencies
         run: |
           npm install
-          npm install @capacitor/cli @capacitor/core @capacitor/android @capacitor/filesystem
+          npm install @capacitor/cli @capacitor/core @capacitor/android @capacitor/filesystem @capgo/capacitor-file-picker
 
       - name: Build Web App
         run: npm run build
@@ -32,7 +32,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
 
       - name: Build APK (Gradle)
         run: |

@@ -32,6 +32,9 @@ document.addEventListener('alpine:init', () => {
 		},
 	}))
 })
+$(document).on("pageshow", "#notas", function() {
+    listarNotasLocales();
+});
 function makefile() {
   $.mobile.loading('show')
 	let datafile = compilefile()
@@ -162,64 +165,41 @@ async function savefile(data) {
       const { Filesystem } = Capacitor.Plugins;
       const status = await Filesystem.checkPermissions();
       if (status.publicStorage !== 'granted') {
-        await Filesystem.requestPermissions();
+        await Filesystem.requestPermissions()
+        
       }
       await Filesystem.writeFile({
-        path: `${data.metadato.name}.json`,
+        path: `Pretexto/${data.metadato.name}.nev`,
         data: JSON.stringify(data),
-        directory: 'DATA',
+        directory: 'DOCUMENTS',
         encoding: 'utf8',
         recursive: true // Crea la carpeta si no existe
       });
-      alert("Guardado");
+      alert("Guardado en documentos");
     } catch (e) {
       alert("Error en Capacitor: " + e.message);
     }
-  } else {
-    // --- LÓGICA PARA IDE / NAVEGADOR (Tu código actual) ---
-    try {
-      if (!fileHandle) {
-        fileHandle = await window.showSaveFilePicker({
-          suggestedName: (data.metadato.name || "nota") + ".json",
-          types: [{ accept: { 'application/json': ['.json'] } }]
-        });
-      }
-      const writable = await fileHandle.createWritable();
-      await writable.write(JSON.stringify(data));
-      await writable.close();
-      alert("Guardado en disco");
-    } catch (e) {
-      if (e.name !== 'AbortError') alert("Error: " + e.message);
-    }
-  }
+  } 
 }
 async function abrirArchivo() {
   const isCapacitor = window.hasOwnProperty('Capacitor');
   
   if (isCapacitor) {
     try {
-      const { Filesystem } = Capacitor.Plugins;
-      const result = await Filesystem.readdir({
-        path: '',
-        directory: 'DATA'
+      const { FilePicker } = Capacitor.Plugins;
+      const result = await FilePicker.pickFiles({
+        limit: 1,
+        types: ['.nev']
       });
       if (result.files.length === 0) {
-        alert("No hay notas guardadas.");
-        return;
+        return null;
       }
-      const archivoInfo = result.files[0];
-      const nombreArchivo = typeof archivoInfo === 'object' ? archivoInfo.name : archivoInfo;
-      const contenido = await Filesystem.readFile({
-        path: nombreArchivo,
-        directory: 'DATA',
-        encoding: 'utf8'
-        
-      }); 
-      
-      const nota = JSON.parse(contenido.data);
-      cargarNotaEnEditor(nota);
-      alert("Cargada: " + nota.metadato.name);
-      
+      const file = result.files[0];
+      // Decodificación UTF-8 desde Base6
+      const base64Data = file.data;
+      const decodedString = decodeURIComponent(escape(atob(base64Data)));
+      const notaCargada = JSON.parse(decodedString);
+      cargarNotaEnEditor(notaCargada);
     } catch (err) {
       alert("Error al leer archivos: " + err.message);
     }
@@ -234,6 +214,64 @@ async function abrirArchivo() {
       cargarNotaEnEditor(JSON.parse(text));
     } catch (e) {}
   }
+}
+async function listarNotasLocales() {
+    const isCapacitor = window.hasOwnProperty('Capacitor');
+    const $lista = $('#lista-notas-locales');
+    $lista.empty();
+
+    if (isCapacitor) {
+        try {
+            const { Filesystem } = Capacitor.Plugins;
+            
+            // Leer el directorio de documentos
+            const result = await Filesystem.readdir({
+                path: 'PreTexto',
+                directory: 'DOCUMENTS'
+            });
+
+            if (result.files.length === 0) {
+                $lista.append('<li>No hay notas guardadas</li>');
+            }
+
+            for (let file of result.files) {
+                // Solo mostrar archivos con nuestra extensión .nev
+                if (file.name.endsWith('.nev')) {
+                    const li = `<li>
+                        <a href="#" onclick="cargarNotaLocal('${file.name}')">
+                            ${file.name.replace('.nev', '')}
+                        </a>
+                    </li>`;
+                    $lista.append(li);
+                }
+            }
+        } catch (e) {
+            console.error("Error al listar: ", e);
+            $lista.append('<li>Crea tu primera nota para empezar</li>');
+        }
+    } else {
+        $lista.append('<li>El listado local solo está disponible en Android</li>');
+    }
+    
+    // Refrescar el estilo de jQuery Mobile
+    $lista.listview("refresh");
+}
+
+// Función para cargar una nota al hacer clic en la lista
+async function cargarNotaLocal(fileName) {
+    try {
+        const { Filesystem } = Capacitor.Plugins;
+        const contenido = await Filesystem.readFile({
+            path: `PreTexto/${fileName}.nve`,
+            directory: 'DOCUMENTS',
+            encoding: 'utf8'
+        });
+
+        const nota = JSON.parse(contenido.data);
+        cargarNotaEnEditor(nota); // Reutiliza tu función existente 
+    } catch (e) {
+        alert("Error al cargar la nota: " + e.message);
+    }
 }
 function cargarNotaEnEditor(nota) {
     $("#namedoc").val(nota.metadato.name);
