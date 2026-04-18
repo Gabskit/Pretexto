@@ -156,16 +156,15 @@ async function savefile(data) {
   
   // Detectar si estamos en Capacitor o en Navegador
   const isCapacitor = window.hasOwnProperty('Capacitor');
-  const status = await Filesystem.checkPermissions();
-      if (status.publicStorage != 'granted') {
-        status = await Filesystem.requestPermissions()
-        
-      }
+  
   if (isCapacitor) {
     // --- LÓGICA PARA CELULAR (Capacitor) ---
     try {
       const { Filesystem } = Capacitor.Plugins;
-      
+      const status = await Filesystem.checkPermissions();
+      if (status.publicStorage != 'granted') {
+        status = await Filesystem.requestPermissions()
+      }
       await Filesystem.writeFile({
         path: `Pretexto/${data.metadato.name.trim()}.nev`,
         data: JSON.stringify(data),
@@ -220,16 +219,16 @@ $(document).on("pageshow", "#notas", function() {
 
 async function listarDesdeDisco() {
   const { Filesystem } = Capacitor.Plugins;
-  const status = await Filesystem.checkPermissions();
-      if (status.publicStorage != 'granted') {
-        status = await Filesystem.requestPermissions()
-        
-      }
+  
   const $lista = $('#lista-notas-locales');
   $lista.empty();
   
   try {
-    
+    const status = await Filesystem.checkPermissions();
+      if (status.publicStorage != 'granted') {
+        status = await Filesystem.requestPermissions()
+        
+      }
     // 1. Leemos la carpeta real en Documentos
     const result = await Filesystem.readdir({
       path: 'PreTexto',
