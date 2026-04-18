@@ -162,7 +162,7 @@ async function savefile(data) {
     try {
       const { Filesystem } = Capacitor.Plugins;
       const status = await Filesystem.checkPermissions();
-      if (status.publicStorage !== 'granted') {
+      if (status.publicStorage != 'granted') {
         await Filesystem.requestPermissions()
         
       }
