@@ -32,9 +32,7 @@ document.addEventListener('alpine:init', () => {
 		},
 	}))
 })
-$(document).on("pageshow", "#notas", function() {
-    listarNotasLocales();
-});
+
 function makefile() {
   $.mobile.loading('show')
 	let datafile = compilefile()
@@ -215,49 +213,50 @@ async function abrirArchivo() {
     } catch (e) {}
   }
 }
-async function listarNotasLocales() {
-    const isCapacitor = window.hasOwnProperty('Capacitor');
-    const $lista = $('#lista-notas-locales');
-    $lista.empty();
+// Usamos el evento de jQuery Mobile para refrescar la lista al entrar
+$(document).on("pageshow", "#notas", function() {
+  listarDesdeDisco();
+});
 
-    if (isCapacitor) {
-        try {
-            const { Filesystem } = Capacitor.Plugins;
-            
-            // Leer el directorio de documentos
-            const result = await Filesystem.readdir({
-                path: 'PreTexto',
-                directory: 'DOCUMENTS'
-            });
-
-            if (result.files.length === 0) {
-                $lista.append('<li>No hay notas guardadas</li>');
-            }
-
-            for (let file of result.files) {
-                // Solo mostrar archivos con nuestra extensión .nev
-                if (file.name.endsWith('.nev')) {
-                    const li = `<li>
+async function listarDesdeDisco() {
+  const { Filesystem } = Capacitor.Plugins;
+  const $lista = $('#lista-notas-locales');
+  $lista.empty();
+  
+  try {
+    // 1. Leemos la carpeta real en Documentos
+    const result = await Filesystem.readdir({
+      path: 'PreTexto',
+      directory: 'DOCUMENTS'
+    });
+    
+    // 2. Si no hay archivos, avisamos
+    if (result.files.length === 0) {
+      $lista.append('<li>No se encontraron notas</li>');
+    } else {
+      // 3. Iteramos sobre los archivos REALES del disco
+      result.files.forEach(file => {
+        // En v8, 'file' es un objeto. Usamos file.name
+        if (file.name.endsWith('.nev')) {
+          const nombreVisible = file.name.replace('.nev', '');
+          const li = `<li>
                         <a href="#" onclick="cargarNotaLocal('${file.name}')">
-                            ${file.name.replace('.nev', '')}
+                            ${nombreVisible}
                         </a>
                     </li>`;
-                    $lista.append(li);
-                }
-            }
-        } catch (e) {
-            console.error("Error al listar: ", e);
-            $lista.append('<li>Crea tu primera nota para empezar</li>');
+          $lista.append(li);
         }
-    } else {
-        $lista.append('<li>El listado local solo está disponible en Android</li>');
+      });
     }
-    
-    // Refrescar el estilo de jQuery Mobile
-    $lista.listview("refresh");
+  } catch (e) {
+    // Si la carpeta no existe aún (primera vez), la creamos o mostramos vacío
+    $lista.append('<li>Crea tu primera nota para empezar</li>');
+    console.log("Carpeta PreTexto aún no existe.");
+  }
+  
+  // Muy importante para que JQM aplique los estilos al contenido nuevo
+  $lista.listview("refresh");
 }
-
-// Función para cargar una nota al hacer clic en la lista
 async function cargarNotaLocal(fileName) {
     try {
         const { Filesystem } = Capacitor.Plugins;

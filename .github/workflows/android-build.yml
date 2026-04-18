@@ -17,13 +17,14 @@ jobs:
         run: |
           npm install
           npm install @capacitor/cli @capacitor/core @capacitor/android @capacitor/filesystem @capgo/capacitor-file-picker
+          npx cap add android
+          npx cap sync android 
 
       - name: Build Web App
         run: npm run build
 
       - name: Capacitor Sync
         run: |
-          npx cap add android
           sed -i '/<application/i <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>\n<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>' android/app/src/main/AndroidManifest.xml
           sed -i 's/<application/<application android:requestLegacyExternalStorage="true"/' android/app/src/main/AndroidManifest.xml
           npx cap sync android
