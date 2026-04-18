@@ -186,8 +186,9 @@ async function abrirArchivo() {
     try {
       const { FilePicker } = Capacitor.Plugins;
       const result = await FilePicker.pickFiles({
-        multiple: false,
-        types: ['.nev']
+        limit: 1,
+        types: ['.nev'],
+        readFile: true
       });
       if (result.files.length === 0) {
         return null;
@@ -227,16 +228,15 @@ async function listarDesdeDisco() {
     // 1. Leemos la carpeta real en Documentos
     const result = await Filesystem.readdir({
       path: 'PreTexto',
-      directory: Directory.Documents
+      directory: 'DOCUMENTS'
     });
     
     // 2. Si no hay archivos, avisamos
     if (result.files.length === 0) {
       $lista.append('<li>No se encontraron notas</li>');
     } else {
-      // 3. Iteramos sobre los archivos REALES del disco
-      result.files.forEach(file => {
-        // En v8, 'file' es un objeto. Usamos file.name
+      for (var i = 0; i < result.files.length; i++) {
+        let file = result.files[i]
         if (file.name.endsWith('.nev')) {
           const nombreVisible = file.name.replace('.nev', '');
           const li = `<li>
@@ -246,7 +246,7 @@ async function listarDesdeDisco() {
                     </li>`;
           $lista.append(li);
         }
-      });
+      }
     }
   } catch (e) {
     // Si la carpeta no existe aún (primera vez), la creamos o mostramos vacío
