@@ -536,4 +536,4 @@ function ajusdataload(key) {
 	} 
 }
 preferences.theme = ajusdataload(keys[0]) ||  "a"
-listarNotasLocales()
+//listarNotasLocales()
