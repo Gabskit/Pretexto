@@ -187,7 +187,6 @@ async function abrirArchivo() {
       const { FilePicker } = Capacitor.Plugins;
       const result = await FilePicker.pickFiles({
         limit: 1,
-        types: ['.nev'],
         readFile: true
       });
       if (result.files.length === 0) {
