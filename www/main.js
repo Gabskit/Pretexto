@@ -187,7 +187,7 @@ async function abrirArchivo() {
       const { FilePicker } = Capacitor.Plugins;
       const result = await FilePicker.pickFiles({
         limit: 1,
-        readFile: true
+        readData: true
       });
       if (result.files.length === 0) {
         return null;
