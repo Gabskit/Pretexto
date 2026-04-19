@@ -180,7 +180,7 @@ async function savefile(data) {
 }
 async function compartirNota() {
   const { Share, Filesystem } = Capacitor.Plugins;
-  let nombreArchivo = $("#namedoc").value
+  let nombreArchivo = $("#namedoc").val() + '.nev'
   makefile()
   try {
     // 1. Obtenemos la ruta interna del archivo
@@ -211,6 +211,7 @@ async function importarNota() {
     if (result.files.length > 0) {
       let i = 0
       for (var i = 0; i < result.files.length; i++) {
+        let archivo = result.files
         if (archivo.name.endsWith('.nev')) {
           await Filesystem.writeFile({
             path: `PreTexto/${archivo.name}`,
