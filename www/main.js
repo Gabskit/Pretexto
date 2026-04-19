@@ -194,10 +194,24 @@ async function compartirNota() {
   let nombreArchivo = $("#namedoc").val() + '.nev'
   makefile()
   try {
+    // 1. Leemos el contenido actual de la nota desde nuestra carpeta DATA interna
+    const archivoGuardado = await Filesystem.readFile({
+      path: `Pretexto/${nombreArchivo}`,
+      directory: 'DATA',
+      encoding: 'utf8'
+    });
+
+    // 2. Escribimos ese mismo contenido en la carpeta CACHE temporal
+    await Filesystem.writeFile({
+      path: nombreArchivo,
+      data: archivoGuardado.data,
+      directory: 'CACHE',
+      encoding: 'utf8'
+    });
     // 1. Obtenemos la ruta interna del archivo
     const uriResult = await Filesystem.getUri({
       path: `Pretexto/${nombreArchivo}`,
-      directory: 'DATA'
+      directory: 'CACHE'
     });
 
     // 2. Usamos el Share nativo
