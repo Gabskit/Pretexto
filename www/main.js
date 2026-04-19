@@ -185,7 +185,7 @@ async function compartirNota() {
   try {
     // 1. Obtenemos la ruta interna del archivo
     const uriResult = await Filesystem.getUri({
-      path: `PreTexto/${nombreArchivo}`,
+      path: `Pretexto/${nombreArchivo}`,
       directory: 'DATA'
     });
 
@@ -209,12 +209,11 @@ async function importarNota() {
       readData: true // Esto nos da el contenido en Base64 directamente
     });
     if (result.files.length > 0) {
-      let i = 0
-      for (var i = 0; i < result.files.length; i++) {
-        let archivo = result.files
+      for (let i = 0; i < result.files.length; i++) {
+        let archivo = result.files[i]
         if (archivo.name.endsWith('.nev')) {
           await Filesystem.writeFile({
-            path: `PreTexto/${archivo.name}`,
+            path: `Pretexto/${archivo.name}`,
             data: archivo.data,
             directory: 'DATA',
             recursive: true
@@ -284,7 +283,7 @@ async function cargarNotaLocal(fileName) {
     try {
         const { Filesystem } = Capacitor.Plugins;
         const contenido = await Filesystem.readFile({
-            path: `PreTexto/${fileName}`,
+            path: `Pretexto/${fileName}`,
             directory: 'DATA',
             encoding: 'utf8'
         });
@@ -559,3 +558,6 @@ function ajusdataload(key) {
 }
 preferences.theme = ajusdataload(keys[0]) ||  "a"
 //listarNotasLocales()
+
+
+
