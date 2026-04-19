@@ -240,7 +240,7 @@ async function listarDesdeDisco() {
       $lista.append('<li>No se encontraron notas</li>');
     } else {
       for (var i = 0; i < result.files.length; i++) {
-        alert(result.files)
+        //alert(result.files)
         let file = result.files[i]
         if (file.name.endsWith('.nev')) {
           const nombreVisible = file.name.replace('.nev', '');
