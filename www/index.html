@@ -28,7 +28,7 @@
         <a data-ajax="false" class="squircle" data-role="button" data-icon="gear" data-iconpos="notext" href="set.html"></a>
        </div>
       </div>
-      <div data-role="content" :data-theme="jqmtheme">
+      <div data-role="content" class="full" :data-theme="jqmtheme">
       </div>
       <div x-html="navbar" data-role="footer" data-position="fixed" data-id="footr" :data-theme="jqmtheme">
       <!---foter navbar--->
@@ -39,11 +39,13 @@
      <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
       <img :src="logo" >
       <span class="setui">
-       <button data-role="button" data-icon="folder" onclick="abrirArchivo()">Abrir</button>
-       <a data-role="button" href="#edit" data-icon="plus" class="squircle" data-iconpos="right" data-transition="none">Nueva nota</a>
+       <button class="squircle" data-icon="folder" onclick="importarNota()">Importar</button>
+       <a data-role="button" href="#edit" data-icon="plus" class="squircle" data-transition="none">Nueva nota</a>
+       
+      
       </span>
      </div>
-     <div data-role="content" :data-theme="jqmtheme">
+     <div data-role="content" class="full" :data-theme="jqmtheme">
       <ul data-role="listview" id="lista-notas-locales" data-inset="true" class="squircle">
       </ul>
      </div>
@@ -59,7 +61,7 @@
        <button data-icon="plus" data-iconpos="right">Nuevo evento</button>
       </span-->
      </div>
-     <div data-role="content" :data-theme="jqmtheme">
+     <div data-role="content" class="full" :data-theme="jqmtheme">
       <div id="calendar"></div>
       <script type="text/javascript">
  $(document).on("pageshow", "#calen", function() {
@@ -90,7 +92,7 @@
        <input type="search" name="barra-busca" id="barra-busca">
       </form>
      </div>
-     <div data-role="content" :data-theme="jqmtheme">
+     <div data-role="content" class="full" :data-theme="jqmtheme">
       <p>Coming soon</p>
      </div>
      <div x-html="navbar" data-role="footer" data-position="fixed" data-id="footr" :data-theme="jqmtheme">
@@ -116,7 +118,7 @@
        <a data-role="button" data-icon="view" data-iconpos="notext" href="#view" class="squircle" data-transition="none"></a>
       </span>
      </div>
-     <div data-role="content" class="edit-content" :data-theme="jqmtheme">
+     <div data-role="content" class="full" :data-theme="jqmtheme">
       <div>
        <label for="namedoc">Nombre:</label>
        <input type="text" name="namedoc" id="namedoc">
@@ -177,7 +179,7 @@
        <a data-role="button" data-icon="edit" data-iconpos="notext" href="#edit" class="squircle" data-transition="none"></a>
       </span>
      </div>
-     <div data-role="content" data-theme="c" id="preview2" style="padding: 0;">
+     <div data-role="content" class="full" data-theme="c" id="preview2" style="padding: 0;">
       
      </div>
     </div>

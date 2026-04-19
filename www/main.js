@@ -168,7 +168,7 @@ async function savefile(data) {
       await Filesystem.writeFile({
         path: `Pretexto/${data.metadato.name.trim()}.nev`,
         data: JSON.stringify(data),
-        directory: 'DOCUMENTS',
+        directory: 'DATA',
         encoding: 'utf8',
         recursive: true // Crea la carpeta si no existe
       });
@@ -178,41 +178,58 @@ async function savefile(data) {
     }
   } 
 }
-async function abrirArchivo() {
-  const isCapacitor = window.hasOwnProperty('Capacitor');
-  
-  if (isCapacitor) {
-    try {
-      const { FilePicker } = Capacitor.Plugins;
-      const result = await FilePicker.pickFiles({
-        limit: 1,
-        readData: true
-      });
-      if (result.files.length === 0) {
-        return null;
-      }
-      const file = result.files[0];
-      // Decodificación UTF-8 desde Base6
-      const base64Data = file.data;
-      const decodedString = decodeURIComponent(escape(atob(base64Data)));
-      const notaCargada = JSON.parse(decodedString);
-      cargarNotaEnEditor(notaCargada);
-    } catch (err) {
-      alert("Error al leer archivos: " + err.message);
-    }
-  } else {
-    // Lógica original de PC si no es Capacitor
-    try {
-      [fileHandle] = await window.showOpenFilePicker({
-        types: [{ accept: { 'application/json': ['.json'] } }]
-      });
-      const file = await fileHandle.getFile();
-      const text = await file.text();
-      cargarNotaEnEditor(JSON.parse(text));
-    } catch (e) {}
+async function compartirNota() {
+  const { Share, Filesystem } = Capacitor.Plugins;
+  let nombreArchivo = $("#namedoc").value
+  makefile()
+  try {
+    // 1. Obtenemos la ruta interna del archivo
+    const uriResult = await Filesystem.getUri({
+      path: `PreTexto/${nombreArchivo}`,
+      directory: 'DATA'
+    });
+
+    // 2. Usamos el Share nativo
+    await Share.share({
+      title: 'Enviar Nota',
+      url: uriResult.uri,
+      dialogTitle: 'Compartir nota con...'
+    });
+  } catch (e) {
+    alert("Error al compartir: " + e.message);
   }
 }
-// Usamos el evento de jQuery Mobile para refrescar la lista al entrar
+async function importarNota() {
+  const { FilePicker } = Capacitor.Plugins; // O import { FilePicker } from ...
+  const { Filesystem } = Capacitor.Plugins;
+
+  try {
+    const result = await FilePicker.pickFiles({
+      limit: 0,
+      readData: true // Esto nos da el contenido en Base64 directamente
+    });
+    if (result.files.length > 0) {
+      let i = 0
+      for (var i = 0; i < result.files.length; i++) {
+        if (archivo.name.endsWith('.nev')) {
+          await Filesystem.writeFile({
+            path: `PreTexto/${archivo.name}`,
+            data: archivo.data,
+            directory: 'DATA',
+            recursive: true
+          });
+        } 
+      }
+      alert("Importación exitosa");
+      listarDesdeDisco(); // Tu función para refrescar la lista
+    } else {
+      alert("Importacion cancelada")
+    }
+  } catch (e) {
+    console.error("Error al importar:", e);
+  }
+}
+
 $(document).on("pageshow", "#notas", function() {
   listarDesdeDisco();
 });
@@ -232,7 +249,7 @@ async function listarDesdeDisco() {
     // 1. Leemos la carpeta real en Documentos
     const result = await Filesystem.readdir({
       path: 'Pretexto',
-      directory: 'DOCUMENTS'
+      directory: 'DATA'
     });
     
     // 2. Si no hay archivos, avisamos
@@ -267,7 +284,7 @@ async function cargarNotaLocal(fileName) {
         const { Filesystem } = Capacitor.Plugins;
         const contenido = await Filesystem.readFile({
             path: `PreTexto/${fileName}`,
-            directory: 'DOCUMENTS',
+            directory: 'DATA',
             encoding: 'utf8'
         });
 

@@ -18,15 +18,16 @@ body.ui-mobile-viewport {
  min-height: 100vh !important;
  -webkit-overflow-scrolling: touch !important; 
 }
-div[data-role="content"]{
-	min-height: 100vh;
-}
+
 @font-face {
 	font-family: lexend-deca;
 	src: url("assets/LexendDeca-Regular.ttf");
 }
 hr{
 	color: #000 !important;
+}
+.full{
+	min-height: 100vh;
 }
 .barui {
 	display: flex !important;
@@ -69,9 +70,7 @@ hr{
 	background: linear-gradient(#222, #444) padding-box, linear-gradient(90deg, #000, #222) border-box !important;
 	color: #fff;
 }
-.edit-content{
-	padding: 1em !important;
-}
+
 .widget{
 	display: flex!important;
 	flex: 1;
