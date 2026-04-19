@@ -161,10 +161,10 @@ async function savefile(data) {
     // --- LÓGICA PARA CELULAR (Capacitor) ---
     try {
       const { Filesystem } = Capacitor.Plugins;
-      const status = await Filesystem.checkPermissions();
+      /*const status = await Filesystem.checkPermissions();
       if (status.publicStorage != 'granted') {
         status = await Filesystem.requestPermissions()
-      }
+      }*/
       await Filesystem.writeFile({
         path: `Pretexto/${data.metadato.name.trim()}.nev`,
         data: JSON.stringify(data),
@@ -224,11 +224,11 @@ async function listarDesdeDisco() {
   $lista.empty();
   
   try {
-    const status = await Filesystem.checkPermissions();
+    /*const status = await Filesystem.checkPermissions();
       if (status.publicStorage != 'granted') {
         status = await Filesystem.requestPermissions()
         
-      }
+      }*/
     // 1. Leemos la carpeta real en Documentos
     const result = await Filesystem.readdir({
       path: 'PreTexto',
