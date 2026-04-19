@@ -16,7 +16,7 @@ jobs:
       - name: Install Dependencies
         run: |
           npm install
-          npm install @capacitor/cli @capacitor/core @capacitor/android @capacitor/filesystem @capawesome/capacitor-file-picker
+          npm install @capacitor/cli @capacitor/core @capacitor/android @capacitor/filesystem @capawesome/capacitor-file-picker @capacitor/share
           npx cap add android
           npx cap sync android 
 

@@ -39,10 +39,8 @@
      <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
       <img :src="logo" >
       <span class="setui">
-       <button class="squircle" data-icon="folder" onclick="importarNota()">Importar</button>
+       <button data-icon="folder" @click="importarNota">Importar</button>
        <a data-role="button" href="#edit" data-icon="plus" class="squircle" data-transition="none">Nueva nota</a>
-       
-      
       </span>
      </div>
      <div data-role="content" class="full" :data-theme="jqmtheme">
@@ -146,9 +144,6 @@
         <div id="preview1"></div>
        </div>
       </div>
-      <div id="result">
-       
-      </div>
      </div>
      <div data-role="footer" class="barui" data-position="fixed" :data-theme="jqmtheme">
       <!--input type="color" name="" id="" value="" />
@@ -162,8 +157,9 @@
        <label for="stri"><s>S</s></label>
        <input type="checkbox" name="stri" id="stri">
       </div-->
-      <div>
+      <div data-role="controlgroup" data-type="horizontal">
        <button data-icon="save" data-iconpos="notext" @click="makefile"></button>
+       <button data-icon="share" data-iconpos="notext" @click="compartirNota"></button>
       </div>
      </div>
     </div>
@@ -173,7 +169,6 @@
       <span>
        <a data-role="button" data-icon="back" data-iconpos="notext" href="#notas" class="squircle" data-transition="none"></a>
       </span>
-      <img :src="logo">
       <h1 name="filename"></h1>
       <span>
        <a data-role="button" data-icon="edit" data-iconpos="notext" href="#edit" class="squircle" data-transition="none"></a>

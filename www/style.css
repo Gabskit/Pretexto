@@ -99,3 +99,7 @@ hr{
 	background-image: url("assets/Folder.svg");
 	background-size: 18px 18px;
 }
+.ui-icon-share {
+	background-image: url("assets/Share.svg");
+	background-size: 18px 18px;
+}
