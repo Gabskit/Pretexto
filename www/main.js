@@ -40,6 +40,15 @@ function makefile() {
 	$.mobile.loading('hide')
 	savefile(datafile)
 }
+function parsearSimbolos(texto) {
+    if (!texto) return "";
+    let procecedfile = texto
+        .replace(/\*([^*]+)\*/g, '<b>$1</b>')       // *negrita*
+        .replace(/•([^*]+)•/g, '<i>$1</i>')   // •italica• (según tu símbolo)
+        .replace(/_([^*]+)_/g, '<u>$1</u>')         // _subrayado_
+        .replace(/~([^*]+)~/g, '<s>$1</s>');        // ~tachado~
+  return procecedfile
+}
 function compilefile() {
 	const lista = document.getElementById('docreate');
 	if (!lista) return;
@@ -51,6 +60,7 @@ function compilefile() {
 			filetype: "pretexto-note",
 			ver: "1.0",
 			date: new Date().toDateString(),
+			time: new Date().toTimeString(),
 			name: document.querySelector("#namedoc").value || "Sin titulo",
 		},
 		dataWid: []
@@ -77,8 +87,9 @@ function compilefile() {
 				const alignText = widget.querySelector('select[name="textpos"]')
 				datosWidget.valor = areaText ? areaText.value : ""
 				datosWidget.posicion = alignText ? alignText.value : ""
+				const formatedText = parsearSimbolos(datosWidget.valor)
 				docres[i] = `<p align="${datosWidget.posicion}" style="color: #000;" class="p-1">
-        ${datosWidget.valor}
+        ${formatedText}
        </p>`
 				break;
 				
@@ -263,7 +274,7 @@ async function listarDesdeDisco() {
           const nombreVisible = file.name.replace('.nev', '');
           const li = `<li>
                         <a href="#" onclick="cargarNotaLocal('${file.name}')">
-                            ${nombreVisible}
+                           <h2> ${nombreVisible}</h2>
                         </a>
                     </li>`;
           $lista.append(li);
@@ -384,7 +395,7 @@ function addtodoc(type) {
          <button data-icon="arrow-d" data-iconpos="notext"></button>
          </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
-         <textarea name="textwid" rows="8" cols="20" class="squircle"></textarea>
+         <textarea name="textwid" rows="8" cols="20" class="squircle txt-nota" ></textarea>
          <select name="textpos" data-native-menu="false" data-mini="true">
           <option value="left">◧</option>
           <option value="center">▣</option>
@@ -476,7 +487,7 @@ function addtolist(type, element) {
          <button data-icon="arrow-d" data-iconpos="notext"></button>
          </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
-         <textarea name="textwid" rows="8" cols="20" class="squircle"></textarea>
+         <textarea name="textwid" rows="8" cols="20" class="squircle txt-nota" ></textarea>
          <select name="textpos" data-native-menu="false" data-mini="true">
           <option value="left">◧</option>
           <option value="center">▣</option>
@@ -522,6 +533,71 @@ function addtolist(type, element) {
 	  $list.listview().listview("refresh");
 	  $nuevoItem.trigger('create')
 	},5)
+}
+// 1. Variable global para recordar dónde estábamos escribiendo
+let ultimoTextarea = null;
+
+// 2. Cada vez que tocas o escribes en un widget de texto, lo guardamos en la memoria
+$(document).on('focus click keyup', '.txt-nota', function() {
+  ultimoTextarea = this;
+  actualizarCheckboxes(this);
+});
+
+// 3. El evento al marcar/desmarcar los checkboxes del footer
+$(document).on('change', '#stng, #ital, #unde, #stri', function(e) {
+  // Si no hemos tocado ningún texto aún, avisamos y abortamos
+  if (!ultimoTextarea) {
+    $(this).prop('checked', false).checkboxradio("refresh"); // Lo desmarcamos visualmente
+    return;
+  }
+  
+  const el = ultimoTextarea;
+  let start = el.selectionStart;
+  let end = el.selectionEnd;
+  let texto = $(el).val();
+  
+  // Diccionario de símbolos
+  const simbolos = { 'stng': '*', 'ital': '•', 'unde': '_', 'stri': '~' };
+  let s = simbolos[this.id];
+  
+  // ¿El texto ya está rodeado por estos símbolos?
+  const yaTiene = texto.substring(start - 1, start) === s && texto.substring(end, end + 1) === s;
+  
+  if (yaTiene) {
+    // QUITAR EL FORMATO (Borrar símbolos)
+    const nuevoTexto = texto.substring(0, start - 1) + texto.substring(start, end) + texto.substring(end + 1);
+    $(el).val(nuevoTexto);
+    el.setSelectionRange(start - 1, end - 1);
+  } else {
+    // PONER EL FORMATO (Añadir símbolos)
+    const seleccionado = texto.substring(start, end);
+    const nuevoTexto = texto.substring(0, start) + s + seleccionado + s + texto.substring(end);
+    $(el).val(nuevoTexto);
+    el.setSelectionRange(start + 1, end + 1);
+  }
+  
+  // Le devolvemos el foco al cuadro de texto para seguir escribiendo
+  el.focus();
+  actualizarCheckboxes(el);
+});
+
+// 4. Función para prender o apagar los botones según donde esté el cursor
+function actualizarCheckboxes(el) {
+  if (!el) return;
+  const start = el.selectionStart;
+  const texto = el.value;
+  
+  const comprobar = (s) => {
+    const antes = texto.substring(0, start);
+    const despues = texto.substring(start);
+    return antes.lastIndexOf(s) !== -1 && despues.indexOf(s) !== -1;
+  };
+  
+  // Usamos checkboxradio("refresh") porque es obligatorio en jQuery Mobile
+  $('#stng').prop('checked', comprobar('*')).checkboxradio("refresh");
+  $('#ital').prop('checked', comprobar('•')).checkboxradio("refresh");
+  $('#unde').prop('checked', comprobar('_')).checkboxradio("refresh");
+  $('#stri').prop('checked', comprobar('~')).checkboxradio("refresh");
 }
 function showres() {
 	const $res = $("#preview1")
