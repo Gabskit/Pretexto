@@ -231,7 +231,7 @@ async function listarDesdeDisco() {
       }*/
     // 1. Leemos la carpeta real en Documentos
     const result = await Filesystem.readdir({
-      path: 'PreTexto',
+      path: 'Pretexto',
       directory: 'DOCUMENTS'
     });
     
