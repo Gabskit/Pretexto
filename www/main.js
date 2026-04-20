@@ -217,7 +217,7 @@ async function compartirNota() {
     // 2. Usamos el Share nativo
     await Share.share({
       title: 'Enviar Nota',
-      url: uriResult.uri,
+      files: [uriResult.uri],
       dialogTitle: 'Compartir nota con...'
     });
   } catch (e) {
