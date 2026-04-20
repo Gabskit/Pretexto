@@ -183,7 +183,7 @@ async function savefile(data) {
         encoding: 'utf8',
         recursive: true // Crea la carpeta si no existe
       });
-      alert("Guardado en documentos");
+      alert("Guardado");
     } catch (e) {
       alert("Error en Capacitor: " + e.message);
     }
@@ -194,23 +194,19 @@ async function compartirNota() {
   let nombreArchivo = $("#namedoc").val() + '.nev'
   makefile()
   try {
-    // 1. Leemos el contenido actual de la nota desde nuestra carpeta DATA interna
-    const archivoGuardado = await Filesystem.readFile({
-      path: `Pretexto/${nombreArchivo}`,
-      directory: 'DATA',
-      encoding: 'utf8'
-    });
-
+    let datosActuales = compilefile();
+    let contenidoJSON = JSON.stringify(datosActuales);
+    
     // 2. Escribimos ese mismo contenido en la carpeta CACHE temporal
     await Filesystem.writeFile({
       path: nombreArchivo,
-      data: archivoGuardado.data,
+      data: contenidoJSON,
       directory: 'CACHE',
       encoding: 'utf8'
     });
     // 1. Obtenemos la ruta interna del archivo
     const uriResult = await Filesystem.getUri({
-      path: `Pretexto/${nombreArchivo}`,
+      path: `${nombreArchivo}`,
       directory: 'CACHE'
     });
 
@@ -221,7 +217,9 @@ async function compartirNota() {
       dialogTitle: 'Compartir nota con...'
     });
   } catch (e) {
-    alert("Error al compartir: " + e.message);
+    if (e.message !== "Share canceled") {
+  alert("Error al compartir: " + e.message);
+} 
   }
 }
 async function importarNota() {
