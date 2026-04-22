@@ -43,6 +43,12 @@ function makefile() {
 function parsearSimbolos(texto) {
     if (!texto) return "";
     let procecedfile = texto
+        .replace(/</g, '(')
+        .replace(/>/g, ')')
+        .replace(/&/g, '&amp')
+        .replace(/"/g, '&quot')
+        .replace(/'/g, '&#039')
+        
         .replace(/\*([^*]+)\*/g, '<b>$1</b>')       // *negrita*
         .replace(/•([^*]+)•/g, '<i>$1</i>')   // •italica• (según tu símbolo)
         .replace(/_([^*]+)_/g, '<u>$1</u>')         // _subrayado_
@@ -77,8 +83,9 @@ function compilefile() {
 				const styleTitle = widget.querySelector('select[name="titlestyle"]')
 				datosWidget.valor = inputTitle ? inputTitle.value : ""
 				datosWidget.estilo = styleTitle ? styleTitle.value : ""
+				const titleText = parsearSimbolos(datosWidget.valor)
 				docres[i] = `<div class="ui-bar-${datosWidget.estilo} p-2">
-        <h1>${datosWidget.valor}</h1>
+        <h1>${titleText}</h1>
        </div>`
 				break;
 				
@@ -87,9 +94,9 @@ function compilefile() {
 				const alignText = widget.querySelector('select[name="textpos"]')
 				datosWidget.valor = areaText ? areaText.value : ""
 				datosWidget.posicion = alignText ? alignText.value : ""
-				const formatedText = parsearSimbolos(datosWidget.valor)
+				const textText = parsearSimbolos(datosWidget.valor)
 				docres[i] = `<p align="${datosWidget.posicion}" style="color: #000;" class="p-1">
-        ${formatedText}
+        ${textText}
        </p>`
 				break;
 				
@@ -106,8 +113,9 @@ function compilefile() {
 				datosWidget.valor = inputBadge ? inputBadge.value : "";
 				datosWidget.semantica = semanBadge ? semanBadge.value : ""
 				datosWidget.tema = themeBadge ? themeBadge.value : ""
+				const badgeText = parsearSimbolos(datosWidget.valor)
 				docres[i] = `<div class="badge badge-${datosWidget.semantica}" data-theme="${datosWidget.tema}">
-        ${datosWidget.valor}
+        ${badgeText}
        </div>`
 				break;
 				
@@ -130,8 +138,9 @@ function compilefile() {
 							const alignText = miniwidget.querySelector('select[name="textpos"]')
 							innerDatosWidget.valor = areaText ? areaText.value : ""
 							innerDatosWidget.posicion = alignText ? alignText.value : ""
+							const textText = parsearSimbolos(innerDatosWidget.valor)
 							flowHtml += `<p align="${innerDatosWidget.posicion}" style="color: #000;" class="p-1">
-        ${innerDatosWidget.valor}
+        ${textText}
        </p>`
 							break;
 						case 'badge':
@@ -141,8 +150,9 @@ function compilefile() {
 							innerDatosWidget.valor = inputBadge ? inputBadge.value : "";
 							innerDatosWidget.semantica = semanBadge ? semanBadge.value : ""
 							innerDatosWidget.tema = themeBadge ? themeBadge.value : ""
+							const badgeText = parsearSimbolos(innerDatosWidget.valor)
 							flowHtml += `<div class="badge badge-${innerDatosWidget.semantica}" data-theme="${innerDatosWidget.tema}">
-        ${innerDatosWidget.valor}
+        ${badgeText}
        </div>`
 							break;
 						
@@ -622,17 +632,15 @@ function showres() {
 	}
 }
 function delwidg() {
-	const lista = document.getElementById('docreate')
-	const widgets = lista.children;
-	for (var i = 0; i < widgets.length; i++) {
-		widgets[i].addEventListener('click', (e) => {
-			let btn = e.target.getAttribute("name")
-			if (btn == 'delwid') {
-				e.target.closest("li").remove()
-				$("#docreate").listview('refresh')
-			}
-		})
-	}
+	$("#docreate").off("click.borrar").on("click.borrar", "button[name='delwid']", function(e) {
+  
+  // Eliminamos el <li> que contiene al botón
+  $(this).closest("li").remove();
+  
+  // Refrescamos jQuery Mobile para que ajuste los espacios
+  $("#docreate").listview("refresh");
+  $("ul[name='minilist']").listview('refresh')
+});
 }
 
 function ajusdatasave(key, data) {
