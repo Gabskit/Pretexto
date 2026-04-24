@@ -6,7 +6,7 @@ const nav = `<div data-role="navbar" data-iconpos="top">
 					<!--li><a @click="navi(3)" :class="hili[3]" href="#busca" data-icon="search">Buscar</a></li-->
 				</ul>
 			</div>`
-let docres = []
+let docres = ""
 const keys = ["theme"]
 let preferences = {
 	theme: 'a'
@@ -15,7 +15,6 @@ let fileHandle = null
 document.addEventListener('alpine:init', () => {
 	Alpine.data('inicio', () => ({
 		hili: ["ui-btn-active ui-state-persist","","","",""],
-		datadoc: [],
 		navbar: nav,
 		navi(index){
 		 this.hili = ["","","","",""]
@@ -26,20 +25,21 @@ document.addEventListener('alpine:init', () => {
 		logocol() {
 			this.logo = ["c", "d", "e"].includes(this.jqmtheme) ? "assets/ptlogoblack.svg" : "assets/ptlogo.svg"
 		},
+		makefile() {
+		  $.mobile.loading('show')
+		  let datafile = compilefile()
+		  $.mobile.loading('hide')
+		  savefile(datafile)
+		  this.doc = docres
+		},
 		setheme(theme){
 			preferences.theme = theme
 			ajusdatasave(keys[0], preferences.theme)
 		},
+		doc: docres,
 	}))
 })
 
-function makefile() {
-  $.mobile.loading('show')
-	let datafile = compilefile()
-	showres()
-	$.mobile.loading('hide')
-	savefile(datafile)
-}
 function parsearSimbolos(texto) {
     if (!texto) return "";
     let procecedfile = texto
@@ -56,121 +56,97 @@ function parsearSimbolos(texto) {
   return procecedfile
 }
 function compilefile() {
-	const lista = document.getElementById('docreate');
-	if (!lista) return;
-	const namefile = document.querySelector('input[name="namedoc"]')
-	const widgets = lista.children;
-	docres = []
-	let file = {
-		metadato: {
-			filetype: "pretexto-note",
-			ver: "1.0",
-			date: new Date().toDateString(),
-			time: new Date().toTimeString(),
-			name: document.querySelector("#namedoc").value || "Sin titulo",
-		},
-		dataWid: []
-	}
-	for (let i = 0; i < widgets.length; i++) {
-		const widget = widgets[i];
-		const tipo = widget.getAttribute('pt-type');
-		
-		let datosWidget = { tipo: tipo };
-		
-		switch (tipo) {
-			case 'title':
-				const inputTitle = widget.querySelector('input[name="titlewid"]')
-				const styleTitle = widget.querySelector('select[name="titlestyle"]')
-				datosWidget.valor = inputTitle ? inputTitle.value : ""
-				datosWidget.estilo = styleTitle ? styleTitle.value : ""
-				const titleText = parsearSimbolos(datosWidget.valor)
-				docres[i] = `<div class="ui-bar-${datosWidget.estilo} p-2">
-        <h1>${titleText}</h1>
-       </div>`
-				break;
-				
-			case 'text':
-				const areaText = widget.querySelector('textarea[name="textwid"]')
-				const alignText = widget.querySelector('select[name="textpos"]')
-				datosWidget.valor = areaText ? areaText.value : ""
-				datosWidget.posicion = alignText ? alignText.value : ""
-				const textText = parsearSimbolos(datosWidget.valor)
-				docres[i] = `<p align="${datosWidget.posicion}" style="color: #000;" class="p-1">
-        ${textText}
-       </p>`
-				break;
-				
-			/*case 'image':
-				// Si añades un widget de imagen con un input de URL o base64
-				const inputImg = widget.querySelector('input[name="imagewid"]');
-				datosWidget.url = inputImg ? inputImg.value : "";
-				break;*/
-				
-			case 'badge':
-				const inputBadge = widget.querySelector('input[name="badwid"]');
-				const semanBadge = widget.querySelector('select[name="badcol"]')
-				const themeBadge = widget.querySelector('select[name="badtheme"]')
-				datosWidget.valor = inputBadge ? inputBadge.value : "";
-				datosWidget.semantica = semanBadge ? semanBadge.value : ""
-				datosWidget.tema = themeBadge ? themeBadge.value : ""
-				const badgeText = parsearSimbolos(datosWidget.valor)
-				docres[i] = `<div class="badge badge-${datosWidget.semantica}" data-theme="${datosWidget.tema}">
-        ${badgeText}
-       </div>`
-				break;
-				
-			case 'div':
-				// Los divisores no suelen tener valor, solo existen
-				docres[i] = `<hr/>`
-				break;
-			case 'flow':
-				const listFlow = widget.querySelector("ul[name='minilist']")
-				const innerWid = listFlow ? listFlow.children : []
-				let flowHtml = `<div class="flowui p-2">`;
-				datosWidget.minilista = []
-				for (var j = 0; j < innerWid.length; j++) {
-					const miniwidget = innerWid[j]
-					const innerType = innerWid[j].getAttribute("pt-type")
-					let innerDatosWidget = { subtipo : innerType}
-					switch (innerType) {
-						case 'text':
-							const areaText = miniwidget.querySelector('textarea[name="textwid"]')
-							const alignText = miniwidget.querySelector('select[name="textpos"]')
-							innerDatosWidget.valor = areaText ? areaText.value : ""
-							innerDatosWidget.posicion = alignText ? alignText.value : ""
-							const textText = parsearSimbolos(innerDatosWidget.valor)
-							flowHtml += `<p align="${innerDatosWidget.posicion}" style="color: #000;" class="p-1">
-        ${textText}
-       </p>`
-							break;
-						case 'badge':
-							const inputBadge = miniwidget.querySelector('input[name="badwid"]');
-							const semanBadge = miniwidget.querySelector('select[name="badcol"]')
-							const themeBadge = miniwidget.querySelector('select[name="badtheme"]')
-							innerDatosWidget.valor = inputBadge ? inputBadge.value : "";
-							innerDatosWidget.semantica = semanBadge ? semanBadge.value : ""
-							innerDatosWidget.tema = themeBadge ? themeBadge.value : ""
-							const badgeText = parsearSimbolos(innerDatosWidget.valor)
-							flowHtml += `<div class="badge badge-${innerDatosWidget.semantica}" data-theme="${innerDatosWidget.tema}">
-        ${badgeText}
-       </div>`
-							break;
-						
-						default:
-							// Tab to edit
-					}
-					
-					datosWidget.minilista.push(innerDatosWidget)
-				}
-				flowHtml += "</div>"
-				docres[i] = flowHtml
-				break;
-			default:
-				console.warn("Tipo de widget no reconocido:", tipo);
-		}
-		file.dataWid.push(datosWidget);
-	}
-	return file;
+  const lista = $('#docreate');
+  if (!lista.length) return;
+  const widgets = lista.children();
+  docres = "";
+  let file = {
+    metadato: {
+      filetype: "pretexto-note",
+      ver: "1.0",
+      date: new Date().toDateString(),
+      time: new Date().toTimeString(),
+      name: $("#namedoc").val() || "Sin titulo",
+    },
+    dataWid: []
+  };
+  
+  for (let i = 0; i < widgets.length; i++) {
+    const widget = $(widgets[i]); // Envolvemos en jQuery
+    const tipo = widget.attr('pt-type');
+    
+    let datosWidget = { tipo: tipo };
+    
+    switch (tipo) {
+      case 'title':
+        datosWidget.valor = widget.find('input[name="titlewid"]').val() || "";
+        datosWidget.estilo = widget.find('select[name="titlestyle"]').val() || "a";
+        docres += `<div class="ui-bar-${datosWidget.estilo} p-2">
+        			<h1>${parsearSimbolos(datosWidget.valor)}</h1>
+       				</div>`;
+        break;
+        
+      case 'text':
+        datosWidget.valor = widget.find('textarea[name="textwid"]').val() || "";
+        datosWidget.posicion = widget.find('select[name="textpos"]').val() || "left";
+        docres += `<p align="${datosWidget.posicion}" style="color: #000;" class="p-1">
+        			${parsearSimbolos(datosWidget.valor)}
+       				</p>`;
+        break;
+        
+      case 'badge':
+        datosWidget.valor = widget.find('input[name="badwid"]').val() || "";
+        datosWidget.semantica = widget.find('select[name="badcol"]').val() || "primary";
+        datosWidget.tema = widget.find('select[name="badtheme"]').val() || "light";
+        docres += `<div class="badge badge-${datosWidget.semantica}" data-theme="${datosWidget.tema}">
+        			${parsearSimbolos(datosWidget.valor)}
+       				</div>`;
+        break;
+        
+      case 'div':
+        docres += `<hr/>`;
+        break;
+        
+      case 'flow':
+        const listFlow = widget.find("ul[name='minilist']");
+        const innerWid = listFlow.children();
+        let flowHtml = `<div class="flowui p-2">`;
+        datosWidget.minilista = [];
+        
+        for (let j = 0; j < innerWid.length; j++) {
+          const miniwidget = $(innerWid[j]); // Envolvemos en jQuery
+          const innerType = miniwidget.attr("pt-type");
+          let innerDatosWidget = { subtipo: innerType };
+          
+          switch (innerType) {
+            case 'text':
+              innerDatosWidget.valor = miniwidget.find('textarea[name="textwid"]').val() || "";
+              innerDatosWidget.posicion = miniwidget.find('select[name="textpos"]').val() || "left";
+              flowHtml += `<p align="${innerDatosWidget.posicion}" style="color: #000;" class="p-1">
+        						${parsearSimbolos(innerDatosWidget.valor)}
+       							</p>`;
+              break;
+            case 'badge':
+              innerDatosWidget.valor = miniwidget.find('input[name="badwid"]').val() || "";
+              innerDatosWidget.semantica = miniwidget.find('select[name="badcol"]').val() || "primary";
+              innerDatosWidget.tema = miniwidget.find('select[name="badtheme"]').val() || "light";
+              flowHtml += `<div class="badge badge-${innerDatosWidget.semantica}" data-theme="${innerDatosWidget.tema}">
+        						${parsearSimbolos(innerDatosWidget.valor)}
+       							</div>`;
+              break;
+          }
+          datosWidget.minilista.push(innerDatosWidget);
+        }
+        flowHtml += "</div>";
+        docres += flowHtml;
+        break;
+        
+      default:
+        console.warn("Tipo de widget no reconocido:", tipo);
+    }
+    file.dataWid.push(datosWidget);
+  }
+  return file;
 }
 async function savefile(data) {
   if (!data) return;
@@ -383,7 +359,6 @@ function cargarNotaEnEditor(nota) {
         }
     }
     compilefile(); 
-    showres();
     $.mobile.changePage("#view");
 }
 function addtodoc(type) {
@@ -621,16 +596,7 @@ function actualizarCheckboxes(el) {
   $('#unde').prop('checked', comprobar('_')).checkboxradio("refresh");
   $('#stri').prop('checked', comprobar('~')).checkboxradio("refresh");
 }
-function showres() {
-	const $res = $("#preview1")
-	const $view = $("#preview2")
-	$res.empty()
-	$view.empty()
-	for (var i = 0; i < docres.length; i++) {
-		$res.append(docres[i])
-		$view.append(docres[i])
-	}
-}
+
 function delwidg() {
 	$("#docreate").off("click.borrar").on("click.borrar", "button[name='delwid']", function(e) {
   
