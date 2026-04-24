@@ -172,6 +172,17 @@ function compilefile() {
         flowHtml += "</div>";
         docres += flowHtml;
         break;
+      case 'image':
+        datosWidget.url = widget.find('input[name="imagewid"]').val() || ""
+        datosWidget.estilo = widget.find('select[name="imagepos"]').val() || "circular";
+        if (datosWidget.url) {
+          docres += `
+            <div class="ui ${datosWidget.estilo} image">
+            <img src="${datosWidget.url}">
+            </div>`;
+          
+        }
+        break;
         
       default:
         console.warn("Tipo de widget no reconocido:", tipo);
@@ -348,21 +359,21 @@ function cargarNotaEnEditor(nota) {
       let actwid = $lista.children().last()
         switch (typewid) {
           case 'title':
-            actwid.find("input[name='titlewid']").val(wid[i].valor)
-            actwid.find("select[name='titlestyle']").val(wid[i].estilo)
+            actwid.find("input[name='titlewid']").val(wid[i].valor ? wid[i].valor : "")
+            actwid.find("select[name='titlestyle']").val(wid[i].estilo ? wid[i].estilo : "a")
             break;
           case 'text':
-            actwid.find("textarea[name='textwid']").val(wid[i].valor)
-            actwid.find("select[name='textpos']").val(wid[i].posicion)
-            actwid.find("input[name='textrib']").val(wid[i].valorlis)
-            actwid.find("select[name='textribon']").val(wid[i].liston)
-            actwid.find("select[name='textribpos']").val(wid[i].posicionlis)
-            actwid.find("select[name='textribcol']").val(wid[i].colorlis)
+            actwid.find("textarea[name='textwid']").val(wid[i].valor ? wid[i].valor : "")
+            actwid.find("select[name='textpos']").val(wid[i].posicion ? wid[i].posicion : "left")
+            actwid.find("input[name='textrib']").val(wid[i].valorlis ? wid[i].valorlis : "")
+            actwid.find("select[name='textribon']").val(wid[i].liston ? wid[i].liston : "false")
+            actwid.find("select[name='textribpos']").val(wid[i].posicionlis ? wid[i].posicionlis : " ")
+            actwid.find("select[name='textribcol']").val(wid[i].colorlis ? wid[i].colorlis : "red")
             break;
           case 'badge':
-            actwid.find("input[name='badwid']").val(wid[i].valor)
-            actwid.find("select[name='badcol']").val(wid[i].semantica)
-            actwid.find("select[name='badtheme']").val(wid[i].tema)
+            actwid.find("input[name='badwid']").val(wid[i].valor ? wid[i].valor : "")
+            actwid.find("select[name='badcol']").val(wid[i].semantica ? wid[i].semantica : "primary")
+            actwid.find("select[name='badtheme']").val(wid[i].tema ? wid[i].tema : "light")
             break;
           case 'div':
             // omitible
@@ -376,13 +387,17 @@ function cargarNotaEnEditor(nota) {
               let miniactwid = actwid.children().last()
               switch (minitypewid) {
                 case 'text':
-                  miniactwid.find("textarea[name='textwid']").val(miniwid[j].valor)
-                  miniactwid.find("select[name='textpos']").val(miniwid[j].posicion)
+                  miniactwid.find("textarea[name='textwid']").val(miniwid[j].valor ? miniwid[j].valor : "")
+                  miniactwid.find("select[name='textpos']").val(miniwid[j].posicion ? miniwid[j].posicion : "left")
+                  miniactwid.find("input[name='textrib']").val(miniwid[j].valorlis ? miniwid[j].valorlis : "")
+                  miniactwid.find("select[name='textribon']").val(miniwid[j].liston ? miniwid[j].liston : "false")
+                  miniactwid.find("select[name='textribpos']").val(miniwid[j].posicionlis ? miniwid[j].posicionlis : " ")
+                  miniactwid.find("select[name='textribcol']").val(miniwid[j].colorlis ? miniwid[j].colorlis : "red")
                   break;
                 case 'badge':
-                  miniactwid.find("input[name='badwid']").val(miniwid[j].valor)
-                  miniactwid.find("select[name='badcol']").val(miniwid[j].semantica)
-                  miniactwid.find("select[name='badtheme']").val(miniwid[j].tema)
+                  miniactwid.find("input[name='badwid']").val(miniwid[j].valor ? miniwid[j].valor : "")
+                  miniactwid.find("select[name='badcol']").val(miniwid[j].semantica ? miniactwid[j].semantica : "primary")
+                  miniactwid.find("select[name='badtheme']").val(miniwid[j].tema ? miniwid[j].tema : "light")
                   break;
                 
                 default:
@@ -390,7 +405,9 @@ function cargarNotaEnEditor(nota) {
               }
             }
             break;
-          
+          case 'image':
+            
+            break;
           default:
             // Tab to edit
         }
@@ -511,6 +528,7 @@ function addtodoc(type) {
           <ul class="dropdown menu rounded-box bg-base-300 squircle" popover id="popminiadd-${uid}" style="position-anchor:--addminiwid-${uid}">
         <li><button data-role="none" class="squircle edit-btn" @click="addtolist('text', $el)">Texto</button></li>
         <li><button data-role="none" class="squircle edit-btn" @click="addtolist('badge', $el)">Etiqueta</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="addtolist('image', $el)">Imagen</button></li>
        </ul>
          </span>
          <div>
@@ -518,6 +536,23 @@ function addtodoc(type) {
           </ul>
          </div>
        </li>`
+      break;
+    case "image":
+      html = `<li pt-type="image">
+        <h1 class="setui">Imagen<button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
+        <span class="setui">
+        <div data-role="controlgroup" data-type="horizontal">
+         <button @click="seleccionarImagen(this)" data-icon="plus" data-mini="true">Subir Foto</button>
+        </div>
+        <input type="hidden" name="imagewid" value=""/>
+        <select name="imagepos" data-native-menu="false" data-mini="true">
+         <option value="circular">Circular</option>
+         <option value="fluid">Ancho completo</option>
+         <option value="rounded">Redondeada</option>
+        </select>
+       </span>
+      <div class="img-preview-container" style="text-align:center; margin-top:10px;"></div>
+    </li>`
       break;
 		default:
 			// Tab to edit
@@ -611,7 +646,23 @@ function addtolist(type, element) {
         </span>
        </li>`
       break;
-    
+    case "image":
+      html = `<li pt-type="image">
+        <h1 class="setui">Imagen<button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
+        <span class="setui">
+        <div data-role="controlgroup" data-type="horizontal">
+         <button @click="seleccionarImagen(this)" data-icon="plus" data-mini="true">Subir Foto</button>
+        </div>
+        <input type="hidden" name="imagewid" value=""/>
+        <select name="imagepos" data-native-menu="false" data-mini="true">
+         <option value="circular">Circular</option>
+         <option value="fluid">Ancho completo</option>
+         <option value="rounded">Redondeada</option>
+        </select>
+       </span>
+      <div class="img-preview-container" style="text-align:center; margin-top:10px;"></div>
+    </li>`
+      break;
 		default:
 			// Tab to edit
 	}
@@ -621,6 +672,33 @@ function addtolist(type, element) {
 	  $list.listview().listview("refresh");
 	  $nuevoItem.trigger('create')
 	},5)
+}
+async function seleccionarImagen(btn) {
+  const { FilePicker } = Capacitor.Plugins;
+  const $widget = $(btn).closest('li');
+  const $inputHidden = $widget.find('input[name="imagewid"]');
+  const $preview = $widget.find('.img-preview-container');
+  
+  try {
+    const result = await FilePicker.pickFiles({
+      types: ['image/*'],
+      limit: 1,
+      readData: true // Esto nos da el Base64 necesario para visualizar y guardar
+    });
+    
+    if (result.files.length > 0) {
+      const archivo = result.files[0];
+      // Formateamos como DataURL para que el <img> lo entienda
+      const base64Data = `data:${archivo.mimeType};base64,${archivo.data}`;
+      
+      $inputHidden.val(base64Data);
+      // Mostrar una pequeña miniatura en el editor para confirmar
+      $preview.html(`<img src="${base64Data}" style="max-height:100px; border-radius:5px;"/>`);
+      alert("Imagen cargada correctamente");
+    }
+  } catch (e) {
+    console.error("Error al seleccionar imagen:", e);
+  }
 }
 // 1. Variable global para recordar dónde estábamos escribiendo
 let ultimoTextarea = null;
