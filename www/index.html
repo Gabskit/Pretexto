@@ -2,8 +2,8 @@
 <html lang="es">
   <head>
     <script src="cdn/jquery.js"></script>
-    <script src="cdn/jquery.mobile-1.3.2.min.js"></script>
     <script src="cdn/semantic.min.js"></script>
+    <script src="cdn/jquery.mobile-1.3.2.min.js"></script>
     <script src="cdn/browser@4.js"></script>
     <script src="cdn/cdn.min.js" defer></script>
     <script src="cdn/calendar.min.js"></script>
@@ -46,8 +46,10 @@
       </span>
      </div>
      <div data-role="content" class="full" :data-theme="jqmtheme">
-      <ul data-role="listview" id="lista-notas-locales" data-autodividers="true" data-filter="true">
+      <ul data-role="listview" id="lista-notas-locales" data-autodividers="true" data-filter="true" data-split-icon="delete">
       </ul>
+       
+      </div>
      </div>
      <div x-html="navbar" data-role="footer" data-position="fixed" data-id="footr" :data-theme="jqmtheme">
       <!--footer navbar-->
@@ -107,7 +109,7 @@
       </span>
       <img :src="logo">
       <span style="display: flex; align-items: center;">
-       <button data-role="none" class="btn squircle" popovertarget="popadd" style="anchor-name:--addwid">+ widget</button>
+       <button popovertarget="popadd" style="anchor-name:--addwid" data-icon="plus">Widget</button>
        <ul class="dropdown menu rounded-box bg-base-300 squircle" popover id="popadd" style="position-anchor:--addwid">
         <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('title')">Titulo</button></li>
         <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('text')">Texto</button></li>
@@ -123,9 +125,6 @@
        <label for="namedoc">Nombre:</label>
        <input type="text" name="namedoc" id="namedoc">
       </div>
-      <div class="tabs tabs-box squircle">
-       <input data-role="none" type="radio" name="tab" class="tab squircle" aria-label="Editar" style="color: #000;" checked>
-       <div class="tab-content bg-base-100 border-base-300 p-1 squircle">
         <ul data-role="listview" data-inset="true" id="docreate" class="squircle">
        
        <!--li pt-type="image">
@@ -139,13 +138,9 @@
         </div>
        </li-->
        
+       
       </ul>
-       </div>
-       <input data-role="none" type="radio" name="tab" class="tab squircle" aria-label="Ver" style="color: #000;">
-       <div class="tab-content bg-base-100 border-base-300 p-1 squircle">
-        <div id="preview1" x-html="doc"></div>
-       </div>
-      </div>
+       
      </div>
      <div data-role="footer" class="barui" data-position="fixed" :data-theme="jqmtheme">
       <!--input type="color" name="" id="" value="" /-->
@@ -172,7 +167,8 @@
        <a data-role="button" data-icon="back" data-iconpos="notext" href="#notas" class="squircle" data-transition="none"></a>
       </span>
       <h1 name="filename"></h1>
-      <span>
+      <span class="setui">
+       <button data-icon="share" data-iconpos="notext" @click="compartirNota"></button>
        <a data-role="button" data-icon="edit" data-iconpos="notext" href="#edit" class="squircle" data-transition="none"></a>
       </span>
      </div>

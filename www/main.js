@@ -89,9 +89,24 @@ function compilefile() {
       case 'text':
         datosWidget.valor = widget.find('textarea[name="textwid"]').val() || "";
         datosWidget.posicion = widget.find('select[name="textpos"]').val() || "left";
-        docres += `<p align="${datosWidget.posicion}" style="color: #000;" class="p-1">
+        datosWidget.liston = widget.find('select[name="textribon"]').val() || "false"
+        datosWidget.valorlis = widget.find('input[name="textrib"]').val() || ""
+        datosWidget.posicionlis = widget.find('select[name="textribpos"]').val() || " "
+        datosWidget.colorlis = widget.find('select[name="textribcol"]').val() || "red"
+        if (datosWidget.liston == "true") {
+          docres += `<div class="ui raised segment" style="margin: 10px;">
+        <span class="ui ${datosWidget.colorlis} ${datosWidget.posicionlis} ribbon label">${parsearSimbolos(datosWidget.valorlis)}</span>
+        <p align="${datosWidget.posicion}" style="color: #000;" class="p-1">
         			${parsearSimbolos(datosWidget.valor)}
-       				</p>`;
+       				</p>
+       </div>`
+        } else {
+          docres += `<div class="ui raised segment" style="margin: 10px;">
+        <p align="${datosWidget.posicion}" style="color: #000;" class="p-1">
+        			${parsearSimbolos(datosWidget.valor)}
+       				</p>
+       </div>`;
+        }
         break;
         
       case 'badge':
@@ -122,9 +137,26 @@ function compilefile() {
             case 'text':
               innerDatosWidget.valor = miniwidget.find('textarea[name="textwid"]').val() || "";
               innerDatosWidget.posicion = miniwidget.find('select[name="textpos"]').val() || "left";
-              flowHtml += `<p align="${innerDatosWidget.posicion}" style="color: #000;" class="p-1">
-        						${parsearSimbolos(innerDatosWidget.valor)}
-       							</p>`;
+              innerDatosWidget.liston = widget.find('select[name="textribon"]').val() || "false"
+              innerDatosWidget.valorlis = widget.find('input[name="textrib"]').val() || ""
+              innerDatosWidget.posicionlis = widget.find('select[name="textribpos"]').val() || " "
+              innerDatosWidget.colorlis = widget.find('select[name="textribcol"]').val() || "red"
+              if (innerDatosWidget.liston == "true") {
+              flowHtml += `<div class="ui raised segment" style="margin: 10px;">
+               <span class="ui ${innerDatosWidget.colorlis} ${innerDatosWidget.posicionlis} ribbon label">${parsearSimbolos(innerDatosWidget.valorlis)}</span>
+               <p align="${innerDatosWidget.posicion}" style="color: #000;" class="p-1">
+        			${parsearSimbolos(innerDatosWidget.valor)}
+       				</p>
+             </div>`
+                
+              } else {
+              flowHtml += `<div class="ui raised segment" style="margin: 10px;">
+              <p align="${innerDatosWidget.posicion}" style="color: #000;" class="p-1">
+        			${parsearSimbolos(innerDatosWidget.valor)}
+       				</p>
+             </div>`;
+                
+              }
               break;
             case 'badge':
               innerDatosWidget.valor = miniwidget.find('input[name="badwid"]').val() || "";
@@ -274,6 +306,7 @@ async function listarDesdeDisco() {
                         <a href="#" onclick="cargarNotaLocal('${file.name}')">
                            <h2> ${nombreVisible}</h2>
                         </a>
+                        
                     </li>`;
           $lista.append(li);
         }
@@ -321,6 +354,10 @@ function cargarNotaEnEditor(nota) {
           case 'text':
             actwid.find("textarea[name='textwid']").val(wid[i].valor)
             actwid.find("select[name='textpos']").val(wid[i].posicion)
+            actwid.find("input[name='textrib']").val(wid[i].valorlis)
+            actwid.find("select[name='textribon']").val(wid[i].liston)
+            actwid.find("select[name='textribpos']").val(wid[i].posicionlis)
+            actwid.find("select[name='textribcol']").val(wid[i].colorlis)
             break;
           case 'badge':
             actwid.find("input[name='badwid']").val(wid[i].valor)
@@ -374,7 +411,7 @@ function addtodoc(type) {
          <button data-icon="arrow-d" data-iconpos="notext"></button>
         </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
-         <input type="text" name="titlewid" value="" class="squircle"/>
+         <input type="text" name="titlewid" value="" class="squircle" placeholder="Título"/>
          <select name="titlestyle" data-native-menu="false" data-mini="true">
           <option value="a">a</option>
           <option value="b">b</option>
@@ -391,14 +428,41 @@ function addtodoc(type) {
          <button data-icon="arrow-u" data-iconpos="notext"></button>
          <button data-icon="arrow-d" data-iconpos="notext"></button>
          </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
-        <span class="setui">
-         <textarea name="textwid" rows="8" cols="20" class="squircle txt-nota" ></textarea>
+        <span class="widui">
+         <input type="text" name="textrib" placeholder="Texto del liston">
+         <span class="setui">
+          <select name="textribon" data-role="slider" data-mini="true">
+           <option value="false">No</option>
+           <option value="true">Si</option>
+          </select>
+          <select name="textribpos" data-native-menu="false" data-mini="true">
+           <option value=" ">Izquierda</option>
+           <option value="right">Derecha</option>
+          </select>
+          <select name="textribcol" data-native-menu="false" data-mini="true">
+           <option value="red">Rojo</option>
+           <option value="orange">Naranja</option>
+           <option value="olive">Olivo</option>
+           <option value="green">Verde</option>
+           <option value="teal">Agua</option>
+           <option value="blue">Azul</option>
+           <option value="violet">Violeta</option>
+           <option value="pink">Rosa</option>
+           <option value="brown">Cafe</option>
+           <option value="grey">Gris</option>
+           <option value="black">Negro</option>
+          </select>
+         </span>
+         <hr />
+         <span class="setui">
+          <textarea name="textwid" rows="8" cols="20" class="squircle txt-nota"  placeholder="Texto principal"></textarea>
          <select name="textpos" data-native-menu="false" data-mini="true">
           <option value="left">◧</option>
           <option value="center">▣</option>
           <option value="right">◨</option>
           <option value="justify">⬛︎</option>
          </select>
+         </span>
         </span>
        </li>`
       break;
@@ -409,7 +473,7 @@ function addtodoc(type) {
          <button data-icon="arrow-d" data-iconpos="notext"></button>
          </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
-         <input type="text" name="badwid" value="" class="squircle"/>
+         <input type="text" name="badwid" value="" class="squircle" placeholder="Texto de la etiqueta"/>
          <select name="badcol" data-native-menu="false" data-mini="true">
           <option value="primary">Primario</option>
           <option value="secondary">Secundario</option>
@@ -441,9 +505,9 @@ function addtodoc(type) {
         <h1 class="setui">Contenedor<!--div data-role="controlgroup" data-type="horizontal">
          <button data-icon="arrow-u" data-iconpos="notext"></button>
          <button data-icon="arrow-d" data-iconpos="notext"></button>
-         </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
+         </div--><button name="delwid" data-icon="delete" data-iconpos="notext" data-mini="true"></button></h1>
          <span class="setui">
-          <button data-role="none" class="btn squircle" popovertarget="popminiadd-${uid}" name="addwid" style="anchor-name:--addminiwid-${uid}">+ widget</button>
+          <button popovertarget="popminiadd-${uid}" name="addwid" style="anchor-name:--addminiwid-${uid}" data-icon="plus">Widget</button>
           <ul class="dropdown menu rounded-box bg-base-300 squircle" popover id="popminiadd-${uid}" style="position-anchor:--addminiwid-${uid}">
         <li><button data-role="none" class="squircle edit-btn" @click="addtolist('text', $el)">Texto</button></li>
         <li><button data-role="none" class="squircle edit-btn" @click="addtolist('badge', $el)">Etiqueta</button></li>
@@ -483,14 +547,41 @@ function addtolist(type, element) {
          <button data-icon="arrow-u" data-iconpos="notext"></button>
          <button data-icon="arrow-d" data-iconpos="notext"></button>
          </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
-        <span class="setui">
-         <textarea name="textwid" rows="8" cols="20" class="squircle txt-nota" ></textarea>
+        <span class="widui">
+         <input type="text" name="textrib" placeholder="Texto del liston">
+         <span class="setui">
+          <select name="textribon" data-role="slider" data-mini="true">
+           <option value="false">No</option>
+           <option value="true">Si</option>
+          </select>
+          <select name="textribpos" data-native-menu="false" data-mini="true">
+           <option value=" ">Izquierda</option>
+           <option value="right">Derecha</option>
+          </select>
+          <select name="textribcol" data-native-menu="false" data-mini="true">
+           <option value="red">Rojo</option>
+           <option value="orange">Naranja</option>
+           <option value="olive">Olivo</option>
+           <option value="green">Verde</option>
+           <option value="teal">Agua</option>
+           <option value="blue">Azul</option>
+           <option value="violet">Violeta</option>
+           <option value="pink">Rosa</option>
+           <option value="brown">Cafe</option>
+           <option value="grey">Gris</option>
+           <option value="black">Negro</option>
+          </select>
+         </span>
+         <hr />
+         <span class="setui">
+          <textarea name="textwid" rows="8" cols="20" class="squircle txt-nota"  placeholder="Texto principal"></textarea>
          <select name="textpos" data-native-menu="false" data-mini="true">
           <option value="left">◧</option>
           <option value="center">▣</option>
           <option value="right">◨</option>
           <option value="justify">⬛︎</option>
          </select>
+         </span>
         </span>
        </li>`
       break;
@@ -501,7 +592,7 @@ function addtolist(type, element) {
          <button data-icon="arrow-d" data-iconpos="notext"></button>
          </div--><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
-         <input type="text" name="badwid" value="" class="squircle"/>
+         <input type="text" name="badwid" value="" class="squircle" placeholder="Texto de la etiqueta"/>
          <select name="badcol" data-native-menu="false" data-mini="true">
           <option value="primary">Primario</option>
           <option value="secondary">Secundario</option>

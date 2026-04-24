@@ -1,7 +1,6 @@
 *{
 	transition: 0.3s all ease-in !important;
 	font-family: lexend-deca !important;
-	
 }
 html, body {
  margin: 0;
@@ -18,13 +17,19 @@ body.ui-mobile-viewport {
  min-height: 100vh !important;
  -webkit-overflow-scrolling: touch !important; 
 }
-
 @font-face {
 	font-family: lexend-deca;
 	src: url("assets/LexendDeca-Regular.ttf");
 }
-hr{
+/*hr{
 	color: #000 !important;
+}*/
+.ui.dropdown .menu {
+    z-index: 9999 !important;
+}
+.ui.dropdown {
+    display: block !important;
+    margin: 0.5em 0;
 }
 .full{
 	min-height: 100vh;
