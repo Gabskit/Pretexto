@@ -234,7 +234,6 @@ async function savefile(data) {
 async function compartirNota() {
   const { Share, Filesystem } = Capacitor.Plugins;
   let nombreArchivo = $("#namedoc").val() + '.nev'
-  makefile()
   try {
     let datosActuales = compilefile();
     let contenidoJSON = JSON.stringify(datosActuales);
@@ -260,6 +259,7 @@ async function compartirNota() {
     });
   } catch (e) {
     if (e.message !== "Share canceled") {
+      alert(e)
       /*$.toast({
         class: 'error',
         message: "Error al compartir: " + e,
@@ -403,21 +403,21 @@ function cargarNotaEnEditor(nota) {
       let actwid = $lista.children().last()
         switch (typewid) {
           case 'title':
-            actwid.find("input[name='titlewid']").val(wid[i].valor ? wid[i].valor : "")
-            actwid.find("select[name='titlestyle']").val(wid[i].estilo ? wid[i].estilo : "a")
+            actwid.find("input[name='titlewid']").val(wid[i].valor) || ''
+            actwid.find("select[name='titlestyle']").val(wid[i].estilo) || 'a'
             break;
           case 'text':
-            actwid.find("textarea[name='textwid']").val(wid[i].valor ? wid[i].valor : "")
-            actwid.find("select[name='textpos']").val(wid[i].posicion ? wid[i].posicion : "left")
-            actwid.find("input[name='textrib']").val(wid[i].valorlis ? wid[i].valorlis : "")
-            actwid.find("select[name='textribon']").val(wid[i].liston ? wid[i].liston : "false")
-            actwid.find("select[name='textribpos']").val(wid[i].posicionlis ? wid[i].posicionlis : " ")
-            actwid.find("select[name='textribcol']").val(wid[i].colorlis ? wid[i].colorlis : "red")
+            actwid.find("textarea[name='textwid']").val(wid[i].valor) || ''
+            actwid.find("select[name='textpos']").val(wid[i].posicion) || 'left'
+            actwid.find("input[name='textrib']").val(wid[i].valorlis) || ''
+            actwid.find("select[name='textribon']").val(wid[i].liston) || 'false'
+            actwid.find("select[name='textribpos']").val(wid[i].posicionlis) || ' '
+            actwid.find("select[name='textribcol']").val(wid[i].colorlis) || 'red'
             break;
           case 'badge':
-            actwid.find("input[name='badwid']").val(wid[i].valor ? wid[i].valor : "")
-            actwid.find("select[name='badcol']").val(wid[i].semantica ? wid[i].semantica : "primary")
-            actwid.find("select[name='badtheme']").val(wid[i].tema ? wid[i].tema : "light")
+            actwid.find("input[name='badwid']").val(wid[i].valor) || ''
+            actwid.find("select[name='badcol']").val(wid[i].semantica) || 'primary'
+            actwid.find("select[name='badtheme']").val(wid[i].tema) || 'light'
             break;
           case 'div':
             // omitible
@@ -431,21 +431,21 @@ function cargarNotaEnEditor(nota) {
               let miniactwid = actwid.children().last()
               switch (minitypewid) {
                 case 'text':
-                  miniactwid.find("textarea[name='textwid']").val(miniwid[j].valor ? miniwid[j].valor : "")
-                  miniactwid.find("select[name='textpos']").val(miniwid[j].posicion ? miniwid[j].posicion : "left")
-                  miniactwid.find("input[name='textrib']").val(miniwid[j].valorlis ? miniwid[j].valorlis : "")
-                  miniactwid.find("select[name='textribon']").val(miniwid[j].liston ? miniwid[j].liston : "false")
-                  miniactwid.find("select[name='textribpos']").val(miniwid[j].posicionlis ? miniwid[j].posicionlis : " ")
-                  miniactwid.find("select[name='textribcol']").val(miniwid[j].colorlis ? miniwid[j].colorlis : "red")
+                  miniactwid.find("textarea[name='textwid']").val(miniwid[j].valor) || ''
+                  miniactwid.find("select[name='textpos']").val(miniwid[j].posicion) || 'left'
+                  miniactwid.find("input[name='textrib']").val(miniwid[j].valorlis) || ''
+                  miniactwid.find("select[name='textribon']").val(miniwid[j].liston) || 'false'
+                  miniactwid.find("select[name='textribpos']").val(miniwid[j].posicionlis) || ' '
+                  miniactwid.find("select[name='textribcol']").val(miniwid[j].colorlis) || 'red'
                   break;
                 case 'badge':
-                  miniactwid.find("input[name='badwid']").val(miniwid[j].valor ? miniwid[j].valor : "")
-                  miniactwid.find("select[name='badcol']").val(miniwid[j].semantica ? miniactwid[j].semantica : "primary")
-                  miniactwid.find("select[name='badtheme']").val(miniwid[j].tema ? miniwid[j].tema : "light")
+                  miniactwid.find("input[name='badwid']").val(miniwid[j].valor) || ''
+                  miniactwid.find("select[name='badcol']").val(miniwid[j].semantica) || 'primary'
+                  miniactwid.find("select[name='badtheme']").val(miniwid[j].tema) || 'light'
                   break;
                 case 'image':
-                  miniactwid.find("input[name='imagewid']").val(miniwid[j].url ? miniwid[j].url : "");
-                  miniactwid.find("select[name='imagepos']").val(miniwid[j].estilo ? miniwid[j].estilo : "circular");
+                  miniactwid.find("input[name='imagewid']").val(miniwid[j].url) || ''
+                  miniactwid.find("select[name='imagepos']").val(miniwid[j].estilo) || 'circular'
                   // Mostrar la miniatura si ya tiene datos
                   if(miniwid[j].url) {
                     miniactwid.find(".img-preview-container").html(`<img src="${miniwid[j].url}" style="max-height:100px;"/>`);
@@ -458,8 +458,8 @@ function cargarNotaEnEditor(nota) {
             }
             break;
           case 'image':
-            actwid.find("input[name='imagewid']").val(wid[i].url ?  wid[i].url : "");
-            actwid.find("select[name='imagepos']").val(wid[i].estilo ? wid[i].estilo : "circular");
+            actwid.find("input[name='imagewid']").val(wid[i].url) || ''
+            actwid.find("select[name='imagepos']").val(wid[i].estilo) || 'circular'
             // Mostrar la miniatura si ya tiene datos
             if(wid[i].url) {
               actwid.find(".img-preview-container").html(`<img src="${wid[i].url}" style="max-height:100px;"/>`);
