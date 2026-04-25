@@ -447,14 +447,27 @@ function cargarNotaEnEditor(nota) {
                   miniactwid.find("select[name='badcol']").val(miniwid[j].semantica ? miniactwid[j].semantica : "primary")
                   miniactwid.find("select[name='badtheme']").val(miniwid[j].tema ? miniwid[j].tema : "light")
                   break;
-                
+                case 'image':
+                  miniactwid.find("input[name='imagewid']").val(miniwid[j].url ? miniwid[j].url : "");
+                  miniactwid.find("select[name='imagepos']").val(miniwid[j].estilo ? miniwid[j].estilo : "circular");
+                  // Mostrar la miniatura si ya tiene datos
+                  if(miniwid[j].url) {
+                    miniactwid.find(".img-preview-container").html(`<img src="${miniwid[j].url}" style="max-height:100px;"/>`);
+                    
+                  }
+                  break;
                 default:
                   // Tab to edit
               }
             }
             break;
           case 'image':
-            
+            actwid.find("input[name='imagewid']").val(wid[i].url ?  wid[i].url : "");
+            actwid.find("select[name='imagepos']").val(wid[i].estilo ? wid[i].estilo : "circular");
+            // Mostrar la miniatura si ya tiene datos
+            if(wid[i].url) {
+              actwid.find(".img-preview-container").html(`<img src="${wid[i].url}" style="max-height:100px;"/>`);
+            }
             break;
           default:
             // Tab to edit
@@ -722,8 +735,6 @@ function addtolist(type, element) {
 	},5)
 }
 async function seleccionarImagen(btn) {
-  alert("Paso 1: Iniciando función...");
-  
   try {
     // Verificar si Capacitor está inyectado
     if (typeof Capacitor === 'undefined' || !Capacitor.Plugins) {
@@ -737,16 +748,10 @@ async function seleccionarImagen(btn) {
       alert("Error: El plugin FilePicker no está registrado. ¿Ejecutaste 'npx cap sync'?");
       return;
     }
-    
-    alert("Paso 2: Abriendo galería...");
     const result = await FilePicker.pickFiles({
       types: ['image/*'],
-      multiple: false,
       readData: true
     });
-    
-    alert("Paso 3: Imagen capturada. Procesando datos...");
-    
     if (result.files && result.files.length > 0) {
       const file = result.files[0];
       
@@ -769,12 +774,23 @@ async function seleccionarImagen(btn) {
       
       $inputHidden.val(base64Image);
       $previewDiv.html(`<img src="${base64Image}" style="width:100%; max-height:150px; object-fit:cover; border-radius:8px; margin-top:10px;">`);
-      
-      alert("Paso 4: ¡Éxito! Imagen cargada en el DOM.");
+      $.toast({
+        class: 'success',
+        message: "¡Éxito! Imagen cargada",
+        horizontal: true,
+        displayTime: auto,
+        showProgress: 'bottom'
+      })
     }
   } catch (e) {
     // Esto atrapará errores de permisos o cancelaciones de usuario
-    alert("Fallo detectado: " + e.message + " | " + JSON.stringify(e));
+    $.toast({
+        class: 'error',
+        message: "Fallo detectado: " + e.message + " | " + JSON.stringify(e),
+        horizontal: true,
+        displayTime: auto,
+        showProgress: 'bottom'
+      })
   }
 }
 // 1. Variable global para recordar dónde estábamos escribiendo
