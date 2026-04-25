@@ -722,44 +722,59 @@ function addtolist(type, element) {
 	},5)
 }
 async function seleccionarImagen(btn) {
-  const target = btn || this
-  const { FilePicker } = Capacitor.Plugins;
-  const $widget = $(target).closest('li');
-  const $inputHidden = $widget.find('input[name="imagewid"]');
-  const $preview = $widget.find('.img-preview-container');
+  alert("Paso 1: Iniciando función...");
   
   try {
+    // Verificar si Capacitor está inyectado
+    if (typeof Capacitor === 'undefined' || !Capacitor.Plugins) {
+      alert("Error crítico: Capacitor no está definido. ¿Estás en un navegador web?");
+      return;
+    }
+    
+    const { FilePicker } = Capacitor.Plugins;
+    
+    if (!FilePicker) {
+      alert("Error: El plugin FilePicker no está registrado. ¿Ejecutaste 'npx cap sync'?");
+      return;
+    }
+    
+    alert("Paso 2: Abriendo galería...");
     const result = await FilePicker.pickFiles({
       types: ['image/*'],
-      limit: 1,
-      readData: true // Esto nos da el Base64 necesario para visualizar y guardar
+      multiple: false,
+      readData: true
     });
     
-    if (result.files.length > 0) {
-      const archivo = result.files[0];
-      // Formateamos como DataURL para que el <img> lo entienda
-      const base64Data = "data:${archivo.mimeType};base64,${archivo.data}";
+    alert("Paso 3: Imagen capturada. Procesando datos...");
+    
+    if (result.files && result.files.length > 0) {
+      const file = result.files[0];
       
-      $inputHidden.val(base64Data);
-      // Mostrar una pequeña miniatura en el editor para confirmar
-      $preview.html(`<img src="${base64Data}" style="max-height:100px; border-radius:5px;"/>`);
-      $.toast({
-        class: 'success',
-        message: 'Imagen cargada correctamente',
-        horizontal: true,
-        displayTime: auto,
-        showProgress: 'bottom'
-      })
+      // Verificar si el plugin devolvió la data en Base64
+      if (!file.data) {
+        alert("Error: El plugin no devolvió el contenido 'data'. Revisa la configuración de readData.");
+        return;
+      }
+      
+      const base64Image = `data:${file.mimeType || 'image/jpeg'};base64,${file.data}`;
+      
+      const $li = $(btn).closest('li');
+      const $inputHidden = $li.find('input[name="imagewid"]');
+      const $previewDiv = $li.find('.img-preview-container');
+      
+      if ($inputHidden.length === 0) {
+        alert("Error: No se encontró el input oculto en el HTML.");
+        return;
+      }
+      
+      $inputHidden.val(base64Image);
+      $previewDiv.html(`<img src="${base64Image}" style="width:100%; max-height:150px; object-fit:cover; border-radius:8px; margin-top:10px;">`);
+      
+      alert("Paso 4: ¡Éxito! Imagen cargada en el DOM.");
     }
   } catch (e) {
-    $.toast({
-        class: 'error',
-        message: 'Error al cargar la imagen:' + e,
-        horizontal: true,
-        displayTime: auto,
-        showProgress: 'bottom'
-      })
-    console.error("Error al seleccionar imagen:", e);
+    // Esto atrapará errores de permisos o cancelaciones de usuario
+    alert("Fallo detectado: " + e.message + " | " + JSON.stringify(e));
   }
 }
 // 1. Variable global para recordar dónde estábamos escribiendo
