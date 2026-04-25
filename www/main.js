@@ -212,9 +212,21 @@ async function savefile(data) {
         encoding: 'utf8',
         recursive: true // Crea la carpeta si no existe
       });
-      alert("Guardado");
+      $.toast({
+        class: 'success',
+        message: 'Guardado',
+        horizontal: true,
+        displayTime: auto,
+        showProgress: 'bottom'
+      })
     } catch (e) {
-      alert("Error en Capacitor: " + e.message);
+      $.toast({
+        class: 'error',
+        message: "Error en Capacitor: " + e,
+        horizontal: true,
+        displayTime: auto,
+        showProgress: 'bottom'
+      })
     }
   } 
 }
@@ -247,7 +259,13 @@ async function compartirNota() {
     });
   } catch (e) {
     if (e.message !== "Share canceled") {
-  alert("Error al compartir: " + e.message);
+      $.toast({
+        class: 'error',
+        message: "Error al compartir: " + e,
+        horizontal: true,
+        displayTime: auto,
+        showProgress: 'bottom'
+      })
 } 
   }
 }
@@ -272,13 +290,31 @@ async function importarNota() {
           });
         } 
       }
-      alert("Importación exitosa");
+      $.toast({
+        class: 'success',
+        message: 'Importacion exitosa',
+        horizontal: true,
+        displayTime: auto,
+        showProgress: 'bottom'
+      })
       listarDesdeDisco(); // Tu función para refrescar la lista
     } else {
-      alert("Importacion cancelada")
+      $.toast({
+        class: 'Error',
+        message: 'Importacion Cancelada',
+        horizontal: true,
+        displayTime: auto,
+        showProgress: 'bottom'
+      })
     }
   } catch (e) {
-    console.error("Error al importar:", e);
+    $.toast({
+      class: 'error',
+      message: 'Error al importar:' + e,
+      horizontal: true,
+      displayTime: auto,
+      showProgress: 'bottom'
+    })
   }
 }
 
@@ -326,7 +362,13 @@ async function listarDesdeDisco() {
   } catch (e) {
     // Si la carpeta no existe aún (primera vez), la creamos o mostramos vacío
     $lista.append('<li>Crea tu primera nota para empezar</li>');
-    console.log("Carpeta PreTexto aún no existe.");
+    $.toast({
+        class: 'warn',
+        message: 'Carpeta PreTextoaun no existe',
+        horizontal: true,
+        displayTime: auto,
+        showProgress: 'bottom'
+      })
   }
   
   // Muy importante para que JQM aplique los estilos al contenido nuevo
@@ -344,7 +386,13 @@ async function cargarNotaLocal(fileName) {
         const nota = JSON.parse(contenido.data);
         cargarNotaEnEditor(nota); // Reutiliza tu función existente 
     } catch (e) {
-        alert("Error al cargar la nota: " + e.message);
+      $.toast({
+        class: 'error',
+        message: 'Error al cargar la nota:' + e,
+        horizontal: true,
+        displayTime: auto,
+        showProgress: 'bottom'
+      })
     }
 }
 function cargarNotaEnEditor(nota) {
@@ -689,14 +737,27 @@ async function seleccionarImagen(btn) {
     if (result.files.length > 0) {
       const archivo = result.files[0];
       // Formateamos como DataURL para que el <img> lo entienda
-      const base64Data = `data:${archivo.mimeType};base64,${archivo.data}`;
+      const base64Data = "data:${archivo.mimeType};base64,${archivo.data}";
       
       $inputHidden.val(base64Data);
       // Mostrar una pequeña miniatura en el editor para confirmar
       $preview.html(`<img src="${base64Data}" style="max-height:100px; border-radius:5px;"/>`);
-      alert("Imagen cargada correctamente");
+      $.toast({
+        class: 'success',
+        message: 'Imagen cargada correctamente',
+        horizontal: true,
+        displayTime: auto,
+        showProgress: 'bottom'
+      })
     }
   } catch (e) {
+    $.toast({
+        class: 'error',
+        message: 'Error al cargar la imagen:' + e,
+        horizontal: true,
+        displayTime: auto,
+        showProgress: 'bottom'
+      })
     console.error("Error al seleccionar imagen:", e);
   }
 }
