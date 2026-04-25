@@ -590,7 +590,7 @@ function addtodoc(type) {
         <h1 class="setui">Imagen<button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
         <div data-role="controlgroup" data-type="horizontal">
-         <button @click="seleccionarImagen(this)" data-icon="plus" data-mini="true">Subir Foto</button>
+         <button @click="seleccionarImagen($el)" data-icon="plus" data-mini="true">Subir Foto</button>
         </div>
         <input type="hidden" name="imagewid" value=""/>
         <select name="imagepos" data-native-menu="false" data-mini="true">
@@ -699,7 +699,7 @@ function addtolist(type, element) {
         <h1 class="setui">Imagen<button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
         <div data-role="controlgroup" data-type="horizontal">
-         <button @click="seleccionarImagen(this)" data-icon="plus" data-mini="true">Subir Foto</button>
+         <button @click="seleccionarImagen($el)" data-icon="plus" data-mini="true">Subir Foto</button>
         </div>
         <input type="hidden" name="imagewid" value=""/>
         <select name="imagepos" data-native-menu="false" data-mini="true">
@@ -722,8 +722,9 @@ function addtolist(type, element) {
 	},5)
 }
 async function seleccionarImagen(btn) {
+  const target = btn || this
   const { FilePicker } = Capacitor.Plugins;
-  const $widget = $(btn).closest('li');
+  const $widget = $(target).closest('li');
   const $inputHidden = $widget.find('input[name="imagewid"]');
   const $preview = $widget.find('.img-preview-container');
   
