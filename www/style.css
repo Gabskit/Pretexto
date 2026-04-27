@@ -1,13 +1,10 @@
 *{
-	transition: 0.3s all ease-in !important;
+	transition: 0.3s cubic-bezier(0.65, 0, 0.35, 1) !important;
 	font-family: lexend-deca !important;
 }
 html, body {
  margin: 0;
  padding: 0;
-}
-canvas {
- display: block;
 }
 body.ui-mobile-viewport {
  overflow-y: auto !important;
@@ -24,13 +21,20 @@ body.ui-mobile-viewport {
 /*hr{
 	color: #000 !important;
 }*/
-.ui.dropdown .menu {
-    z-index: 9999 !important;
+.ui-state-highlight {
+    height: 80px; /* Altura promedio de un widget */
+    background: rgba(0,0,0,0.05) !important;
+    border: 2px dashed #ccc !important;
+    margin: 5px 0;
+    list-style: none;
+    visibility: visible !important;
 }
-.ui.dropdown {
-    display: block !important;
-    margin: 0.5em 0;
+li {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
 }
+
 .full{
 	min-height: 100vh;
 }

@@ -3,6 +3,9 @@
   <head>
     <script src="cdn/jquery.js"></script>
     <script src="cdn/semantic.min.js"></script>
+    <script src="cdn/jquery-ui.min.js"></script>
+    <script src="cdn/jquery.ui.touch-punch.min.js"></script>
+    <script src="cdn/jquery.mjs.nestedSortable.min.js"></script>
     <script src="cdn/jquery.mobile-1.3.2.min.js"></script>
     <script src="cdn/browser@4.js"></script>
     <script src="cdn/cdn.min.js" defer></script>
@@ -41,7 +44,7 @@
      <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
       <img :src="logo" >
       <span class="setui">
-       <button data-icon="folder" @click="importarNota">Importar</button>
+       <button data-icon="folder" @click="Capacitores.importarNota">Importar</button>
        <a data-role="button" href="#edit" data-icon="plus" class="squircle" data-transition="none">Nueva nota</a>
       </span>
      </div>
@@ -100,21 +103,21 @@
      </div>
     </div>
     <!--edit page-->
-    <div data-role="page" id="edit" x-effect="delwidg">
+    <div data-role="page" id="edit">
      <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
       <span>
-       <a data-role="button" data-icon="back"  data-iconpos="notext" href="#notas" class="squircle" data-transition="none"></a>
+       <a data-role="button" data-icon="back" data-iconpos="notext" href="#notas" class="squircle" data-transition="none"></a>
       </span>
       <img :src="logo">
       <span style="display: flex; align-items: center;">
        <button popovertarget="popadd" style="anchor-name:--addwid" data-icon="plus">Widget</button>
        <ul class="dropdown menu rounded-box bg-base-300 squircle" popover id="popadd" style="position-anchor:--addwid">
-        <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('title')">Titulo</button></li>
-        <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('text')">Texto</button></li>
-        <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('badge')">Etiqueta</button></li>
-        <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('div')">Divisor</button></li>
-        <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('flow')">Contenedor</button></li>
-        <li><button data-role="none" class="squircle edit-btn" @click="addtodoc('image')">Imagen</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtodoc('title')">Titulo</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtodoc('text')">Texto</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtodoc('badge')">Etiqueta</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtodoc('div')">Divisor</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtodoc('flow')">Contenedor</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtodoc('image')">Imagen</button></li>
        </ul>
        <a data-role="button" data-icon="view" data-iconpos="notext" href="#view" class="squircle" data-transition="none"></a>
       </span>
@@ -124,7 +127,7 @@
        <label for="namedoc">Nombre:</label>
        <input type="text" name="namedoc" id="namedoc">
       </div>
-        <ul data-role="listview" data-inset="true" id="docreate" class="squircle">
+        <ul data-role="listview" data-inset="true" id="docreate" class="squircle sortable">
       </ul>
      </div>
      <div data-role="footer" class="barui" data-position="fixed" :data-theme="jqmtheme">
@@ -141,7 +144,7 @@
       </div>
       <div data-role="controlgroup" data-type="horizontal">
        <button data-icon="save" data-iconpos="notext" @click="makefile"></button>
-       <button data-icon="share" data-iconpos="notext" @click="compartirNota"></button>
+       <button data-icon="share" data-iconpos="notext" @click="Capacitores.compartirNota"></button>
       </div>
      </div>
     </div>
@@ -153,7 +156,7 @@
       </span>
       <h1 name="filename"></h1>
       <span class="setui">
-       <button data-icon="share" data-iconpos="notext" @click="compartirNota"></button>
+       <button data-icon="share" data-iconpos="notext" @click="Capacitores.compartirNota"></button>
        <a data-role="button" data-icon="edit" data-iconpos="notext" href="#edit" class="squircle" data-transition="none"></a>
       </span>
      </div>
