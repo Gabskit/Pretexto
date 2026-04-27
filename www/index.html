@@ -44,7 +44,7 @@
      <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
       <img :src="logo" >
       <span class="setui">
-       <button data-icon="folder" @click="Capacitores.importarNota">Importar</button>
+       <button data-icon="folder" @click="Capacitores.importarNota()">Importar</button>
        <a data-role="button" href="#edit" data-icon="plus" class="squircle" data-transition="none">Nueva nota</a>
       </span>
      </div>
@@ -144,7 +144,7 @@
       </div>
       <div data-role="controlgroup" data-type="horizontal">
        <button data-icon="save" data-iconpos="notext" @click="makefile"></button>
-       <button data-icon="share" data-iconpos="notext" @click="Capacitores.compartirNota"></button>
+       <button data-icon="share" data-iconpos="notext" @click="Capacitores.compartirNota()"></button>
       </div>
      </div>
     </div>
@@ -156,7 +156,7 @@
       </span>
       <h1 name="filename"></h1>
       <span class="setui">
-       <button data-icon="share" data-iconpos="notext" @click="Capacitores.compartirNota"></button>
+       <button data-icon="share" data-iconpos="notext" @click="Capacitores.compartirNota()"></button>
        <a data-role="button" data-icon="edit" data-iconpos="notext" href="#edit" class="squircle" data-transition="none"></a>
       </span>
      </div>
