@@ -1,3 +1,333 @@
+class BaseWidget {
+  constructor(tipo) {
+    this.tipo = tipo;
+  }
+  getHTML() {
+    return ``;
+  }
+  getWYSIWYG(datos) {
+    return ``; 
+  }
+  extraerDatos($elementoDOM) {
+    return { tipo: this.tipo };
+  }
+  compilarVista(datos) {
+    return ``;
+  }
+  cargarDatos($elementoDOM, datos) {
+  }
+}
+class TitleWidget extends BaseWidget {
+  constructor() {
+    super('title');
+  }
+  getHTML() {
+    return `<li pt-type="title">
+        <h1 class="setui">Titulo<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
+        <span class="setui">
+         <input type="text" name="titlewid" value="" class="squircle txt-nota" placeholder="Título"/>
+         <select name="titlestyle" data-native-menu="false" data-mini="true">
+          <option value="a">a</option>
+          <option value="b">b</option>
+          <option value="c">c</option>
+          <option value="d">d</option>
+          <option value="e">e</option>
+         </select>
+        </span>
+       </li>`;
+  }
+  getWYSIWYG(datos){
+    return `<div class="ui-bar-${datos.estilo} p-2"><h1
+    contenteditable="true" 
+    oninput="$(this).closest('li').data('valor', this.innerText)">${datos.valor || 'Titulo.'}</h1></div>`
+  }
+  extraerDatos($widget) {
+    let datos = super.extraerDatos($widget);
+    datos.valor = $widget.find('input[name="titlewid"]').val() || "";
+    datos.estilo = $widget.find('select[name="titlestyle"]').val() || "a";
+    return datos;
+  }
+  compilarVista(datos) {
+    return `<div class="ui-bar-${datos.estilo} p-2"><h1>${parsearSimbolos(datos.valor)}</h1></div>`;
+  }
+  cargarDatos($widget, datos) {
+    $widget.find("input[name='titlewid']").val(datos.valor ? datos.valor : '');
+    $widget.find("select[name='titlestyle']").val(datos.estilo ? datos.estilo : 'a');
+  }
+}
+class BadgeWidget extends BaseWidget {
+  constructor() {
+    super('badge');
+  }
+  getHTML(){
+    return `<li pt-type="badge">
+        <h1 class="setui">Etiqueta<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
+        <input type="text" name="badwid" value="" class="squircle txt-nota" placeholder="Texto de la etiqueta"/>
+         
+        <span class="setui">
+         <select name="badcol" data-native-menu="false" data-mini="true">
+          <option value="red">Rojo</option>
+          <option value="orange">Naranja</option>
+          <option value="olive">Olivo</option>
+          <option value="green">Verde</option>
+          <option value="teal">Agua</option>
+          <option value="blue">Azul</option>
+          <option value="violet">Violeta</option>
+          <option value="pink">Rosa</option>
+          <option value="brown">Cafe</option>
+          <option value="grey">Gris</option>
+          <option value="black">Negro</option>
+         </select>
+         <select name="badtype" data-native-menu="false" data-mini="true">
+          <option value=" ">Simple</option>
+          <option value="tag">Etiqueta</option>
+          <optgroup label="Apuntando">
+           <option value="pointing">Arriba</option>
+           <option value="pointing below">Abajo</option>
+           <option value="left pointing">Izquierda</option>
+           <option value="right pointing">Derecha</option>
+          </optgroup>
+         </select>
+         <select name="badsim" data-role="slider" data-mini="true">
+           <option value="false">Normal</option>
+           <option value="true">Simple</option>
+          </select>
+        </span>
+       </li>`
+  }
+  getWYSIWYG(datos){
+    
+  }
+  extraerDatos($widget) {
+    let datos = super.extraerDatos($widget);
+    datos.valor = $widget.find('input[name="badwid"]').val() || "";
+    datos.color = $widget.find('select[name="badcol"]').val() || "red";
+    datos.tipo = $widget.find('select[name="badtype"]').val() || "simple";
+    datos.simple = $widget.find('select[name="badsim"]').val() || "false"
+    return datos;
+  }
+  compilarVista(datos) {
+    let prev = ''
+    if (datos.simple === 'true'){
+      prev = `<div class="ui ${datos.color} ${datos.tipo} basic label">${parsearSimbolos(datos.valor)}</div>`
+    } else {
+      prev = `<div class="ui ${datos.color} ${datos.tipo} label">${parsearSimbolos(datos.valor)}</div>`
+    }
+    return prev;
+  }
+  cargarDatos($widget, datos) {
+    $widget.find("input[name='badwid']").val(datos.valor ? datos.valor : '');
+    $widget.find("select[name='badcol']").val(datos.color ? datos.color : 'red');
+    $widget.find("select[name='badtype']").val(datos.tipo ? datos.tipo : 'simple');
+    $widget.find("select[name='badsim']").val(datos.simple ? datos.simple : 'false')
+  }
+}
+class FlowWidget extends BaseWidget {
+  constructor() {
+    super('flow');
+  }
+  getHTML() {
+    let uid = Math.floor(Math.random() * 1000000)
+      return `<li pt-type="flow">
+        <h1 class="setui">Contenedor<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext" data-mini="true"></button></h1>
+         <span class="setui">
+          <button popovertarget="popminiadd-${uid}" name="addwid" style="anchor-name:--addminiwid-${uid}" data-icon="plus">Widget</button>
+          <ul class="dropdown menu rounded-box bg-base-300 squircle" popover id="popminiadd-${uid}" style="position-anchor:--addminiwid-${uid}">
+        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtolist('text', $el)">Texto</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtolist('badge', $el)">Etiqueta</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtolist('image', $el)">Imagen</button></li>
+       </ul>
+         </span>
+         <div>
+          <ul data-role="listview" data-inset="true" name="minilist" class="squircle sortable minilist-sortable">
+          </ul>
+         </div>
+       </li>`;
+  }
+  extraerDatos($widget) {
+    let datos = super.extraerDatos($widget);
+    datos.minilista = [];
+    const $hijos = $widget.find("ul[name='minilist']").children("li");
+    $hijos.each((index, elemento) => {
+      const $subWidget = $(elemento);
+      const subtipo = $subWidget.attr('pt-type');
+      const claseWidget = RegistroWidgets[subtipo];
+      if (claseWidget) {
+        let datosSubWidget = claseWidget.extraerDatos($subWidget);
+        datosSubWidget.subtipo = subtipo
+        datos.minilista.push(datosSubWidget);
+      }
+    });
+    return datos;
+  }
+  compilarVista(datos) {
+    let htmlInterno = '';
+    if (datos.minilista && datos.minilista.length > 0) {
+      datos.minilista.forEach(subDatos => {
+        const claseWidget = RegistroWidgets[subDatos.subtipo];
+        if (claseWidget) {
+          htmlInterno += claseWidget.compilarVista(subDatos);
+        }
+      });
+    }
+    return `<div class="flowui">${htmlInterno}</div>`;
+  }
+  cargarDatos($widget, datos) {
+    if (!datos.minilista || datos.minilista.length === 0) return;
+    const $listaInterna = $widget.find("ul[name='minilist']");
+    const $botonAdd = $widget.find("button[name='addwid']");
+    datos.minilista.forEach(subDatos => {
+      getfile.addtolist(subDatos.subtipo, $botonAdd);
+      const $subWidgetActual = $listaInterna.children("li").last();
+      const claseWidget = RegistroWidgets[subDatos.subtipo];
+      if (claseWidget) {
+        claseWidget.cargarDatos($subWidgetActual, subDatos);
+      }
+    });
+  }
+}
+class TextWidget extends BaseWidget {
+  constructor() {
+    super('text')
+  }
+  getHTML(){
+    return `<li pt-type="text">
+        <h1 class="setui">Texto<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
+        <span class="widui">
+         <input type="text" name="textrib" placeholder="Texto del liston">
+         <span class="setui">
+          <select name="textribon" data-role="slider" data-mini="true">
+           <option value="false">No</option>
+           <option value="true">Si</option>
+          </select>
+          <select name="textribpos" data-native-menu="false" data-mini="true">
+           <option value=" ">Izquierda</option>
+           <option value="right">Derecha</option>
+          </select>
+          <select name="textribcol" data-native-menu="false" data-mini="true">
+           <option value="red">Rojo</option>
+           <option value="orange">Naranja</option>
+           <option value="olive">Olivo</option>
+           <option value="green">Verde</option>
+           <option value="teal">Agua</option>
+           <option value="blue">Azul</option>
+           <option value="violet">Violeta</option>
+           <option value="pink">Rosa</option>
+           <option value="brown">Cafe</option>
+           <option value="grey">Gris</option>
+           <option value="black">Negro</option>
+          </select>
+         </span>
+         <span class="setui">
+          <textarea name="textwid" rows="8" cols="20" class="squircle txt-nota"  placeholder="Texto principal"></textarea>
+         <select name="textpos" data-native-menu="false" data-mini="true">
+          <option value="left">◧</option>
+          <option value="center">▣</option>
+          <option value="right">◨</option>
+          <option value="justify">⬛︎</option>
+         </select>
+         </span>
+        </span>
+       </li>`
+  }
+  extraerDatos($widget){
+    let datos = super.extraerDatos($widget)
+    datos.valor = $widget.find('textarea[name="textwid"]').val() || "";
+    datos.posicion = $widget.find('select[name="textpos"]').val() || "left";
+    datos.liston = $widget.find('select[name="textribon"]').val() || "false"
+    datos.valorlis = $widget.find('input[name="textrib"]').val() || ""
+    datos.posicionlis = $widget.find('select[name="textribpos"]').val() || " "
+    datos.colorlis = $widget.find('select[name="textribcol"]').val() || "red"
+    return datos
+  }
+  compilarVista(datos){
+    let prev = ''
+    if (datos.liston === 'true'){
+      prev = `<div class="ui raised segment" style="margin: 10px;"><span class="ui ${datos.colorlis} ${datos.posicionlis} ribbon label">${parsearSimbolos(datos.valorlis)}</span><p align="${datos.posicion}" style="color: #000;" class="p-1">${parsearSimbolos(datos.valor)}</p></div>`
+    } else {
+      prev = `<div class="ui raised segment" style="margin: 10px;"><p align="${datos.posicion}" style="color: #000;" class="p-1">${parsearSimbolos(datos.valor)}</p></div>`
+    }
+    return prev;
+  }
+  cargarDatos($widget, datos){
+    $widget.find("textarea[name='textwid']").val(datos.valor ? datos.valor : '')
+    $widget.find("select[name='textpos']").val(datos.posicion ? datos.posicion : 'left')
+    $widget.find("input[name='textrib']").val(datos.valorlis ? datos.valorlis : '')
+    $widget.find("select[name='textribon']").val(datos.liston ? datos.liston : 'false')
+    $widget.find("select[name='textribpos']").val(datos.posicionlis ? datos.posicionlis : ' ')
+    $widget.find("select[name='textribcol']").val(datos.colorlis ? datos.colorlis : 'red')
+  }
+}
+class ImageWidget extends BaseWidget{
+  constructor() {
+    super('image')
+  }
+  getHTML(){
+    return `<li pt-type="image">
+        <h1 class="setui">Imagen<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
+        <span class="setui">
+        <div data-role="controlgroup" data-type="horizontal">
+         <button @click="Capacitores.seleccionarImagen($el)" data-icon="plus" data-mini="true">Subir Foto</button>
+        </div>
+        <input type="hidden" name="imagewid" value=""/>
+        <select name="imagepos" data-native-menu="false" data-mini="true">
+         <option value="circular">Circular</option>
+         <option value="fluid">Ancho completo</option>
+         <option value="rounded">Redondeada</option>
+        </select>
+       </span>
+      <div class="img-preview-container" style="text-align:center; margin-top:10px;"></div>
+    </li>`
+  }
+  extraerDatos($widget){
+    let datos = super.extraerDatos($widget)
+    datos.url = $widget.find('input[name="imagewid"]').val() || ""
+    datos.estilo = $widget.find('select[name="imagepos"]').val() || "circular";
+    return datos
+  }
+  compilarVista(datos){
+    let prev = ''
+    if (datos.url) {
+      prev = `<div class="ui ${datos.estilo} image"><img src="${datos.url}"></div>`;
+    }
+    return prev
+  }
+  cargarDatos($widget, datos){
+    $widget.find("input[name='imagewid']").val(datos.url ? datos.url : '')
+    $widget.find("select[name='imagepos']").val(datos.estilo ? datos.estilo : 'circular')
+    if(datos.url) {
+      $widget.find(".img-preview-container").html(`<img src="${datos.url}" style="max-height:100px;"/>`);
+    }
+  }
+}
+class DivWidget extends BaseWidget {
+  constructor() {
+    super('div')
+  }
+  getHTML(){
+    return `<li pt-type="div">
+        <h1 class="setui">Divisor<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
+       </li>`
+  }
+  extraerDatos($widget){
+    let datos = super.extraerDatos($widget)
+    return datos
+  }
+  compilarVista(datos) {
+    return '<hr/>'
+  }
+  cargarDatos($widget, datos){
+    
+  }
+}
+const RegistroWidgets = {
+  'title': new TitleWidget(),
+  'badge': new BadgeWidget(),
+  'text': new TextWidget(),
+  'image': new ImageWidget(),
+  'div': new DivWidget(),
+  'flow': new FlowWidget()
+};
 class Filer {
   constructor() {
     setTimeout(() => {
@@ -20,92 +350,16 @@ class Filer {
       dataWid: []
     };
     this.docres = ''
-    for (let i = 0; i < widgets.length; i++) {
-      const widget = $(widgets[i]); // Envolvemos en jQuery
-      const tipo = widget.attr('pt-type');
-      let datosWidget = { tipo: tipo };
-      switch (tipo) {
-        case 'title':
-          datosWidget.valor = widget.find('input[name="titlewid"]').val() || "";
-          datosWidget.estilo = widget.find('select[name="titlestyle"]').val() || "a";
-          this.docres += `<div class="ui-bar-${datosWidget.estilo} p-2"><h1>${parsearSimbolos(datosWidget.valor)}</h1></div>`
-          break;
-        case 'text':
-         datosWidget.valor = widget.find('textarea[name="textwid"]').val() || "";
-          datosWidget.posicion = widget.find('select[name="textpos"]').val() || "left";
-          datosWidget.liston = widget.find('select[name="textribon"]').val() || "false"
-          datosWidget.valorlis = widget.find('input[name="textrib"]').val() || ""
-          datosWidget.posicionlis = widget.find('select[name="textribpos"]').val() || " "
-          datosWidget.colorlis = widget.find('select[name="textribcol"]').val() || "red"
-          if (datosWidget.liston == "true") {
-            this.docres += `<div class="ui raised segment" style="margin: 10px;"><span class="ui ${datosWidget.colorlis} ${datosWidget.posicionlis} ribbon label">${parsearSimbolos(datosWidget.valorlis)}</span><p align="${datosWidget.posicion}" style="color: #000;" class="p-1">${parsearSimbolos(datosWidget.valor)}</p></div>`
-          } else {
-            this.docres += `<div class="ui raised segment" style="margin: 10px;"><p align="${datosWidget.posicion}" style="color: #000;" class="p-1">${parsearSimbolos(datosWidget.valor)}</p></div>`;
-          }
-          break;
-        case 'badge':
-          datosWidget.valor = widget.find('input[name="badwid"]').val() || "";
-          datosWidget.semantica = widget.find('select[name="badcol"]').val() || "primary";
-          datosWidget.tema = widget.find('select[name="badtheme"]').val() || "light";
-          this.docres += `<div class="badge badge-${datosWidget.semantica}" data-theme="${datosWidget.tema}">${parsearSimbolos(datosWidget.valor)}</div>`;
-          break;
-        case 'div':
-          this.docres += `<hr/>`;
-          break;
-        case 'flow':
-          const listFlow = widget.find("ul[name='minilist']");
-          const innerWid = listFlow.children();
-          let flowHtml = `<div class="flowui p-2">`;
-          datosWidget.minilista = [];
-          for (let j = 0; j < innerWid.length; j++) {
-            const miniwidget = $(innerWid[j]); // Envolvemos en jQuery
-            const innerType = miniwidget.attr("pt-type");
-            let innerDatosWidget = { subtipo: innerType };
-            switch (innerType) {
-              case 'text':
-                innerDatosWidget.valor = miniwidget.find('textarea[name="textwid"]').val() || "";
-                innerDatosWidget.posicion = miniwidget.find('select[name="textpos"]').val() || "left";
-                innerDatosWidget.liston = miniwidget.find('select[name="textribon"]').val() || "false"
-                innerDatosWidget.valorlis = miniwidget.find('input[name="textrib"]').val() || ""
-                innerDatosWidget.posicionlis = miniwidget.find('select[name="textribpos"]').val() || " "
-                innerDatosWidget.colorlis = miniwidget.find('select[name="textribcol"]').val() || "red"
-                if (innerDatosWidget.liston == "true") {
-                flowHtml += `<div class="ui raised segment" style="margin: 10px;"><span class="ui ${innerDatosWidget.colorlis} ${innerDatosWidget.posicionlis} ribbon label">${parsearSimbolos(innerDatosWidget.valorlis)}</span><p align="${innerDatosWidget.posicion}" style="color: #000;" class="p-1">${parsearSimbolos(innerDatosWidget.valor)}</p></div>`
-                } else {
-                flowHtml += `<div class="ui raised segment" style="margin: 10px;"><p align="${innerDatosWidget.posicion}" style="color: #000;" class="p-1">${parsearSimbolos(innerDatosWidget.valor)}</p></div>`;
-                }
-                break;
-              case 'badge':
-                innerDatosWidget.valor = miniwidget.find('input[name="badwid"]').val() || "";
-                innerDatosWidget.semantica = miniwidget.find('select[name="badcol"]').val() || "primary";
-                innerDatosWidget.tema = miniwidget.find('select[name="badtheme"]').val() || "light";
-                flowHtml += `<div class="badge badge-${innerDatosWidget.semantica}" data-theme="${innerDatosWidget.tema}">${parsearSimbolos(innerDatosWidget.valor)}</div>`;
-                break;
-              case 'image':
-                innerDatosWidget.url = miniwidget.find('input[name="imagewid"]').val() || ""
-                innerDatosWidget.estilo = miniwidget.find('select[name="imagepos"]').val() || "circular"
-                if (innerDatosWidget.url) {
-                flowHtml += `<div class="ui ${innerDatosWidget.estilo} image"><img src="${innerDatosWidget.url}"></div>`;
-                }
-                break;
-            }
-            datosWidget.minilista.push(innerDatosWidget);
-          }
-          flowHtml += "</div>";
-          this.docres += flowHtml;
-          break;
-        case 'image':
-          datosWidget.url = widget.find('input[name="imagewid"]').val() || ""
-          datosWidget.estilo = widget.find('select[name="imagepos"]').val() || "circular";
-          if (datosWidget.url) {
-            this.docres += `<div class="ui ${datosWidget.estilo} image"><img src="${datosWidget.url}"></div>`;
-          }
-          break;
-        default:
-          console.warn("Tipo de widget no reconocido:", tipo);
-      }
-      file.dataWid.push(datosWidget);
+    widgets.each((index, elemento) => {
+    const $widget = $(elemento);
+    const tipo = $widget.attr('pt-type');
+    const widgetClass = RegistroWidgets[tipo];
+    if (widgetClass) {
+      const datosExtraidos = widgetClass.extraerDatos($widget);
+      file.dataWid.push(datosExtraidos);
+      this.docres += widgetClass.compilarVista(datosExtraidos);
     }
+    });
     return file;
   }
   cargarNotaEnEditor(nota) {
@@ -120,211 +374,32 @@ class Filer {
     this.lista.empty();
     for (var i = 0; i < wid.length; i++) {
       let typewid = wid[i].tipo
+      let datosWidget = wid[i]
       this.addtodoc(typewid)
-      let actwid = this.lista.children().last()
-        switch (typewid) {
-          case 'title':
-            actwid.find("input[name='titlewid']").val(wid[i].valor || '')
-            actwid.find("select[name='titlestyle']").val(wid[i].estilo || 'a')
-            break;
-          case 'text':
-            actwid.find("textarea[name='textwid']").val(wid[i].valor || '')
-            actwid.find("select[name='textpos']").val(wid[i].posicion || 'left')
-            actwid.find("input[name='textrib']").val(wid[i].valorlis || '')
-            actwid.find("select[name='textribon']").val(wid[i].liston || 'false')
-            actwid.find("select[name='textribpos']").val(wid[i].posicionlis || ' ')
-            actwid.find("select[name='textribcol']").val(wid[i].colorlis || 'red')
-            break;
-          case 'badge':
-            actwid.find("input[name='badwid']").val(wid[i].valor || '')
-            actwid.find("select[name='badcol']").val(wid[i].semantica || 'primary')
-            actwid.find("select[name='badtheme']").val(wid[i].tema || 'light')
-            break;
-          case 'div':
-            // omitible
-            break;
-          case 'flow':
-            let miniwid = wid[i].minilista
-            for (var j = 0; j < miniwid.length; j++) {
-              let minitypewid = miniwid[j].subtipo
-              let addbtn = actwid.find("button[name='addwid']")
-              this.addtolist(minitypewid, addbtn)
-              let miniactwid = actwid.children().last()
-              switch (minitypewid) {
-                case 'text':
-                  miniactwid.find("textarea[name='textwid']").val(miniwid[j].valor || '')
-                  miniactwid.find("select[name='textpos']").val(miniwid[j].posicion || 'left')
-                  miniactwid.find("input[name='textrib']").val(miniwid[j].valorlis || '')
-                  miniactwid.find("select[name='textribon']").val(miniwid[j].liston || 'false')
-                  miniactwid.find("select[name='textribpos']").val(miniwid[j].posicionlis || ' ')
-                  miniactwid.find("select[name='textribcol']").val(miniwid[j].colorlis || 'red')
-                  break;
-                case 'badge':
-                  miniactwid.find("input[name='badwid']").val(miniwid[j].valor || '')
-                  miniactwid.find("select[name='badcol']").val(miniwid[j].semantica || 'primary')
-                  miniactwid.find("select[name='badtheme']").val(miniwid[j].tema || 'light')
-                  break;
-                case 'image':
-                  miniactwid.find("input[name='imagewid']").val(miniwid[j].url || '')
-                  miniactwid.find("select[name='imagepos']").val(miniwid[j].estilo || 'circular')
-                  // Mostrar la miniatura si ya tiene datos
-                  if(miniwid[j].url) {
-                    miniactwid.find(".img-preview-container").html(`<img src="${miniwid[j].url}" style="max-height:100px;"/>`);
-                    
-                  }
-                  break;
-                default:
-                  // Tab to edit
-              }
-            }
-            break;
-          case 'image':
-            actwid.find("input[name='imagewid']").val(wid[i].url || '')
-            actwid.find("select[name='imagepos']").val(wid[i].estilo || 'circular')
-            // Mostrar la miniatura si ya tiene datos
-            if(wid[i].url) {
-              actwid.find(".img-preview-container").html(`<img src="${wid[i].url}" style="max-height:100px;"/>`);
-            }
-            break;
-          default:
-            // Tab to edit
-        }
+      let $widgetActual = this.lista.children().last();
+      const widgetClass = RegistroWidgets[typewid]
+      if (widgetClass) {
+        widgetClass.cargarDatos($widgetActual, datosWidget);
+      }
     }
     setTimeout(() => {
       this.compilefile(); 
       $.mobile.changePage("#view");
-    }, 5)
+    }, 50)
     
   }
   addtodoc(type) {
 	if (!this.lista.length) return;
-	let html
-	let uid = Math.random()
-	switch (type) {
-		case 'title':
-			html = `<li pt-type="title">
-        <h1 class="setui">Titulo<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
-        <span class="setui">
-         <input type="text" name="titlewid" value="" class="squircle" placeholder="Título"/>
-         <select name="titlestyle" data-native-menu="false" data-mini="true">
-          <option value="a">a</option>
-          <option value="b">b</option>
-          <option value="c">c</option>
-          <option value="d">d</option>
-          <option value="e">e</option>
-         </select>
-        </span>
-       </li>`
-			break;
-		case 'text':
-			html = `<li pt-type="text">
-        <h1 class="setui">Texto<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
-        <span class="widui">
-         <input type="text" name="textrib" placeholder="Texto del liston">
-         <span class="setui">
-          <select name="textribon" data-role="slider" data-mini="true">
-           <option value="false">No</option>
-           <option value="true">Si</option>
-          </select>
-          <select name="textribpos" data-native-menu="false" data-mini="true">
-           <option value=" ">Izquierda</option>
-           <option value="right">Derecha</option>
-          </select>
-          <select name="textribcol" data-native-menu="false" data-mini="true">
-           <option value="red">Rojo</option>
-           <option value="orange">Naranja</option>
-           <option value="olive">Olivo</option>
-           <option value="green">Verde</option>
-           <option value="teal">Agua</option>
-           <option value="blue">Azul</option>
-           <option value="violet">Violeta</option>
-           <option value="pink">Rosa</option>
-           <option value="brown">Cafe</option>
-           <option value="grey">Gris</option>
-           <option value="black">Negro</option>
-          </select>
-         </span>
-         <hr />
-         <span class="setui">
-          <textarea name="textwid" rows="8" cols="20" class="squircle txt-nota"  placeholder="Texto principal"></textarea>
-         <select name="textpos" data-native-menu="false" data-mini="true">
-          <option value="left">◧</option>
-          <option value="center">▣</option>
-          <option value="right">◨</option>
-          <option value="justify">⬛︎</option>
-         </select>
-         </span>
-        </span>
-       </li>`
-      break;
-      case "badge":
-      	html = `<li pt-type="badge">
-        <h1 class="setui">Etiqueta<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
-        <span class="setui">
-         <input type="text" name="badwid" value="" class="squircle" placeholder="Texto de la etiqueta"/>
-         <select name="badcol" data-native-menu="false" data-mini="true">
-          <option value="primary">Primario</option>
-          <option value="secondary">Secundario</option>
-          <option value="accent">Acento</option>
-          <option value="info">Info</option>
-          <option value="success">Exito</option>
-          <option value="warning">Advertencia</option>
-          <option value="error">Error</option>
-         </select>
-         <select name="badtheme" data-native-menu="false" data-mini="true">
-          <option value="light">Claro</option>
-          <option value="dark">Oscuro</option>
-          <option value="cupcake">Cupcake</option>
-          <option value="bumblebee">Bumblebee</option>
-         </select>
-        </span>
-       </li>`
-      break;
-      case "div":
-      	html = `<li pt-type="div">
-        <h1 class="setui">Divisor<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
-       </li>`
-      break;
-      case "flow":
-      	html = `<li pt-type="flow">
-        <h1 class="setui">Contenedor<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext" data-mini="true"></button></h1>
-         <span class="setui">
-          <button popovertarget="popminiadd-${uid}" name="addwid" style="anchor-name:--addminiwid-${uid}" data-icon="plus">Widget</button>
-          <ul class="dropdown menu rounded-box bg-base-300 squircle" popover id="popminiadd-${uid}" style="position-anchor:--addminiwid-${uid}">
-        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtolist('text', $el)">Texto</button></li>
-        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtolist('badge', $el)">Etiqueta</button></li>
-        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtolist('image', $el)">Imagen</button></li>
-       </ul>
-         </span>
-         <div>
-          <ul data-role="listview" data-inset="true" name="minilist" class="squircle sortable minilist-sortable">
-          </ul>
-         </div>
-       </li>`
-      break;
-    case "image":
-      html = `<li pt-type="image">
-        <h1 class="setui">Imagen<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
-        <span class="setui">
-        <div data-role="controlgroup" data-type="horizontal">
-         <button @click="Capacitores.seleccionarImagen($el)" data-icon="plus" data-mini="true">Subir Foto</button>
-        </div>
-        <input type="hidden" name="imagewid" value=""/>
-        <select name="imagepos" data-native-menu="false" data-mini="true">
-         <option value="circular">Circular</option>
-         <option value="fluid">Ancho completo</option>
-         <option value="rounded">Redondeada</option>
-        </select>
-       </span>
-      <div class="img-preview-container" style="text-align:center; margin-top:10px;"></div>
-    </li>`
-      break;
-		default:
-			// Tab to edit
-	}
-	const $nuevoItem = $(html);
-	this.lista.append($nuevoItem);
-	setTimeout(() => {
+	
+	const widgetClass = RegistroWidgets[type]
+	if (!widgetClass) {
+    console.warn("Widget no registrado:", type);
+    return;
+  }
+
+  const $nuevoItem = $(widgetClass.getHTML());
+  this.lista.append($nuevoItem);
+  setTimeout(() => {
   this.lista.listview("refresh").trigger('create');
   $nuevoItem.trigger('create');
 }, 2);
@@ -340,93 +415,13 @@ class Filer {
 		return;
 		
 	}
-	let html
-	switch (type) {
-		case 'text':
-			html = `<li pt-type="text">
-        <h1 class="setui">Texto<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
-        <span class="widui">
-         <input type="text" name="textrib" placeholder="Texto del liston">
-         <span class="setui">
-          <select name="textribon" data-role="slider" data-mini="true">
-           <option value="false">No</option>
-           <option value="true">Si</option>
-          </select>
-          <select name="textribpos" data-native-menu="false" data-mini="true">
-           <option value=" ">Izquierda</option>
-           <option value="right">Derecha</option>
-          </select>
-          <select name="textribcol" data-native-menu="false" data-mini="true">
-           <option value="red">Rojo</option>
-           <option value="orange">Naranja</option>
-           <option value="olive">Olivo</option>
-           <option value="green">Verde</option>
-           <option value="teal">Agua</option>
-           <option value="blue">Azul</option>
-           <option value="violet">Violeta</option>
-           <option value="pink">Rosa</option>
-           <option value="brown">Cafe</option>
-           <option value="grey">Gris</option>
-           <option value="black">Negro</option>
-          </select>
-         </span>
-         <hr />
-         <span class="setui">
-          <textarea name="textwid" rows="8" cols="20" class="squircle txt-nota"  placeholder="Texto principal"></textarea>
-         <select name="textpos" data-native-menu="false" data-mini="true">
-          <option value="left">◧</option>
-          <option value="center">▣</option>
-          <option value="right">◨</option>
-          <option value="justify">⬛︎</option>
-         </select>
-         </span>
-        </span>
-       </li>`
-      break;
-      case "badge":
-      	html = `<li pt-type="badge">
-        <h1 class="setui">Etiqueta<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
-        <span class="setui">
-         <input type="text" name="badwid" value="" class="squircle" placeholder="Texto de la etiqueta"/>
-         <select name="badcol" data-native-menu="false" data-mini="true">
-          <option value="primary">Primario</option>
-          <option value="secondary">Secundario</option>
-          <option value="accent">Acento</option>
-          <option value="info">Info</option>
-          <option value="success">Exito</option>
-          <option value="warning">Advertencia</option>
-          <option value="error">Error</option>
-         </select>
-         <select name="badtheme" data-native-menu="false" data-mini="true">
-          <option value="light">Claro</option>
-          <option value="dark">Oscuro</option>
-          <option value="cupcake">Cupcake</option>
-          <option value="bumblebee">Bumblebee</option>
-         </select>
-        </span>
-       </li>`
-      break;
-    case "image":
-      html = `<li pt-type="image">
-        <h1 class="setui">Imagen<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
-        <span class="setui">
-        <div data-role="controlgroup" data-type="horizontal">
-         <button @click="Capacitores.seleccionarImagen($el)" data-icon="plus" data-mini="true">Subir Foto</button>
-        </div>
-        <input type="hidden" name="imagewid" value=""/>
-        <select name="imagepos" data-native-menu="false" data-mini="true">
-         <option value="circular">Circular</option>
-         <option value="fluid">Ancho completo</option>
-         <option value="rounded">Redondeada</option>
-        </select>
-       </span>
-      <div class="img-preview-container" style="text-align:center; margin-top:10px;"></div>
-    </li>`
-      break;
-		default:
-	}
-	const $nuevoItem = $(html)
-	$list.append($nuevoItem);
+	const widgetClass = RegistroWidgets[type]
+	if (!widgetClass) {
+    console.warn("Widget no registrado:", type);
+    return;
+  }
+  const $nuevoItem = $(widgetClass.getHTML());
+  $list.append($nuevoItem);
 	setTimeout(() => {
 	  $list.listview().listview("refresh");
 	  $nuevoItem.trigger('create')
@@ -476,6 +471,27 @@ class Filer {
   
   this.lista.sortable(sortOptions);
   $(".minilist-sortable").sortable(sortOptions);
+}
+renderWYSIWYG() {
+  const $contenedor = $("#wysiwyg-content");
+  $contenedor.empty();
+  const file = this.compilefile();
+  file.dataWid.forEach(datos => {
+    const widgetClass = RegistroWidgets[datos.tipo];
+    if (widgetClass) {
+      $contenedor.append(widgetClass.getWYSIWYG(datos));
+    }
+  });
+}
+syncWYSIWYG() {
+  $("#wysiwyg-content [contenteditable='true']").each(function() {
+    const nuevoTexto = $(this).text();
+    const $parent = $(this).closest('[pt-type]');
+    const index = $parent.index();
+    
+    // Aquí podrías buscar el widget correspondiente en #docreate y actualizar su input/textarea
+    // Pero es más fácil llamar a compilefile() y dejar que el guardado normal maneje el JSON
+  });
 }
 }
 class capacitorfuncs {
@@ -635,7 +651,7 @@ async seleccionarImagen(btn) {
   }
 }
 }
-const nav = `<div data-role="navbar" data-iconpos="top">
+const nav = `<div data-role="navbar" data-iconpos="left">
 				<ul>
 					<li><a @click="navi(0)" :class="hili[0]" href="#main" data-icon="home">Inicio</a></li>
 					<li><a @click="navi(1)" :class="hili[1]" href="#notas" data-icon="nota">Notas</a></li>
@@ -643,6 +659,12 @@ const nav = `<div data-role="navbar" data-iconpos="top">
 					<!--li><a @click="navi(3)" :class="hili[3]" href="#busca" data-icon="search">Buscar</a></li-->
 				</ul>
 			</div>`
+const editnav = `<div data-role="navbar" data-iconpos="left">
+       <ul>
+        <li><a @click="naved(0)" :class="hiedit[0]" href="#wysiwyg" data-icon="nota">Documento</a></li>
+        <li><a @click="naved(1)" :class="hiedit[1]" href="#edit" data-icon="wid">Widgets</a></li>
+       </ul>
+      </div>`
 const keys = ["theme"]
 let preferences = {
 	theme: 'a'
@@ -652,10 +674,16 @@ let Capacitores = new capacitorfuncs()
 document.addEventListener('alpine:init', () => {
 	Alpine.data('inicio', () => ({
 		hili: ["ui-btn-active ui-state-persist","","","",""],
+		hiedit: ["", "ui-btn-active ui-state-persist"],
 		navbar: nav,
+		editbar: editnav,
 		navi(index){
 		 this.hili = ["","","","",""]
 		 this.hili[index] = "ui-btn-active ui-state-persist"
+		},
+		naved(index){
+		  this.hiedit = ["",""]
+		  this.hiedit[index] = "ui-btn-active ui-state-persist"
 		},
 		jqmtheme: preferences.theme,
 		logo: "assets/ptlogo.svg",
@@ -700,7 +728,7 @@ $(document).on('focus click keyup', '.txt-nota', function() {
   ultimoTextarea = this;
   actualizarCheckboxes(this);
 });
-$(document).on('change', '#stng, #ital, #unde, #stri', function(e) {
+$(document).on('change', '#stng, #stng2, #ital, #ital2, #unde, #unde2, #stri, #stri2', function(e) {
   if (!ultimoTextarea) {
     $(this).prop('checked', false).checkboxradio("refresh");
     return;
@@ -735,9 +763,13 @@ function actualizarCheckboxes(el) {
     return antes.lastIndexOf(s) !== -1 && despues.indexOf(s) !== -1;
   };
   $('#stng').prop('checked', comprobar('*')).checkboxradio("refresh");
+  $('#stng2').prop('checked', comprobar('*')).checkboxradio("refresh")
   $('#ital').prop('checked', comprobar('•')).checkboxradio("refresh");
+  $('#ital2').prop('checked', comprobar('•')).checkboxradio("refresh");
   $('#unde').prop('checked', comprobar('_')).checkboxradio("refresh");
+  $('#unde2').prop('checked', comprobar('_')).checkboxradio("refresh");
   $('#stri').prop('checked', comprobar('~')).checkboxradio("refresh");
+  $('#stri2').prop('checked', comprobar('~')).checkboxradio("refresh");
 }
 function ajusdatasave(key, data) {
 	localStorage.setItem(key, data)

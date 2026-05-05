@@ -127,10 +127,12 @@
        <label for="namedoc">Nombre:</label>
        <input type="text" name="namedoc" id="namedoc">
       </div>
-        <ul data-role="listview" data-inset="true" id="docreate" class="squircle sortable">
+       <ul data-role="listview" data-inset="true" id="docreate" class="squircle sortable">
+         
       </ul>
      </div>
-     <div data-role="footer" class="barui" data-position="fixed" :data-theme="jqmtheme">
+     <div data-role="footer" data-position="fixed" :data-theme="jqmtheme">
+      <span class="barui">
       <!--input type="color" name="" id="" value="" /-->
       <div data-role="controlgroup" data-type="horizontal">
        <label for="stng"><strong>B</strong></label>
@@ -146,7 +148,54 @@
        <button data-icon="save" data-iconpos="notext" @click="makefile"></button>
        <button data-icon="share" data-iconpos="notext" @click="Capacitores.compartirNota()"></button>
       </div>
+      </span>
+      <div x-html="editbar">
+       
+      </div>
      </div>
+    </div>
+    <!--wysiwyg-->
+    <div data-role="page" id="wysiwyg">
+     <div data-role="header" data-position="fixed" :data-theme="jqmtheme">
+      <span class="barui">
+       <a data-role="button" data-icon="back" data-iconpos="notext" href="#notas" class="squircle" data-transition="none"></a>
+      <img :src="logo" >
+      </span>
+      <span class="barui">
+       <select name="textribon" data-role="slider" data-mini="true">
+           <option value="false">No</option>
+           <option value="true">Si</option>
+          </select>
+       <select name="textrhibon" data-mini="true">
+           <option value="false">1</option>
+           <option value="true">2</option>
+          </select>
+      </span>
+     </div>
+     <div data-role="content" class="full" :data-theme="jqmtheme" id="wysiwyg-content">
+      
+     </div>
+     <div data-role="footer" data-position="fixed" :data-theme="jqmtheme">
+      <span class="barui">
+      <!--input type="color" name="" id="" value="" /-->
+      <div data-role="controlgroup" data-type="horizontal">
+       <label for="stng2"><strong>B</strong></label>
+       <input type="checkbox" name="stng" id="stng2">
+       <label for="ital2"><em>I</em></label>
+       <input type="checkbox" name="ital" id="ital2">
+       <label for="unde2"><u>U</u></label>
+       <input type="checkbox" name="unde" id="unde2">
+       <label for="stri2"><s>S</s></label>
+       <input type="checkbox" name="stri" id="stri2">
+       </div>
+       <div data-role="controlgroup" data-type="horizontal">
+       <button data-icon="save" data-iconpos="notext" @click="makefile"></button>
+       <button data-icon="share" data-iconpos="notext" @click="Capacitores.compartirNota()"></button>
+      </div>
+      </span>
+      <div x-html="editbar">
+       
+      </div>
     </div>
     <!--view page-->
     <div data-role="page" id="view">
