@@ -1,11 +1,13 @@
+//Base
 class BaseWidget {
   constructor(tipo) {
     this.tipo = tipo;
+    this.datos = { tipo: this.tipo }
   }
   getHTML() {
     return ``;
   }
-  getWYSIWYG(datos) {
+  getWYSIWYG() {
     return ``; 
   }
   extraerDatos($elementoDOM) {
@@ -17,6 +19,8 @@ class BaseWidget {
   cargarDatos($elementoDOM, datos) {
   }
 }
+//Widgets
+//Titulo
 class TitleWidget extends BaseWidget {
   constructor() {
     super('title');
@@ -25,7 +29,9 @@ class TitleWidget extends BaseWidget {
     return `<li pt-type="title">
         <h1 class="setui">Titulo<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="setui">
-         <input type="text" name="titlewid" value="" class="squircle txt-nota" placeholder="Título"/>
+         <input type="text" name="titlewid" value="" class="txt-nota" placeholder="Título" onkeyup="actualizarCheckboxes(this)" 
+   onclick="actualizarCheckboxes(this)" 
+   oninput="getfile.compilefile(); actualizarCheckboxes(this)"/>
          <select name="titlestyle" data-native-menu="false" data-mini="true">
           <option value="a">a</option>
           <option value="b">b</option>
@@ -36,10 +42,13 @@ class TitleWidget extends BaseWidget {
         </span>
        </li>`;
   }
-  getWYSIWYG(datos){
-    return `<div class="ui-bar-${datos.estilo} p-2"><h1
+  getWYSIWYG(){
+    return `<div class="ui-bar-a p-2" wysiwyg-render><h1
     contenteditable="true" 
-    oninput="$(this).closest('li').data('valor', this.innerText)">${datos.valor || 'Titulo.'}</h1></div>`
+    oninput="$(this).closest('li').data('valor', this.innerText)"
+    onkeyup="actualizarCheckboxes(this)" 
+   onclick="actualizarCheckboxes(this)" 
+   oninput="getfile.compilefile(); actualizarCheckboxes(this)" class="wysiwyg-field" data-uid='' data-sync='titlewid' placeholder='Titulo.'></h1></div>`
   }
   extraerDatos($widget) {
     let datos = super.extraerDatos($widget);
@@ -55,6 +64,7 @@ class TitleWidget extends BaseWidget {
     $widget.find("select[name='titlestyle']").val(datos.estilo ? datos.estilo : 'a');
   }
 }
+//Etiqueta 
 class BadgeWidget extends BaseWidget {
   constructor() {
     super('badge');
@@ -62,7 +72,9 @@ class BadgeWidget extends BaseWidget {
   getHTML(){
     return `<li pt-type="badge">
         <h1 class="setui">Etiqueta<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
-        <input type="text" name="badwid" value="" class="squircle txt-nota" placeholder="Texto de la etiqueta"/>
+        <input type="text" name="badwid" value="" class="txt-nota" placeholder="Texto de la etiqueta" onkeyup="actualizarCheckboxes(this)" 
+   onclick="actualizarCheckboxes(this)" 
+   oninput="getfile.compilefile(); actualizarCheckboxes(this)"/>
          
         <span class="setui">
          <select name="badcol" data-native-menu="false" data-mini="true">
@@ -96,7 +108,11 @@ class BadgeWidget extends BaseWidget {
        </li>`
   }
   getWYSIWYG(datos){
-    
+    return `<div class="ui red simple label p-2 wysiwyg-field wysiwyg-render" contenteditable="true" 
+    oninput="$(this).closest('li').data('valor', this.innerText)"
+    onkeyup="actualizarCheckboxes(this)" 
+   onclick="actualizarCheckboxes(this)" 
+   oninput="getfile.compilefile(); actualizarCheckboxes(this)" data-uid='' data-sync='badwid'></div>`
   }
   extraerDatos($widget) {
     let datos = super.extraerDatos($widget);
@@ -109,9 +125,9 @@ class BadgeWidget extends BaseWidget {
   compilarVista(datos) {
     let prev = ''
     if (datos.simple === 'true'){
-      prev = `<div class="ui ${datos.color} ${datos.tipo} basic label">${parsearSimbolos(datos.valor)}</div>`
+      prev = `<div class="ui ${datos.color} ${datos.tipo} basic label p-2">${parsearSimbolos(datos.valor)}</div>`
     } else {
-      prev = `<div class="ui ${datos.color} ${datos.tipo} label">${parsearSimbolos(datos.valor)}</div>`
+      prev = `<div class="ui ${datos.color} ${datos.tipo} label p-2">${parsearSimbolos(datos.valor)}</div>`
     }
     return prev;
   }
@@ -122,17 +138,18 @@ class BadgeWidget extends BaseWidget {
     $widget.find("select[name='badsim']").val(datos.simple ? datos.simple : 'false')
   }
 }
+//Contenedor 
 class FlowWidget extends BaseWidget {
   constructor() {
     super('flow');
   }
   getHTML() {
     let uid = Math.floor(Math.random() * 1000000)
-      return `<li pt-type="flow">
+      return `<li pt-type="flow" data-uid>
         <h1 class="setui">Contenedor<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext" data-mini="true"></button></h1>
          <span class="setui">
           <button popovertarget="popminiadd-${uid}" name="addwid" style="anchor-name:--addminiwid-${uid}" data-icon="plus">Widget</button>
-          <ul class="dropdown menu rounded-box bg-base-300 squircle" popover id="popminiadd-${uid}" style="position-anchor:--addminiwid-${uid}">
+          <ul class="dropdown menu rounded-xl bg-base-300 squircle" popover id="popminiadd-${uid}" style="position-anchor:--addminiwid-${uid}">
         <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtolist('text', $el)">Texto</button></li>
         <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtolist('badge', $el)">Etiqueta</button></li>
         <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtolist('image', $el)">Imagen</button></li>
@@ -143,6 +160,10 @@ class FlowWidget extends BaseWidget {
           </ul>
          </div>
        </li>`;
+  }
+  getWYSIWYG(){
+    return `<div class="flowui-wysiwyg flowui p-2" style="min-height: 40px; border: 1px dashed #ccc; margin-bottom: 5px;">
+            </div>`
   }
   extraerDatos($widget) {
     let datos = super.extraerDatos($widget);
@@ -186,6 +207,7 @@ class FlowWidget extends BaseWidget {
     });
   }
 }
+//Texto
 class TextWidget extends BaseWidget {
   constructor() {
     super('text')
@@ -194,7 +216,9 @@ class TextWidget extends BaseWidget {
     return `<li pt-type="text">
         <h1 class="setui">Texto<div class="move-handle ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all ui-mini"></div><button name="delwid" data-icon="delete" data-iconpos="notext"></button></h1>
         <span class="widui">
-         <input type="text" name="textrib" placeholder="Texto del liston">
+         <input type="text" name="textrib" placeholder="Texto del liston" onkeyup="actualizarCheckboxes(this)" 
+   onclick="actualizarCheckboxes(this)" 
+   oninput="getfile.compilefile(); actualizarCheckboxes(this)">
          <span class="setui">
           <select name="textribon" data-role="slider" data-mini="true">
            <option value="false">No</option>
@@ -219,7 +243,9 @@ class TextWidget extends BaseWidget {
           </select>
          </span>
          <span class="setui">
-          <textarea name="textwid" rows="8" cols="20" class="squircle txt-nota"  placeholder="Texto principal"></textarea>
+          <textarea name="textwid" rows="8" cols="20" class="squircle txt-nota"  placeholder="Texto principal" onkeyup="actualizarCheckboxes(this)" 
+   onclick="actualizarCheckboxes(this)" 
+   oninput="getfile.compilefile(); actualizarCheckboxes(this)"></textarea>
          <select name="textpos" data-native-menu="false" data-mini="true">
           <option value="left">◧</option>
           <option value="center">▣</option>
@@ -229,6 +255,9 @@ class TextWidget extends BaseWidget {
          </span>
         </span>
        </li>`
+  }
+  getWYSIWYG(){
+    return ``
   }
   extraerDatos($widget){
     let datos = super.extraerDatos($widget)
@@ -278,6 +307,9 @@ class ImageWidget extends BaseWidget{
        </span>
       <div class="img-preview-container" style="text-align:center; margin-top:10px;"></div>
     </li>`
+  }
+  getWYSIWYG(){
+    return `<div class="ui circular image"><img src=""></div>`;
   }
   extraerDatos($widget){
     let datos = super.extraerDatos($widget)
@@ -332,36 +364,49 @@ class Filer {
   constructor() {
     setTimeout(() => {
       this.lista = $("#docreate")
+      this.lista2 = $("#wysiwyg-content")
       this.docres = ""
     }, 2)
   }
   compilefile() {
-    this.lista = $("#docreate")
-    if (!this.lista.length) return;
-    const widgets = this.lista.children();
-    let file = {
-      metadato: {
-        filetype: "pretexto-note",
-        ver: "1.0",
-        date: new Date().toDateString(),
-        time: new Date().toTimeString(),
-        name: $("#namedoc").val() || "Sin titulo",
-      },
-      dataWid: []
-    };
-    this.docres = ''
-    widgets.each((index, elemento) => {
-    const $widget = $(elemento);
+  this.lista = $("#docreate");
+  if (!this.lista.length) return;
+  
+  const widgetsDOM = this.lista.children();
+  let file = {
+    metadato: {
+      filetype: "pretexto-note",
+      ver: "1.0",
+      date: new Date().toLocaleDateString(),
+      name: $("#namedoc").val() || "Sin titulo",
+    },
+    dataWid: []
+  };
+  
+  // ASEGURAMOS QUE SEA STRING VACÍO AL EMPEZAR
+  let acumuladorHTML = "";
+  
+  widgetsDOM.each((index, el) => {
+    const $widget = $(el);
     const tipo = $widget.attr('pt-type');
-    const widgetClass = RegistroWidgets[tipo];
-    if (widgetClass) {
-      const datosExtraidos = widgetClass.extraerDatos($widget);
-      file.dataWid.push(datosExtraidos);
-      this.docres += widgetClass.compilarVista(datosExtraidos);
+    const claseWidget = RegistroWidgets[tipo];
+    
+    if (claseWidget) {
+      try {
+        const datos = claseWidget.extraerDatos($widget);
+        file.dataWid.push(datos);
+        const htmlGenerado = claseWidget.compilarVista(datos);
+        acumuladorHTML += htmlGenerado ? htmlGenerado : "";
+      } catch (e) {
+        console.error("Error procesando widget tipo: " + tipo, e);
+      }
     }
-    });
-    return file;
-  }
+  });
+  
+  this.docres = acumuladorHTML; // Guardamos el string final
+  console.log("Docres compilado con éxito:", this.docres);
+  return file;
+}
   cargarNotaEnEditor(nota) {
     this.lista = $("#docreate")
     if (!nota || !nota.dataWid) {
@@ -389,58 +434,78 @@ class Filer {
     
   }
   addtodoc(type) {
-	if (!this.lista.length) return;
-	
-	const widgetClass = RegistroWidgets[type]
-	if (!widgetClass) {
-    console.warn("Widget no registrado:", type);
-    return;
-  }
+	if (!this.lista.length || !this.lista2.length) return;
+    const widgetClass = RegistroWidgets[type];
+    if (!widgetClass) return;
 
-  const $nuevoItem = $(widgetClass.getHTML());
-  this.lista.append($nuevoItem);
-  setTimeout(() => {
-  this.lista.listview("refresh").trigger('create');
-  $nuevoItem.trigger('create');
-}, 2);
+    // Generar UID único para el nivel raíz
+    const uid = 'wid_' + Math.random().toString(36).substr(2, 9);
+    console.log(uid)
+// AQUÍ: Se añade al widget del editor
+const $nuevowid = $(widgetClass.getHTML()).attr('data-uid', uid);
+
+// AQUÍ: Se añade al bloque del documento
+const $nuevoblock = $(widgetClass.getWYSIWYG()).attr('data-uid', uid);
+    this.lista.append($nuevowid);
+    this.lista2.append($nuevoblock);
+
+    setTimeout(() => {
+      this.lista.listview("refresh").trigger('create');
+      $nuevowid.trigger('create');
+    }, 2);
 	this.initSortables()
 	this.delwidg()
 }
   addtolist(type, element) {
-	const target = element || this
-	const $container = $(target).closest('li[pt-type="flow"]');
-	const $list = $container.find("ul[name='minilist']");
-	if (!$list.length) {
-		console.error("No se encontró 'minilist'. Revisa la estructura HTML.");
-		return;
-		
-	}
-	const widgetClass = RegistroWidgets[type]
-	if (!widgetClass) {
-    console.warn("Widget no registrado:", type);
-    return;
-  }
-  const $nuevoItem = $(widgetClass.getHTML());
+  const target = element || this;
+  const $container = $(target).closest('li[pt-type="flow"]');
+  const $list = $container.find("ul[name='minilist']");
+  
+  // Buscar el contenedor gemelo en el WYSIWYG usando el UID del padre
+  const parentUid = $container.attr('data-uid');
+  const $wysiwygContainer = $(`#wysiwyg-content [data-uid="${parentUid}"] .flowui-wysiwyg`);
+
+  if (!$list.length) return;
+
+  const widgetClass = RegistroWidgets[type];
+  if (!widgetClass) return;
+
+  // Generar UID único para el hijo
+  const uid = 'sub_' + Math.random().toString(36).substr(2, 9);
+
+  const $nuevoItem = $(widgetClass.getHTML()).attr('data-uid', uid);
+  const $nuevoblock = $(widgetClass.getWYSIWYG()).attr('data-uid', uid);
+
+  // Inyectar en ambos lados
   $list.append($nuevoItem);
-	setTimeout(() => {
-	  $list.listview().listview("refresh");
-	  $nuevoItem.trigger('create')
-	},2)
+  if ($wysiwygContainer.length) {
+    $wysiwygContainer.append($nuevoblock);
+  }
+
+  setTimeout(() => {
+    $list.listview().listview("refresh");
+    $nuevoItem.trigger('create');
+  }, 2);
 }
   delwidg() {
-  const self = this;
-  this.lista = $("#docreate");
-  this.lista.off("click.borrar").on("click.borrar", "button[name='delwid']", function(e) {
-    const $itemAEliminar = $(this).closest("li");
-    const $listaPadre = $itemAEliminar.parent();
-    $itemAEliminar.remove();
-    if (self.lista.length) {
-      self.lista.listview("refresh");
-    }
-    if ($listaPadre.attr('name') === 'minilist') {
-      $listaPadre.listview("refresh");
-    }
-  });
+  $(document).on("click", "button[name='delwid']", (e) => {
+      const $li = $(e.target).closest("li");
+      const uid = $li.attr("data-uid")
+      const $parentUl = $li.parent();
+      $li.remove();
+      $(`[data-uid="${uid}"]`).remove();
+      if ($parentUl.hasClass('ui-listview') || $parentUl.attr('data-role') === 'listview' || $parentUl.attr('name') === 'minilist') {
+  try {
+    $parentUl.listview('refresh');
+  } catch (err) {
+    // Si por alguna razón no estaba inicializada como listview, la forzamos
+    $parentUl.listview().listview('refresh');
+  }
+}
+
+// 4. Sincronizar cambios en el JSON
+this.compilefile();
+    });
 }
   initSortables() {
     const self = this
@@ -454,11 +519,17 @@ class Filer {
       ui.placeholder.height(ui.item.height());
     },
     stop: function(event, ui) {
-      $(this).listview('refresh')
-      ui.item.parent().listview("refresh");
-      setTimeout(function() {
-        if (typeof showres === "function") showres();
-      }, 5);
+      $(this).listview('refresh');
+
+// Sincronizar orden en WYSIWYG
+const $container = $("#wysiwyg-content");
+$("#docreate > li").each(function() {
+  const uid = $(this).attr('data-uid');
+  const $block = $container.find(`[data-uid="${uid}"]`);
+  $container.append($block); // Mueve el elemento al final en el nuevo orden
+});
+
+getfile.compilefile();
     },
     receive: function(event, ui) {
       const type = ui.item.attr('pt-type');
@@ -471,27 +542,6 @@ class Filer {
   
   this.lista.sortable(sortOptions);
   $(".minilist-sortable").sortable(sortOptions);
-}
-renderWYSIWYG() {
-  const $contenedor = $("#wysiwyg-content");
-  $contenedor.empty();
-  const file = this.compilefile();
-  file.dataWid.forEach(datos => {
-    const widgetClass = RegistroWidgets[datos.tipo];
-    if (widgetClass) {
-      $contenedor.append(widgetClass.getWYSIWYG(datos));
-    }
-  });
-}
-syncWYSIWYG() {
-  $("#wysiwyg-content [contenteditable='true']").each(function() {
-    const nuevoTexto = $(this).text();
-    const $parent = $(this).closest('[pt-type]');
-    const index = $parent.index();
-    
-    // Aquí podrías buscar el widget correspondiente en #docreate y actualizar su input/textarea
-    // Pero es más fácil llamar a compilefile() y dejar que el guardado normal maneje el JSON
-  });
 }
 }
 class capacitorfuncs {
@@ -661,8 +711,8 @@ const nav = `<div data-role="navbar" data-iconpos="left">
 			</div>`
 const editnav = `<div data-role="navbar" data-iconpos="left">
        <ul>
-        <li><a @click="naved(0)" :class="hiedit[0]" href="#wysiwyg" data-icon="nota">Documento</a></li>
-        <li><a @click="naved(1)" :class="hiedit[1]" href="#edit" data-icon="wid">Widgets</a></li>
+        <li><a @click="naved(0)" :class="hiedit[0]" href="#wysiwyg" data-icon="nota" data-transition='none'>Documento</a></li>
+        <li><a @click="naved(1)" :class="hiedit[1]" href="#edit" data-icon="bars" data-transition='none'>Widgets</a></li>
        </ul>
       </div>`
 const keys = ["theme"]
@@ -700,6 +750,7 @@ document.addEventListener('alpine:init', () => {
 		setheme(theme){
 			preferences.theme = theme
 			ajusdatasave(keys[0], preferences.theme)
+			location.reload()
 		},
 		doc: getfile.docres,
 	}))
@@ -720,57 +771,86 @@ function parsearSimbolos(texto) {
         .replace(/~([^*]+)~/g, '<s>$1</s>')// ~tachado~
   return procecedfile
 }
+$(document).on('ready', function() {
+  
+});
 $(document).on("pageshow", "#notas", function() {
   Capacitores.listarDesdeDisco();
 });
-let ultimoTextarea = null;
-$(document).on('focus click keyup', '.txt-nota', function() {
-  ultimoTextarea = this;
+// 1. Variable global para no perder el norte
+let lastFocusedElement = null;
+let start = ''
+let end = ''
+let elwt
+// 2. Capturamos el foco en cualquier editor
+$(document).on('focusin', 'textarea, input.txt-nota, [contenteditable="true"]', function() {
+  lastFocusedElement = this;
   actualizarCheckboxes(this);
 });
-$(document).on('change', '#stng, #stng2, #ital, #ital2, #unde, #unde2, #stri, #stri2', function(e) {
-  if (!ultimoTextarea) {
-    $(this).prop('checked', false).checkboxradio("refresh");
+
+// 3. La función maestra de formato
+function aplicarFormato(tipo) {
+  // 1. Buscamos el textarea que tiene el foco o el último activo
+  const el = document.activeElement;
+  if (!el || (el.tagName !== 'TEXTAREA' && el.tagName !== 'INPUT')) {
+    console.warn("No hay un campo de texto activo");
     return;
   }
-  const el = ultimoTextarea;
-  let start = el.selectionStart;
-  let end = el.selectionEnd;
-  let texto = $(el).val();
-  const simbolos = { 'stng': '*', 'ital': '•', 'unde': '_', 'stri': '~' };
-  let s = simbolos[this.id];
-  const yaTiene = texto.substring(start - 1, start) === s && texto.substring(end, end + 1) === s;
-  if (yaTiene) {
-    const nuevoTexto = texto.substring(0, start - 1) + texto.substring(start, end) + texto.substring(end + 1);
+  
+  const s = { 'stng': '*', 'ital': '•', 'unde': '_', 'stri': '~' } [tipo];
+  const start = el.selectionStart;
+  const end = el.selectionEnd;
+  const texto = el.value;
+  
+  // 2. Lógica de inserción/eliminación de símbolos
+  const seleccionado = texto.substring(start, end);
+  
+  // Si ya tiene los símbolos, los quitamos (Toggle)
+  if (texto.substring(start - 1, start) === s && texto.substring(end, end + 1) === s) {
+    const nuevoTexto = texto.substring(0, start - 1) + seleccionado + texto.substring(end + 1);
     $(el).val(nuevoTexto);
     el.setSelectionRange(start - 1, end - 1);
   } else {
-    const seleccionado = texto.substring(start, end);
+    // Si no los tiene, los ponemos
     const nuevoTexto = texto.substring(0, start) + s + seleccionado + s + texto.substring(end);
     $(el).val(nuevoTexto);
     el.setSelectionRange(start + 1, end + 1);
   }
-  el.focus();
+  
+  // 3. Forzar actualización y mantener teclado abierto
+  $(el).trigger('input'); // Para que compile la vista previa
+  setTimeout(() => el.focus(), 10);
   actualizarCheckboxes(el);
-});
+}
 function actualizarCheckboxes(el) {
   if (!el) return;
+  
+  let bold, ital, unde, stri;
+  
+  if (el.isContentEditable ||  $(el).prop('contenteditable') === 'true') {
+    bold = document.queryCommandState("bold");
+    ital = document.queryCommandState("italic");
+    unde = document.queryCommandState("underline");
+    stri = document.queryCommandState("strikeThrough");
+  } else {
   const start = el.selectionStart;
   const texto = el.value;
   const comprobar = (s) => {
     const antes = texto.substring(0, start);
     const despues = texto.substring(start);
     return antes.lastIndexOf(s) !== -1 && despues.indexOf(s) !== -1;
-  };
-  $('#stng').prop('checked', comprobar('*')).checkboxradio("refresh");
-  $('#stng2').prop('checked', comprobar('*')).checkboxradio("refresh")
-  $('#ital').prop('checked', comprobar('•')).checkboxradio("refresh");
-  $('#ital2').prop('checked', comprobar('•')).checkboxradio("refresh");
-  $('#unde').prop('checked', comprobar('_')).checkboxradio("refresh");
-  $('#unde2').prop('checked', comprobar('_')).checkboxradio("refresh");
-  $('#stri').prop('checked', comprobar('~')).checkboxradio("refresh");
-  $('#stri2').prop('checked', comprobar('~')).checkboxradio("refresh");
+  }
+  bold = comprobar('*');
+    ital = comprobar('•');
+    unde = comprobar('_');
+    stri = comprobar('~');
+  }
+  $('#stng').prop('checked', bold).checkboxradio("refresh");
+  $('#ital').prop('checked', ital).checkboxradio("refresh");
+  $('#unde').prop('checked', unde).checkboxradio("refresh");
+  $('#stri').prop('checked', stri).checkboxradio("refresh");
 }
+
 function ajusdatasave(key, data) {
 	localStorage.setItem(key, data)
 }

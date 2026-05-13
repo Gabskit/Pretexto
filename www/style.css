@@ -1,5 +1,5 @@
 *{
-	transition: all 0.3s cubic-bezier(0.65, 0, 0.35, 1) !important;
+	transition: all 0.5s cubic-bezier(0.36, 0, 0.66, -0.56) !important;
 	font-family: lexend-deca !important;
 }
 html, body {
@@ -18,9 +18,13 @@ body.ui-mobile-viewport {
 	font-family: lexend-deca;
 	src: url("assets/LexendDeca-Regular.ttf");
 }
-/*hr{
-	color: #000 !important;
-}*/
+/* Evita que el footer salte o se oculte en modo edición */
+.ui-footer-fixed {
+    bottom: 0 !important;
+    position: fixed !important;
+    display: block !important;
+}
+
 .ui-state-highlight {
     height: 80px; /* Altura promedio de un widget */
     background: rgba(0,0,0,0.05) !important;
@@ -34,9 +38,11 @@ li {
     -moz-user-select: none;
     user-select: none;
 }
-
+ul{
+	padding: 5px;
+}
 .full{
-	min-height: 100vh;
+	min-height: 100vh !important;
 }
 .barui {
 	display: flex !important;
@@ -65,8 +71,8 @@ li {
 	align-items: stretch;
 	justify-content: space-between;
 }
-.squircle{
-	border-radius: 2em !important;
+.squircle {
+	border-radius: 2em ;
 	corner-shape: squircle !important;
 }
 .edit-btn{

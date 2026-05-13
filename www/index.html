@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="cdn/calendar.js.min.css"/>
     <link rel="stylesheet" href="style.css"/>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, interactive-widget=resizes-content">
   </head>
   <body x-data="inicio" x-effect="logocol()">
    <!--main page-->
@@ -30,7 +30,7 @@
        <img :src="logo">
        <div style="display: flex;">
         <button data-icon="plus" data-iconpos="notext"></button>
-        <a data-ajax="false" class="squircle" data-role="button" data-icon="gear" data-iconpos="notext" href="set.html"></a>
+        <a class="squircle" data-role="button" data-icon="gear" data-iconpos="notext" href="#ajustes"></a>
        </div>
       </div>
       <div data-role="content" class="full" :data-theme="jqmtheme">
@@ -65,23 +65,17 @@
       </span-->
      </div>
      <div data-role="content" class="full" :data-theme="jqmtheme">
-      <div id="calendar"></div>
-      <script type="text/javascript">
- $(document).on("pageshow", "#calen", function() {
-  // Evitar duplicados si la página se recarga
-  if (!$("#calendar").hasClass("calendar-initialized")) {
-   
-   const options = {
+      <div id="calendar" class="squircle"></div>
+      <script type="text/javascript" charset="utf-8">
+      $('#calen').on('pageshow', function(e){
+       const options = {
     useLocalStorageForEvents: true,
-    // Si __TRANSLATION_OPTIONS no está definido, usa un objeto vacío
-    ...(typeof __TRANSLATION_OPTIONS !== 'undefined' ? __TRANSLATION_OPTIONS : {})
+    ...__TRANSLATION_OPTIONS ? __TRANSLATION_OPTIONS : {}
    };
-   
-   $("#calendar").calendarJs(options);
-   $("#calendar").addClass("calendar-initialized");
-  }
- });
-</script>
+       const calendarInstance = $( "#calendar" ).calendarJs(options)[ 0 ]
+       $("#calendar").addClass("calendar-initialized");
+      })
+      </script>
      </div>
      <div x-html="navbar" data-role="footer" data-position="fixed" data-id="footr" :data-theme="jqmtheme">
       <!--footer navbar-->
@@ -111,7 +105,7 @@
       <img :src="logo">
       <span style="display: flex; align-items: center;">
        <button popovertarget="popadd" style="anchor-name:--addwid" data-icon="plus">Widget</button>
-       <ul class="dropdown menu rounded-box bg-base-300 squircle" popover id="popadd" style="position-anchor:--addwid">
+       <ul class="dropdown menu rounded-xl bg-base-300 squircle" popover id="popadd" style="position-anchor:--addwid">
         <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtodoc('title')">Titulo</button></li>
         <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtodoc('text')">Texto</button></li>
         <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtodoc('badge')">Etiqueta</button></li>
@@ -134,14 +128,14 @@
      <div data-role="footer" data-position="fixed" :data-theme="jqmtheme">
       <span class="barui">
       <!--input type="color" name="" id="" value="" /-->
-      <div data-role="controlgroup" data-type="horizontal">
-       <label for="stng"><strong>B</strong></label>
+      <div data-role="controlgroup" data-type="horizontal" class="squircle">
+       <label for="stng" ontouchstart="event.preventDefault(); aplicarFormato('stng')"><strong>B</strong></label>
        <input type="checkbox" name="stng" id="stng">
-       <label for="ital"><em>I</em></label>
+       <label for="ital" ontouchstart="event.preventDefault(); aplicarFormato('ital')"><em>I</em></label>
        <input type="checkbox" name="ital" id="ital">
-       <label for="unde"><u>U</u></label>
+       <label for="unde" ontouchstart="event.preventDefault(); aplicarFormato('unde')"><u>U</u></label>
        <input type="checkbox" name="unde" id="unde">
-       <label for="stri"><s>S</s></label>
+       <label for="stri" ontouchstart="event.preventDefault(); aplicarFormato('stri')"><s>S</s></label>
        <input type="checkbox" name="stri" id="stri">
       </div>
       <div data-role="controlgroup" data-type="horizontal">
@@ -149,9 +143,9 @@
        <button data-icon="share" data-iconpos="notext" @click="Capacitores.compartirNota()"></button>
       </div>
       </span>
-      <div x-html="editbar">
+      <!--div x-html="editbar">
        
-      </div>
+      </div-->
      </div>
     </div>
     <!--wysiwyg-->
@@ -160,6 +154,18 @@
       <span class="barui">
        <a data-role="button" data-icon="back" data-iconpos="notext" href="#notas" class="squircle" data-transition="none"></a>
       <img :src="logo" >
+      <span style="display: flex; align-items: center;">
+       <button popovertarget="popadd2" style="anchor-name:--addwid2" data-icon="plus">Widget</button>
+       <ul class="dropdown menu rounded-xl bg-base-300 squircle" popover id="popadd2" style="position-anchor:--addwid2">
+        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtodoc('title')">Titulo</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtodoc('text')">Texto</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtodoc('badge')">Etiqueta</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtodoc('div')">Divisor</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtodoc('flow')">Contenedor</button></li>
+        <li><button data-role="none" class="squircle edit-btn" @click="getfile.addtodoc('image')">Imagen</button></li>
+       </ul>
+       <a data-role="button" data-icon="view" data-iconpos="notext" href="#view" class="squircle" data-transition="none"></a>
+      </span>
       </span>
       <span class="barui">
        <select name="textribon" data-role="slider" data-mini="true">
@@ -172,20 +178,20 @@
           </select>
       </span>
      </div>
-     <div data-role="content" class="full" :data-theme="jqmtheme" id="wysiwyg-content">
+     <div data-role="content" class="full" data-theme="c" id="wysiwyg-content" style="padding: 0;">
       
      </div>
      <div data-role="footer" data-position="fixed" :data-theme="jqmtheme">
       <span class="barui">
       <!--input type="color" name="" id="" value="" /-->
-      <div data-role="controlgroup" data-type="horizontal">
-       <label for="stng2"><strong>B</strong></label>
+      <div data-role="controlgroup" data-type="horizontal" class="squircle">
+       <label for="stng2" ontouchstart="event.preventDefault(); aplicarFormato('stng');"><strong>B</strong></label>
        <input type="checkbox" name="stng" id="stng2">
-       <label for="ital2"><em>I</em></label>
+       <label for="ital2" ontouchstart="event.preventDefault(); aplicarFormato('ital');"><em>I</em></label>
        <input type="checkbox" name="ital" id="ital2">
-       <label for="unde2"><u>U</u></label>
+       <label for="unde2" ontouchstart="event.preventDefault(); aplicarFormato('unde');"><u>U</u></label>
        <input type="checkbox" name="unde" id="unde2">
-       <label for="stri2"><s>S</s></label>
+       <label for="stri2" ontouchstart="event.preventDefault(); aplicarFormato('stri');"><s>S</s></label>
        <input type="checkbox" name="stri" id="stri2">
        </div>
        <div data-role="controlgroup" data-type="horizontal">
@@ -196,6 +202,7 @@
       <div x-html="editbar">
        
       </div>
+     </div>
     </div>
     <!--view page-->
     <div data-role="page" id="view">
@@ -211,6 +218,24 @@
      </div>
      <div data-role="content" class="full" data-theme="c" id="preview2" style="padding: 0;" x-html="doc">
       
+     </div>
+    </div>
+    <!--settings page-->
+    <div data-role="page" id="ajustes">
+     <div data-role="header" class="barui" data-position="fixed" :data-theme="jqmtheme">
+      <div><a data-role="button" data-icon="back" data-rel="back" href="#main" class="squircle">Regresar</a></div>
+      <h1>Ajustes</h1>
+     </div>
+     <div data-role="content" :data-theme="jqmtheme" class="full">
+       
+      <div data-role="controlgroup" data-type="horizontal" id="jqm" class="squircle">
+       <p>Tema</p>
+       <button data-theme="a" @click="setheme('a')">a</button>
+       <button data-theme="b" @click="setheme('b')">b</button>
+       <button data-theme="c" @click="setheme('c')">c</button>
+       <button data-theme="d" @click="setheme('d')">d</button>
+       <button data-theme="e" @click="setheme('e')">e</button>
+      </div>
      </div>
     </div>
   </body>
