@@ -1,8 +1,26 @@
-import { createRouter, createWebHistory } from 'vue-router'
-
+import { createRouter, createWebHashHistory } from "vue-router";
+import Main from "./../Pages/Main.vue";
+import Notas from "./../Pages/Notas.vue";
+import Calendario from "./../Pages/Calendario.vue";
+//import Edicion from "./../Pages/Edicion.vue";
+//import Vista from "./../Pages/Vista.vue";
+//import Ajustes from "./../Pages/Ajustes.vue";
+const rutas = [
+    {
+        path: "/",
+        component: Main
+    },
+    {
+        path: "/Notas",
+        component: Notas
+    },
+    { path: "/Calendario", component: Calendario }
+];
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [],
-})
-
-export default router
+    history: createWebHashHistory(),
+    routes: rutas
+});
+router.afterEach(async (to, from, failure) => {
+    if (!failure) setTimeout(() => window.HSStaticMethods.autoInit(), 100);
+});
+export default router;
