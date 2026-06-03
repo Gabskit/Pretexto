@@ -4,8 +4,8 @@
         <div class="barui w-full ui-bar-d">
             <img src="./../assets/ptlogoblack.svg" />
             <button
-                class="btn btn-primary rounded-2xl squircle"
-                data-theme="valorant"
+                class="btn btn-primary waves waves-primary squircle"
+                data-theme="claude"
             >
                 Nueva Nota
             </button>

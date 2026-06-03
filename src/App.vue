@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import Waves from "node-waves";
 
 onMounted(() => {
-    Waves.init();
-    Waves.attach(".waves");
-
+    
     setTimeout(() => window.HSStaticMethods.autoInit(), 100);
 });
 </script>
