@@ -22,6 +22,7 @@
         "@fullcalendar/interaction": "^6.1.10",
         "@fullcalendar/timegrid": "^6.1.10",
         "@fullcalendar/vue3": "^6.1.10",
+        "@iconify/vue": "^5.0.1",
         "flyonui": "^2.4.1",
         "fomantic-ui": "^2.9.4",
         "jquery": "^4.0.0",

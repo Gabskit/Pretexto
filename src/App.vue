@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-
+import { onMounted, ref, defineComponent } from "vue";
+import { Icon } from "@iconify/vue"; // Importas Iconify
 onMounted(() => {
-    
     setTimeout(() => window.HSStaticMethods.autoInit(), 100);
 });
 </script>
@@ -14,7 +13,7 @@ onMounted(() => {
         </transition>
     </router-view>
     <div
-        class="fixed bottom-0 grid grid-cols-6 join ui-bar-d"
+        class="fixed bottom-0 grid grid-cols-6 w-full ui-bar-b"
         data-theme="valorant"
     >
         <router-link to="/" v-slot="{ navigate, isActive }"
@@ -25,7 +24,10 @@ onMounted(() => {
                 ]"
                 @click="navigate"
             >
-                Inicio
+                <Icon
+                    icon="solar:home-smile-angle-line-duotone"
+                    class="w-5 h-5"
+                />
             </button>
         </router-link>
 
@@ -37,7 +39,7 @@ onMounted(() => {
                 ]"
                 @click="navigate"
             >
-                Notas
+                <Icon icon="solar:document-text-line-duotone" class="w-5 h-5" />
             </button>
         </router-link>
         <router-link to="/Calendario" v-slot="{ navigate, isActive }">
@@ -48,7 +50,35 @@ onMounted(() => {
                 ]"
                 @click="navigate"
             >
-                Calendario
+                <Icon
+                    icon="solar:calendar-minimalistic-line-duotone"
+                    class="w-5 h-5"
+                />
+            </button>
+        </router-link>
+        <router-link to="/Edicion" v-slot="{ navigate, isActive }">
+            <button
+                :class="[
+                    'btn waves waves-primary',
+                    isActive ? 'btn-primary' : 'glass'
+                ]"
+                @click="navigate"
+            >
+                <Icon
+                    icon="solar:pen-new-square-line-duotone"
+                    class="w-5 h-5"
+                />
+            </button>
+        </router-link>
+        <router-link to="/Vista" v-slot="{ navigate, isActive }">
+            <button
+                :class="[
+                    'btn waves waves-primary',
+                    isActive ? 'btn-primary' : 'glass'
+                ]"
+                @click="navigate"
+            >
+                <Icon icon="solar:eye-line-duotone" class="w-5 h-5" />
             </button>
         </router-link>
     </div>

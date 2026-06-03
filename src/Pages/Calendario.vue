@@ -1,3 +1,6 @@
+<script setup lang="ts">
+import { Icon } from "@iconify/vue"; // Importas
+</script>
 <script lang="ts">
 import { defineComponent } from "vue";
 import FullCalendar from "@fullcalendar/vue3";
@@ -30,11 +33,17 @@ export default defineComponent({
     <div>
         <div class="barui w-full ui-bar-d">
             <img src="./../assets/ptlogoblack.svg" />
+            <button
+                class="btn btn-primary waves waves-primary squircle"
+                data-theme="claude"
+            >
+                <Icon
+                    icon="solar:calendar-add-line-duotone"
+                    class="w-5 h-5"
+                />Añadir evento
+            </button>
         </div>
-        <FullCalendar
-            :options="calendarOptions"
-            
-        ></FullCalendar>
+        <FullCalendar :options="calendarOptions"></FullCalendar>
     </div>
 </template>
 <style>
